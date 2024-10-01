@@ -20,3 +20,8 @@ spring:
   output:
     ansi:
       enabled: ALWAYS
+
+logging:
+  level:
+    org:
+      hibernate.SQL: debug
