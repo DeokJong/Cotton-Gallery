@@ -21,4 +21,10 @@ public class AccountCreateRequest {
     private String email;
 
     private String phoneNumber;
+
+    private int zipcode;
+
+    private String street;
+
+    private String detail;
 }

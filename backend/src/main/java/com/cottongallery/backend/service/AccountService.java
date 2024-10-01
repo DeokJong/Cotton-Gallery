@@ -2,6 +2,7 @@ package com.cottongallery.backend.service;
 
 import com.cottongallery.backend.constants.Role;
 import com.cottongallery.backend.domain.Account;
+import com.cottongallery.backend.domain.Address;
 import com.cottongallery.backend.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,10 @@ public class AccountService {
                 accountCreateRequest.getEmail(),
                 accountCreateRequest.getPhoneNumber(),
                 Role.USER);
+
+        account.addAddress(new Address(accountCreateRequest.getZipcode(),
+                accountCreateRequest.getStreet(),
+                accountCreateRequest.getDetail()));
 
         accountRepository.save(account);
 

@@ -6,6 +6,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,6 +38,9 @@ public class Account {
     @Column(nullable = false, updatable = false)
     private Role role;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<Address> addressList = new ArrayList<>();
+
     private Account(String name, String username, String password, String email, String phoneNumber, Role role) {
         this.name = name;
         this.username = username;
@@ -46,5 +52,10 @@ public class Account {
 
     public static Account createAccount(String name, String username, String password, String email, String phoneNumber, Role role) {
         return new Account(name, username, password, email, phoneNumber, role);
+    }
+
+    public void addAddress(Address address) {
+        this.addressList.add(address);
+        address.setAccount(this);
     }
 }
