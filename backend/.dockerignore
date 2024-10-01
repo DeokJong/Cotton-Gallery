@@ -1,0 +1,6 @@
+.git
+.gitignore
+.vscode
+.gradle
+bin
+Dockerfile
