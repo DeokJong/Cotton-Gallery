@@ -3,19 +3,17 @@ spring:
     name: backend
 
   profiles:
-    include: db
+    active: local
 
   jpa:
     hibernate:
       ddl-auto: create
-
     open-in-view: false
-
     properties:
       hibernate:
-        format_sql: true
-        default_batch_fetch_size: 500
-        highlight_sql: true
+        "[format_sql]": true
+        "[default_batch_fetch_size]": 500
+        "[highlight_sql]": true
 
   output:
     ansi:
@@ -24,4 +22,4 @@ spring:
 logging:
   level:
     org:
-      hibernate.SQL: debug
+      "[hibernate.SQL]": debug
