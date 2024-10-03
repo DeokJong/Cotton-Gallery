@@ -3,6 +3,7 @@ package com.cottongallery.backend.controller;
 import com.cottongallery.backend.controller.validator.AccountCreateRequestValidator;
 import com.cottongallery.backend.dto.Response;
 import com.cottongallery.backend.dto.account.request.AccountCreateRequest;
+import com.cottongallery.backend.dto.account.response.AccountCheckUsernameResponse;
 import com.cottongallery.backend.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,17 @@ public class AccountController {
     public ResponseEntity<Response> addAccount(@Validated @RequestBody AccountCreateRequest accountCreateRequest) {
         accountService.signUp(accountCreateRequest);
 
-        return new ResponseEntity<>(new Response(LocalDateTime.now(), 201, "회원 가입 성공", null),
+        return new ResponseEntity<>(new Response(LocalDateTime.now(), HttpStatus.CREATED.value(), "회원 가입 성공", null),
                 HttpStatus.CREATED);
+    }
+
+    @GetMapping("/accounts/check-username")
+    public ResponseEntity<Response> checkUsername(@RequestParam String username) {
+        Boolean isDuplicated = accountService.isUsernameDuplicate(username);
+
+        AccountCheckUsernameResponse accountCheckUsernameResponse = new AccountCheckUsernameResponse(isDuplicated);
+
+        return new ResponseEntity<>(new Response(LocalDateTime.now(), HttpStatus.OK.value(), "username 중복 체크 성공", accountCheckUsernameResponse),
+                HttpStatus.OK);
     }
 }

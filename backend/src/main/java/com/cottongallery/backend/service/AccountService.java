@@ -34,4 +34,8 @@ public class AccountService {
 
         return account.getId();
     }
+
+    public Boolean isUsernameDuplicate(String username) {
+        return accountRepository.existsByUsername(username);
+    }
 }
