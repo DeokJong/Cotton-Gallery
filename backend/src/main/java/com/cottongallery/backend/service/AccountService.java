@@ -22,7 +22,7 @@ public class AccountService {
     public Long signUp(AccountCreateRequest accountCreateRequest) {
 
         if (isUsernameDuplicate(accountCreateRequest.getUsername())) {
-            throw new UsernameAlreadyExistsException("이미 존재하는 유저네임입니다. 다른 유저네임을 사용해 주세요.");
+            throw new UsernameAlreadyExistsException("이미 존재하는 사용자명입니다. 다른 사용자명을 사용해 주세요.");
         }
 
         Account account = Account.createAccount(accountCreateRequest.getName(),

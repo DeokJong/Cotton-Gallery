@@ -1,6 +1,7 @@
 package com.cottongallery.backend.controller;
 
 import com.cottongallery.backend.controller.validator.AccountCreateRequestValidator;
+import com.cottongallery.backend.dto.PayloadResponse;
 import com.cottongallery.backend.dto.Response;
 import com.cottongallery.backend.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.dto.account.response.AccountCheckUsernameResponse;
@@ -13,8 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 import static org.springframework.http.MediaType.*;
 
@@ -39,17 +38,17 @@ public class AccountController {
 
         accountService.signUp(accountCreateRequest);
 
-        return new ResponseEntity<>(new Response(LocalDateTime.now(), HttpStatus.CREATED.value(), "회원 가입 성공", null),
+        return new ResponseEntity<>(new Response(HttpStatus.CREATED.value(), "회원가입이 성공적으로 완료되었습니다."),
                 HttpStatus.CREATED);
     }
 
     @GetMapping("/accounts/check-username")
-    public ResponseEntity<Response> checkUsername(@RequestParam String username) {
+    public ResponseEntity<PayloadResponse> checkUsername(@RequestParam String username) {
         Boolean isDuplicated = accountService.isUsernameDuplicate(username);
 
         AccountCheckUsernameResponse accountCheckUsernameResponse = new AccountCheckUsernameResponse(isDuplicated);
 
-        return new ResponseEntity<>(new Response(LocalDateTime.now(), HttpStatus.OK.value(), "username 중복 체크 성공", accountCheckUsernameResponse),
+        return new ResponseEntity<>(new PayloadResponse(HttpStatus.OK.value(), "사용자명 중복 체크가 성공적으로 완료되었습니다.", accountCheckUsernameResponse),
                 HttpStatus.OK);
     }
 }

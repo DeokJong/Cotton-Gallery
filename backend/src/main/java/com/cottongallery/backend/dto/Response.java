@@ -1,15 +1,11 @@
 package com.cottongallery.backend.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Response {
 
     private LocalDateTime timestamp;
@@ -18,5 +14,9 @@ public class Response {
 
     private String message;
 
-    private Object payload;
+    public Response(int status, String message) {
+        this.timestamp = LocalDateTime.now();
+        this.status = status;
+        this.message = message;
+    }
 }

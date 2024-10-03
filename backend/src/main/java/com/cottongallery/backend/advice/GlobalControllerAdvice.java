@@ -1,5 +1,6 @@
 package com.cottongallery.backend.advice;
 
+import com.cottongallery.backend.dto.PayloadResponse;
 import com.cottongallery.backend.dto.Response;
 import com.cottongallery.backend.exception.InvalidRequestException;
 import org.springframework.http.HttpStatus;
@@ -7,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class GlobalControllerAdvice {
 
         }).toList();
 
-        return new ResponseEntity<>(new Response(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), e.getMessage(), errors),
+        return new ResponseEntity<>(new PayloadResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), errors),
                 HttpStatus.BAD_REQUEST);
     }
 }
