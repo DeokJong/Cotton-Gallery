@@ -1,7 +1,7 @@
 package com.cottongallery.backend.controller;
 
 import com.cottongallery.backend.controller.validator.AccountCreateRequestValidator;
-import com.cottongallery.backend.dto.PayloadResponse;
+import com.cottongallery.backend.dto.DataResponse;
 import com.cottongallery.backend.dto.Response;
 import com.cottongallery.backend.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.dto.account.response.AccountCheckUsernameResponse;
@@ -47,14 +47,14 @@ public class AccountController {
     }
 
     @GetMapping("/accounts/check-username")
-    public ResponseEntity<PayloadResponse> checkUsername(@RequestParam String username) {
+    public ResponseEntity<DataResponse> checkUsername(@RequestParam String username) {
         Boolean isDuplicated = accountService.isUsernameDuplicate(username);
 
         AccountCheckUsernameResponse accountCheckUsernameResponse = new AccountCheckUsernameResponse(isDuplicated);
 
         log.info("사용자 명 중복 체크 요청 완료: username={}, isDuplicated={}", username, isDuplicated);
 
-        return new ResponseEntity<>(new PayloadResponse(HttpStatus.OK.value(), "사용자명 중복 체크가 성공적으로 완료되었습니다.", accountCheckUsernameResponse),
+        return new ResponseEntity<>(new DataResponse(HttpStatus.OK.value(), "사용자명 중복 체크가 성공적으로 완료되었습니다.", accountCheckUsernameResponse),
                 HttpStatus.OK);
     }
 }

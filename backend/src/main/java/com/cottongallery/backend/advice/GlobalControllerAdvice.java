@@ -1,7 +1,6 @@
 package com.cottongallery.backend.advice;
 
-import com.cottongallery.backend.dto.PayloadResponse;
-import com.cottongallery.backend.dto.Response;
+import com.cottongallery.backend.dto.DataResponse;
 import com.cottongallery.backend.exception.InvalidRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,7 @@ import java.util.Map;
 public class GlobalControllerAdvice {
 
     @ExceptionHandler
-    public ResponseEntity<Response> handleInvalidRequestException(InvalidRequestException e) {
+    public ResponseEntity<DataResponse> handleInvalidRequestException(InvalidRequestException e) {
         log.warn("[ExceptionHandle]", e);
 
         List<Map<String, String>> errors = e.getBindingResult().getFieldErrors().stream().map(fieldError -> {
@@ -32,7 +31,7 @@ public class GlobalControllerAdvice {
 
         }).toList();
 
-        return new ResponseEntity<>(new PayloadResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), errors),
+        return new ResponseEntity<>(new DataResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), errors),
                 HttpStatus.BAD_REQUEST);
     }
 }
