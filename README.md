@@ -1,4 +1,83 @@
 
+# 프로젝트 시작 가이드
+
+## 1. 프로젝트 소개
+
+본 프로젝트는 **도커(Docker)** 기반의 컨테이너화된 백엔드 서버를 활용하여 로컬 개발 환경을 보다 간편하게 구축하는 것을 목표로 합니다.
+
+## 2. 사전 요구사항
+
+프로젝트를 시작하기 전에 아래의 도구들이 설치되어 있어야 합니다.
+
+- [Docker](https://www.docker.com/get-started) (버전 XX 이상)
+- [Docker Compose](https://docs.docker.com/compose/) (버전 XX 이상)
+- [Git](https://git-scm.com/downloads) (버전 XX 이상)
+- Java Development Kit (JDK XX)
+- PostgreSQL 클라이언트 (선택 사항)
+
+## 3. 프로젝트 클론 및 설정
+
+## 4. 서버 실행 방법
+
+### **4.0 Docker Compose로 Build**
+
+도커로 모든 서비스를 빌드하고 실행:
+
+```bash
+docker-compose up --build
+```
+
+성공적으로 컨테이너가 실행되면, 애플리케이션 서버는 http://localhost:8080에서 접근 가능합니다.
+
+### **4.1 Docker Compose 실행**
+
+도커로 이미 빌드된 시스템을 실행:
+
+```bash
+docker-compose up
+```
+
+성공적으로 컨테이너가 실행되면, 애플리케이션 서버는 http://localhost:8080에서 접근 가능합니다.
+
+### **4.2 Docker 컨테이너 확인 및 로그 확인**
+
+실행 중인 컨테이너 상태를 확인:
+
+```bash
+docker ps
+```
+
+로그를 확인하려면:
+
+```bash
+docker-compose logs app
+```
+
+## 5. 개발 중 유용한 명령어
+
+컨테이너 중지:
+
+```bash
+docker-compose down
+```
+
+컨테이너 재시작:
+
+```bash
+docker-compose restart
+```
+
+개별 컨테이너 진입:
+
+```bash
+docker exec -it <container_name> /bin/bash
+```
+
+## 6. 추가 설정 및 참고
+
+데이터베이스 마이그레이션: 데이터베이스 변경 사항이 있을 경우, 필요한 스크립트나 마이그레이션 툴을 사용하세요.
+환경 변수 설정: .env 파일을 사용해 민감한 정보 및 환경 설정을 관리하세요.
+
 # Git Branch 전략
 
 본 프로젝트는 Git 브랜치 전략을 통해 코드 품질과 협업 효율성을 높이기 위해 아래와 같은 브랜치 전략을 따릅니다.
@@ -64,14 +143,8 @@
 ### 2.3 **병합(Merge)**
 
 - 코드 리뷰 및 테스트가 완료된 후, 병합을 진행합니다.
-- 병합 시 **Fast-Forward 병합**을 사용하지 않고, **Merge Commit**을 남깁니다.
-  
-  예시:
-
-  ```bash
-  git checkout develop
-  git merge --no-ff feature/user-authentication
-  ```
+- 병합시 develop branch로 merge 할 때는 PR을 통해 Merge Commit 을 남기면서 병합합니다.
+- 병합시 main branch로 merge 할 때는 PR을 통해 Squash and Merge 방식으로 병합합니다.
 
 ---
 
