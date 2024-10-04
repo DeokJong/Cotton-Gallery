@@ -19,14 +19,25 @@
 
 ## 4. 서버 실행 방법
 
-### **4.1 Docker Compose 실행**
+### **4.0 Docker Compose로 Build**
 
-도커로 모든 서비스를 시작하려면 아래 명령어를 사용하세요.
+도커로 모든 서비스를 빌드하고 실행:
 
 ```bash
 docker-compose up --build
-성공적으로 컨테이너가 실행되면, 애플리케이션 서버는 http://localhost:8080에서 접근 가능합니다.
 ```
+
+성공적으로 컨테이너가 실행되면, 애플리케이션 서버는 http://localhost:8080에서 접근 가능합니다.
+
+### **4.1 Docker Compose 실행**
+
+도커로 이미 빌드된 시스템을 실행:
+
+```bash
+docker-compose up
+```
+
+성공적으로 컨테이너가 실행되면, 애플리케이션 서버는 http://localhost:8080에서 접근 가능합니다.
 
 ### **4.2 Docker 컨테이너 확인 및 로그 확인**
 
