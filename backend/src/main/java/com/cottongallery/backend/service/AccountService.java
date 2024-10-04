@@ -7,10 +7,12 @@ import com.cottongallery.backend.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.exception.account.UsernameAlreadyExistsException;
 import com.cottongallery.backend.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -37,6 +39,8 @@ public class AccountService {
                 accountCreateRequest.getDetail()));
 
         accountRepository.save(account);
+
+        log.debug("계정 생성 성공: username={}", account.getUsername());
 
         return account.getId();
     }

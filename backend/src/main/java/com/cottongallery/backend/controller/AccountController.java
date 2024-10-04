@@ -8,6 +8,7 @@ import com.cottongallery.backend.dto.account.response.AccountCheckUsernameRespon
 import com.cottongallery.backend.exception.InvalidRequestException;
 import com.cottongallery.backend.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.MediaType.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -38,6 +40,8 @@ public class AccountController {
 
         accountService.signUp(accountCreateRequest);
 
+        log.info("회원 가입 요청 완료: username={}", accountCreateRequest.getUsername());
+
         return new ResponseEntity<>(new Response(HttpStatus.CREATED.value(), "회원가입이 성공적으로 완료되었습니다."),
                 HttpStatus.CREATED);
     }
@@ -47,6 +51,8 @@ public class AccountController {
         Boolean isDuplicated = accountService.isUsernameDuplicate(username);
 
         AccountCheckUsernameResponse accountCheckUsernameResponse = new AccountCheckUsernameResponse(isDuplicated);
+
+        log.info("사용자 명 중복 체크 요청 완료: username={}, isDuplicated={}", username, isDuplicated);
 
         return new ResponseEntity<>(new PayloadResponse(HttpStatus.OK.value(), "사용자명 중복 체크가 성공적으로 완료되었습니다.", accountCheckUsernameResponse),
                 HttpStatus.OK);
