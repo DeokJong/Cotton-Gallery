@@ -38,6 +38,9 @@ public class Account {
     @Column(nullable = false, updatable = false)
     private Role role;
 
+    @Column(nullable = false)
+    private Integer point;
+
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Address> addressList = new ArrayList<>();
 
@@ -48,6 +51,7 @@ public class Account {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.role = role;
+        this.point = 0;
     }
 
     public static Account createAccount(String name, String username, String password, String email, String phoneNumber, Role role) {
