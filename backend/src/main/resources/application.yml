@@ -23,3 +23,9 @@ logging:
   level:
     org:
       "[hibernate.SQL]": debug
+
+jwt:
+  header: Authorization
+  secret: ${JWT_SECRET:default-secret-key}
+  token-validity-in-seconds: 86400
+  tokenPrefix: Bearer

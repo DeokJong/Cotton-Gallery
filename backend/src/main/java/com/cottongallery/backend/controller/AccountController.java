@@ -20,19 +20,19 @@ import static org.springframework.http.MediaType.*;
 @RequestMapping("/api")
 public class AccountController {
 
-    private final AccountService accountService;
-    private final AccountCreateRequestValidator accountCreateRequestValidator;
+  private final AccountService accountService;
+  private final AccountCreateRequestValidator accountCreateRequestValidator;
 
-    @InitBinder
-    public void init(WebDataBinder dataBinder) {
-        dataBinder.addValidators(accountCreateRequestValidator);
-    }
+  @InitBinder
+  public void init(WebDataBinder dataBinder) {
+    dataBinder.addValidators(accountCreateRequestValidator);
+  }
 
-    @PostMapping(value = "/sign-up", consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response> addAccount(@Validated @RequestBody AccountCreateRequest accountCreateRequest) {
-        accountService.signUp(accountCreateRequest);
+  @PostMapping(value = "/sign-up", consumes = APPLICATION_JSON_VALUE)
+  public ResponseEntity<Response> addAccount(@Validated @RequestBody AccountCreateRequest accountCreateRequest) {
+    accountService.signUp(accountCreateRequest);
 
-        return new ResponseEntity<>(new Response(LocalDateTime.now(), 201, "회원 가입 성공", null),
-                HttpStatus.CREATED);
-    }
+    return new ResponseEntity<>(new Response(LocalDateTime.now(), 201, "회원 가입 성공", null),
+        HttpStatus.CREATED);
+  }
 }
