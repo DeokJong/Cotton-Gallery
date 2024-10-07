@@ -1,7 +1,7 @@
 import React from "react";
 
 type PropsType = {
-  id: "username" | "password" | "passwordConfirm" | "name" | "phoneNumber";
+  id: "username" | "password" | "passwordConfirm" | "name" | "phoneNumber" | "email";
   type: string;
   placeholder: string;
   value: string;
@@ -15,9 +15,18 @@ type PropsType = {
 const InputBox = ({ id, type, placeholder, value, onChange, text, error }: PropsType) => {
   // TODO: 비밀번호 눈 아이콘 로직 추가
   return (
-    <div>
-      <label htmlFor="id">{text}</label>
-      <input id={id} type={type} value={value} onChange={onChange} placeholder={placeholder} />
+    <div className="flex flex-col text-xl">
+      <label htmlFor="id" className="indent-3 mb-2">
+        {text}
+      </label>
+      <input
+        id={id}
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
+      />
       {/* 아이콘 위치 */}
       <p>{error[id]}</p>
     </div>

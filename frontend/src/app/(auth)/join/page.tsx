@@ -1,12 +1,7 @@
-import React from "react";
+import SignUp from "../_components/SignUp";
 
 const page = () => {
-  return (
-    <div className="flex flex-col items-center">
-      <h1>회원가입 페이지</h1>
-      <form>{/*  */}</form>
-    </div>
-  );
+  return <SignUp />;
 };
 
 export default page;
