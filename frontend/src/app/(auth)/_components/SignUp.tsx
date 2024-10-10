@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
 import InputBox from "./InputBox";
 import { useAuthStore } from "@/store/authStore";
-// import DaumPostcodeEmbed from "react-daum-postcode";
+import SubmitBtn from "./SubmitBtn";
 
 const SignUp = () => {
   const {
@@ -48,7 +47,6 @@ const SignUp = () => {
     <div className="flex flex-col items-center">
       <h1 className="text-[1.75rem] mb-[3.438rem]">회원가입</h1>
       <form className="flex flex-col gap-[1.875rem]">
-        {/* <DaumPostcodeEmbed /> */}
         <InputBox
           id="username"
           text="아이디"
@@ -103,6 +101,35 @@ const SignUp = () => {
           onChange={handlePhoneNumberChange}
           error={error}
         />
+        <div className="text-xl">
+          <label htmlFor="address" className="ml-3">
+            주소
+          </label>
+          <div className="flex justify-between mt-2">
+            <input
+              id="address"
+              type="text"
+              alt="주소"
+              placeholder="주소"
+              className="w-[26.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
+            />
+            <button type="button" className="w-[9.375rem] h-[3.438rem]  rounded-lg bg-gray-300">
+              우편번호 검색
+            </button>
+          </div>
+          <input
+            id="addressDetail"
+            type="text"
+            alt="상세 주소"
+            placeholder="상세 주소"
+            className="w-[36.25rem] h-[3.75rem] mt-2 indent-5 rounded-[35px] bg-gray-200"
+          />
+        </div>
+
+        <div className="mt-[1.375rem] mb-[3.375rem] flex flex-col gap-5">
+          <SubmitBtn text="회원가입" />
+          <SubmitBtn text="로그인" />
+        </div>
       </form>
     </div>
   );
