@@ -3,8 +3,10 @@
 import InputBox from "./InputBox";
 import { useAuthStore } from "@/store/authStore";
 import SubmitBtn from "./SubmitBtn";
+import { useState } from "react";
 
 const SignUp = () => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const {
     username,
     password,
@@ -41,6 +43,10 @@ const SignUp = () => {
   };
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+  };
+
+  const handleAddressBtnClick = () => {
+    setIsModalOpen(true);
   };
 
   return (
@@ -113,7 +119,11 @@ const SignUp = () => {
               placeholder="주소"
               className="w-[26.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
             />
-            <button type="button" className="w-[9.375rem] h-[3.438rem]  rounded-lg bg-gray-300">
+            <button
+              type="button"
+              onClick={handleAddressBtnClick}
+              className="w-[9.375rem] h-[3.438rem]  rounded-lg bg-gray-300"
+            >
               우편번호 검색
             </button>
           </div>
@@ -125,7 +135,6 @@ const SignUp = () => {
             className="w-[36.25rem] h-[3.75rem] mt-2 indent-5 rounded-[35px] bg-gray-200"
           />
         </div>
-
         <div className="mt-[1.375rem] mb-[3.375rem] flex flex-col gap-5">
           <SubmitBtn text="회원가입" />
           <SubmitBtn text="로그인" />
