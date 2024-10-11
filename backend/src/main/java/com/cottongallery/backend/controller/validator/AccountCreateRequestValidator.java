@@ -2,6 +2,8 @@ package com.cottongallery.backend.controller.validator;
 
 import com.cottongallery.backend.dto.account.request.AccountCreateRequest;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -11,12 +13,12 @@ import org.springframework.validation.Validator;
 public class AccountCreateRequestValidator implements Validator {
 
     @Override
-    public boolean supports(Class<?> clazz) {
+    public boolean supports(@NonNull Class<?> clazz) {
         return AccountCreateRequest.class.isAssignableFrom(clazz);
     }
 
     @Override
-    public void validate(Object target, Errors errors) {
+    public void validate(@NonNull Object target, @NonNull Errors errors) {
         AccountCreateRequest accountCreateRequest = (AccountCreateRequest) target;
 
         if (!errors.hasErrors()) {

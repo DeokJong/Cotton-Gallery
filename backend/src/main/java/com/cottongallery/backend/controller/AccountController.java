@@ -24,13 +24,13 @@ import static org.springframework.http.MediaType.*;
 @RequestMapping("/api")
 public class AccountController {
 
-    private final AccountService accountService;
-    private final AccountCreateRequestValidator accountCreateRequestValidator;
+  private final AccountService accountService;
+  private final AccountCreateRequestValidator accountCreateRequestValidator;
 
-    @InitBinder
-    public void init(WebDataBinder dataBinder) {
-        dataBinder.addValidators(accountCreateRequestValidator);
-    }
+  @InitBinder
+  public void init(WebDataBinder dataBinder) {
+    dataBinder.addValidators(accountCreateRequestValidator);
+  }
 
     @PostMapping(value = "/sign-up", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<Response> addAccount(@Validated @RequestBody AccountCreateRequest accountCreateRequest, BindingResult bindingResult) {
