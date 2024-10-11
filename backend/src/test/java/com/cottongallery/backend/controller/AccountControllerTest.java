@@ -5,7 +5,6 @@ import com.cottongallery.backend.controller.validator.AccountCreateRequestValida
 import com.cottongallery.backend.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.exception.account.UsernameAlreadyExistsException;
 import com.cottongallery.backend.service.AccountService;
-import com.cottongallery.backend.util.AccountTestData;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

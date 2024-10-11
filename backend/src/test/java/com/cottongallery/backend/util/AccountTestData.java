@@ -33,14 +33,14 @@ public final class AccountTestData {
     }
 
     public static Account createTestAccount() {
-        Account account = Account.createAccount(NAME, USERNAME, PASSWORD, EMAIL, PHONE_NUMBER, Role.USER);
+        Account account = Account.createAccount(NAME, USERNAME, PASSWORD, EMAIL, PHONE_NUMBER, Role.ROLE_USER);
         account.addAddress(new Address(ZIPCODE, STREET, DETAIL));
 
         return account;
     }
 
     public static Account createTestAccountWithId() {
-        Account account = Account.createAccountWithId(ID, NAME, USERNAME, PASSWORD, EMAIL, PHONE_NUMBER, Role.USER);
+        Account account = Account.createAccountWithId(ID, NAME, USERNAME, PASSWORD, EMAIL, PHONE_NUMBER, Role.ROLE_ADMIN);
         account.addAddress(new Address(ZIPCODE, STREET, DETAIL));
 
         return account;
