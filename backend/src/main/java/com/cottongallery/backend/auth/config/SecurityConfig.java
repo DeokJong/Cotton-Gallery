@@ -45,18 +45,19 @@ public class SecurityConfig {
             .requestMatchers("/api/login", "/api/sign-up", "/api/public/**").permitAll()
             .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
             .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            .requestMatchers("/api/user/**").hasRole("USER")
             .anyRequest().authenticated())
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
 
-    @Bean
-    public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
-        auth.userDetailsService(accountDetailsService).passwordEncoder(passwordEncoder());
-        return auth.build();
-    }
+  @Bean
+  public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {
+    AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
+    auth.userDetailsService(accountDetailsService).passwordEncoder(passwordEncoder());
+    return auth.build();
+  }
 
   @Bean
   public PasswordEncoder passwordEncoder() {

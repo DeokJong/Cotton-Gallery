@@ -95,7 +95,7 @@ public class TokenProvider {
 
     Claims claims = jwtParser.parseClaimsJws(token).getBody();
     String username = claims.getSubject();
-    
+
 
     // UserDetailsService를 사용하여 사용자 정보 로드
     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -107,6 +107,7 @@ public class TokenProvider {
 
   // 토큰의 유효성을 검증하는 메소드
   public boolean validateToken(String authToken) {
+    logger.info("Validating token: {}", authToken);
     try {
       jwtParser.parseClaimsJws(authToken);
       return true;
