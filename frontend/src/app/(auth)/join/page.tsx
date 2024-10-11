@@ -1,7 +1,7 @@
-import React from "react";
+import SignUp from "../_components/SignUp";
 
 const page = () => {
-  return <div>회원가입 페이지</div>;
+  return <SignUp />;
 };
 
 export default page;
