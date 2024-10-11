@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 import SubmitBtn from "./SubmitBtn";
 import { useState } from "react";
 import AddressModal from "./AddressModal";
+import Link from "next/link";
 
 const SignUp = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -51,19 +52,44 @@ const SignUp = () => {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
-
   const handleAddressBtnClick = () => {
     setIsModalOpen(true);
   };
-
   const handleDetailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDetail(e.target.value);
+  };
+
+  const handleSubmitSignUpForm = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const response = await fetch("/api/sign-up", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json" // 헤더 추가
+      },
+      body: JSON.stringify({
+        name,
+        username,
+        password,
+        confirmPassword: passwordConfirm,
+        email,
+        phoneNumber,
+        zipcode,
+        street,
+        detail
+      })
+    });
+
+    const result = await response.json();
+    console.log(result);
+    //console.log(typeof phoneNumber);
+    //console.log(name, username, password, phoneNumber, passwordConfirm, email, zipcode, street, detail);
   };
 
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-[1.75rem] mb-[3.438rem]">회원가입</h1>
-      <form className="flex flex-col gap-[1.875rem]">
+      <form onSubmit={handleSubmitSignUpForm} className="flex flex-col gap-[1.875rem]">
         <InputBox
           id="username"
           text="아이디"
@@ -158,7 +184,9 @@ const SignUp = () => {
         </div>
         <div className="mt-[1.375rem] mb-[3.375rem] flex flex-col gap-5">
           <SubmitBtn text="회원가입" />
-          <SubmitBtn text="로그인" />
+          <Link href={"/login"}>
+            <SubmitBtn text="로그인" />
+          </Link>
         </div>
       </form>
     </div>

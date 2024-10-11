@@ -5,7 +5,7 @@ export type AuthStoreType = {
   name: string;
   phoneNumber: string;
   email: string;
-  zipcode: number;
+  zipcode: string;
   street: string;
   detail: string;
   error: {
@@ -26,7 +26,7 @@ export type AuthStoreType = {
   setName: (name: string) => void;
   setPhoneNumber: (phoneNumber: string) => void;
   setEmail: (email: string) => void;
-  setZipcode: (zipcode: number) => void;
+  setZipcode: (zipcode: string) => void;
   setStreet: (street: string) => void;
   setDetail: (detail: string) => void;
   setError: (error: Partial<AuthStoreType["error"]>) => void;

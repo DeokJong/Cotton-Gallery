@@ -5,7 +5,7 @@ import DaumPostcodeEmbed, { Address } from "react-daum-postcode";
 type PropsType = {
   isModalOpen: boolean;
   setIsModalOpen: (value: SetStateAction<boolean>) => void;
-  setZipcode: (zipcode: number) => void;
+  setZipcode: (zipcode: string) => void;
   setStreet: (street: string) => void;
 };
 
@@ -50,7 +50,7 @@ const AddressModal = ({ isModalOpen, setIsModalOpen, setZipcode, setStreet }: Pr
     console.log(data.address, data.zonecode); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
     setIsModalOpen(false);
     setStreet(data?.address);
-    setZipcode(+data?.zonecode);
+    setZipcode(data?.zonecode);
   };
 
   return (
