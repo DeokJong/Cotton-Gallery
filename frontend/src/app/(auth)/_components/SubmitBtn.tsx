@@ -13,8 +13,8 @@ const SubmitBtn = ({ text }: PropsType) => {
     if (text === "로그인") {
       setIsLoginBtn(true);
     }
+    // eslint-disable-next-line
   }, []);
-  console.log(isLoginBtn);
 
   return (
     <div>

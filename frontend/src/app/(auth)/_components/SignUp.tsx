@@ -4,6 +4,7 @@ import InputBox from "./InputBox";
 import { useAuthStore } from "@/store/authStore";
 import SubmitBtn from "./SubmitBtn";
 import { useState } from "react";
+import AddressModal from "./AddressModal";
 
 const SignUp = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -14,6 +15,9 @@ const SignUp = () => {
     name,
     phoneNumber,
     email,
+    zipcode,
+    street,
+    detail,
     error,
     setUsername,
     setPassword,
@@ -21,6 +25,9 @@ const SignUp = () => {
     setName,
     setPhoneNumber,
     setEmail,
+    setZipcode,
+    setStreet,
+    setDetail,
     setError
   } = useAuthStore();
 
@@ -47,6 +54,10 @@ const SignUp = () => {
 
   const handleAddressBtnClick = () => {
     setIsModalOpen(true);
+  };
+
+  const handleDetailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDetail(e.target.value);
   };
 
   return (
@@ -117,7 +128,9 @@ const SignUp = () => {
               type="text"
               alt="주소"
               placeholder="주소"
-              className="w-[26.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
+              value={street}
+              className="w-[26.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200 focus:outline-none"
+              readOnly
             />
             <button
               type="button"
@@ -132,7 +145,15 @@ const SignUp = () => {
             type="text"
             alt="상세 주소"
             placeholder="상세 주소"
+            value={detail}
+            onChange={handleDetailChange}
             className="w-[36.25rem] h-[3.75rem] mt-2 indent-5 rounded-[35px] bg-gray-200"
+          />
+          <AddressModal
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            setZipcode={setZipcode}
+            setStreet={setStreet}
           />
         </div>
         <div className="mt-[1.375rem] mb-[3.375rem] flex flex-col gap-5">

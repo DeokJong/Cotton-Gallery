@@ -8,13 +8,19 @@ export const useAuthStore = create<AuthStoreType>((set) => ({
   name: "",
   phoneNumber: "",
   email: "",
+  zipcode: 0,
+  street: "",
+  detail: "",
   error: {
     username: "",
     password: "",
     passwordConfirm: "",
     name: "",
     phoneNumber: "",
-    email: ""
+    email: "",
+    zipcode: "",
+    street: "",
+    detail: ""
   },
 
   setUsername: (username: string) => set({ username }),
@@ -23,5 +29,8 @@ export const useAuthStore = create<AuthStoreType>((set) => ({
   setName: (name: string) => set({ name }),
   setPhoneNumber: (phoneNumber: string) => set({ phoneNumber }),
   setEmail: (email: string) => set({ email }),
+  setZipcode: (zipcode: number) => set({ zipcode }),
+  setStreet: (street: string) => set({ street }),
+  setDetail: (detail: string) => set({ detail }),
   setError: (error) => set((state) => ({ error: { ...state.error, error } }))
 }));

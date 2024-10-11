@@ -1,5 +1,5 @@
 import React from "react";
-import Modal from "react-modal";
+import ReactModal from "react-modal";
 
 type Propstype = {
   children?: React.ReactNode;
@@ -10,9 +10,9 @@ type Propstype = {
 
 const CommonModal = ({ children, isOpen, onRequestClose, style }: Propstype) => {
   return (
-    <Modal isOpen={isOpen} style={style} onRequestClose={onRequestClose} ariaHideApp={false}>
+    <ReactModal isOpen={isOpen} style={style} onRequestClose={onRequestClose} ariaHideApp={false}>
       {children}
-    </Modal>
+    </ReactModal>
   );
 };
 
