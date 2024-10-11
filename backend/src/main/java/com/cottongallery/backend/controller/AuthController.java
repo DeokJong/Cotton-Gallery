@@ -13,8 +13,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,7 +29,7 @@ public class AuthController {
   private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
+  public ResponseEntity<Response> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
     logger.info("Login request for user: {}", authRequest.getUsername());
     String token = authService.login(authRequest);
 
@@ -42,13 +40,13 @@ public class AuthController {
     cookie.setSecure(true); // HTTPS 사용 시 true로 설정
     cookie.setMaxAge((int) (tokenProvider.getExpiration(token) / 1000));
     response.addCookie(cookie);
-    
-    return new ResponseEntity<>(new Response(LocalDateTime.now(), 200, "Login", null),
-        HttpStatus.OK);
+
+    return new ResponseEntity<>(new Response(HttpStatus.OK.value(), "로그인이 성공적으로 완료되었습니다."),
+    HttpStatus.CREATED);
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+  public ResponseEntity<Response> logout(HttpServletRequest request, HttpServletResponse response) {
     // 클라이언트가 전송한 쿠키를 찾아서 삭제
     Cookie[] cookies = request.getCookies();
     if (cookies != null) {
@@ -64,8 +62,8 @@ public class AuthController {
         }
       }
     }
-    return new ResponseEntity<>(new Response(LocalDateTime.now(), 200, "Logout", null),
-    HttpStatus.OK);
+    return new ResponseEntity<>(new Response(HttpStatus.NO_CONTENT.value(), "로그아웃이 성공적으로 완료되었습니다."),
+    HttpStatus.CREATED);
   }
 
 }
