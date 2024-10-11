@@ -30,12 +30,14 @@ public class SecurityConfig {
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
   private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
   private final AccountDetailsService accountDetailsService;
+  private final CorsConfig corsConfig;
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(tokenProvider);
 
     http
+    .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
         .csrf(csrf -> csrf.disable())
         .exceptionHandling(exception -> exception
             .authenticationEntryPoint(jwtAuthenticationEntryPoint)
