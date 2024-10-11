@@ -3,17 +3,20 @@ package com.cottongallery.backend.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cottongallery.backend.domain.Account;
-import com.cottongallery.backend.dto.Response;
 import com.cottongallery.backend.dto.auth.AuthRequest;
-import com.cottongallery.backend.repository.AccountRepository;
+import com.cottongallery.backend.dto.auth.AuthResponse;
+import com.cottongallery.backend.security.JwtAuthenticationFilter;
+import com.cottongallery.backend.security.TokenProvider;
+import com.cottongallery.backend.service.AuthService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.repository.query.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -21,41 +24,43 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class AuthController {
-  private final AccountRepository accountRepository;
-  private final BCryptPasswordEncoder bCryptPasswordEncoder;
+  private final AuthService authService;
+  private final TokenProvider tokenProvider;
+  private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
   @PostMapping("/login")
-  public ResponseEntity<Response> login(@RequestBody AuthRequest loginRequestDTO) {
+  public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
+    logger.info("Login request for user: {}", authRequest.getUsername());
+    String token = authService.login(authRequest);
+    // HttpOnly 쿠키에 토큰 설정
+    Cookie cookie = new Cookie("Authorization", token);
+    cookie.setHttpOnly(true);
+    cookie.setPath("/");
+    cookie.setSecure(true); // HTTPS 사용 시 true로 설정
+    cookie.setMaxAge((int) (tokenProvider.getExpiration(token) / 1000)); // 토큰 만료 시간 설정 (초 단위)
+    response.addCookie(cookie);
 
-    String currentUsername = loginRequestDTO.getUsername();
-    String currentPassword = loginRequestDTO.getPassword();
-    Account account = accountRepository.findByUsername(currentUsername);
-
-    if (account == null) {
-      return ResponseEntity.badRequest().body(new Response());
-    }
-
-    if (!bCryptPasswordEncoder.matches(currentPassword, account.getPassword())) {
-      return ResponseEntity.badRequest().body(new Response());
-    }
-
-    // 3. JWT 토큰 생성 후 리턴 (추후 구현)
-    // String jwtToken = jwtService.generateToken(account);
-    // return ResponseEntity.ok(new Response("Login successful", jwtToken));
-
-    return ResponseEntity.ok(new Response());
+    return ResponseEntity.ok(new AuthResponse(token, token));
   }
 
   @PostMapping("/logout")
-  public String logout(@RequestBody String entity) {
-    // TODO: process POST request
-
-    return entity;
-  }
-
-  @GetMapping("/test-repository")
-  public String testRepository(@Param("username") String username) {
-    return accountRepository.findByUsername(username).toString();
+  public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+    // 클라이언트가 전송한 쿠키를 찾아서 삭제
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if ("Authorization".equals(cookie.getName())) {
+          // 쿠키의 값을 null로 설정하고 만료 시간을 과거로 설정하여 삭제
+          Cookie deleteCookie = new Cookie("Authorization", null);
+          deleteCookie.setPath("/");
+          deleteCookie.setHttpOnly(true);
+          deleteCookie.setSecure(true); // HTTPS 사용 시 true로 설정
+          deleteCookie.setMaxAge(0);
+          response.addCookie(deleteCookie);
+        }
+      }
+    }
+    return ResponseEntity.ok("로그아웃 되었습니다.");
   }
 
 }

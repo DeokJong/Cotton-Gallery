@@ -6,7 +6,7 @@ import com.cottongallery.backend.domain.Address;
 import com.cottongallery.backend.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,15 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService {
 
     private final AccountRepository accountRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder  passwordEncoder;
 
     public Long signUp(AccountCreateRequest accountCreateRequest) {
         Account account = Account.createAccount(accountCreateRequest.getName(),
                 accountCreateRequest.getUsername(),
-                bCryptPasswordEncoder.encode(accountCreateRequest.getPassword()),
+                passwordEncoder.encode(accountCreateRequest.getPassword()),
                 accountCreateRequest.getEmail(),
                 accountCreateRequest.getPhoneNumber(),
-                Role.USER);
+                Role.ROLE_USER);
 
         account.addAddress(new Address(accountCreateRequest.getZipcode(),
                 accountCreateRequest.getStreet(),

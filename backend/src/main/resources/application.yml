@@ -26,6 +26,6 @@ logging:
 
 jwt:
   header: Authorization
-  secret: ${JWT_SECRET:default-secret-key}
-  token-validity-in-seconds: 86400
+  secret: OtItGKqtKQiR1loQhhVkfZAnzMfoNmQgH9pEdKt4nSQ=
+  token-validity-in-seconds: 3600
   tokenPrefix: Bearer
