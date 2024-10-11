@@ -42,7 +42,7 @@ public class AuthController {
     response.addCookie(cookie);
 
     return new ResponseEntity<>(new Response(HttpStatus.OK.value(), "로그인이 성공적으로 완료되었습니다."),
-    HttpStatus.CREATED);
+    HttpStatus.OK);
   }
 
   @PostMapping("/logout")
@@ -63,7 +63,7 @@ public class AuthController {
       }
     }
     return new ResponseEntity<>(new Response(HttpStatus.NO_CONTENT.value(), "로그아웃이 성공적으로 완료되었습니다."),
-    HttpStatus.CREATED);
+    HttpStatus.NO_CONTENT);
   }
 
 }
