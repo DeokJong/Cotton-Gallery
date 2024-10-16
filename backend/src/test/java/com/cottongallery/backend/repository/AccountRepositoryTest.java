@@ -1,6 +1,8 @@
 package com.cottongallery.backend.repository;
 
-import com.cottongallery.backend.domain.Account;
+import com.cottongallery.backend.auth.domain.Account;
+import com.cottongallery.backend.auth.repository.AccountRepository;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

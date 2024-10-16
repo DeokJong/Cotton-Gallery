@@ -1,9 +1,9 @@
 package com.cottongallery.backend.util;
 
-import com.cottongallery.backend.constants.Role;
-import com.cottongallery.backend.domain.Account;
-import com.cottongallery.backend.domain.Address;
-import com.cottongallery.backend.dto.account.request.AccountCreateRequest;
+import com.cottongallery.backend.auth.domain.Account;
+import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
+import com.cottongallery.backend.common.constants.Role;
+import com.cottongallery.backend.common.domain.Address;
 
 public final class AccountTestData {
     public static final Long ID = 1L;

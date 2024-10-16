@@ -1,8 +1,10 @@
 package com.cottongallery.backend.service;
 
-import com.cottongallery.backend.domain.Account;
-import com.cottongallery.backend.exception.account.UsernameAlreadyExistsException;
-import com.cottongallery.backend.repository.AccountRepository;
+import com.cottongallery.backend.auth.domain.Account;
+import com.cottongallery.backend.auth.exception.account.UsernameAlreadyExistsException;
+import com.cottongallery.backend.auth.repository.AccountRepository;
+import com.cottongallery.backend.auth.service.AccountService;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

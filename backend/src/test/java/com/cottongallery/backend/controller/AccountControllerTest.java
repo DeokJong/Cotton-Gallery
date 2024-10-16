@@ -1,10 +1,11 @@
 package com.cottongallery.backend.controller;
 
 import com.cottongallery.backend.auth.config.SecurityConfig;
-import com.cottongallery.backend.controller.validator.AccountCreateRequestValidator;
-import com.cottongallery.backend.dto.account.request.AccountCreateRequest;
-import com.cottongallery.backend.exception.account.UsernameAlreadyExistsException;
-import com.cottongallery.backend.service.AccountService;
+import com.cottongallery.backend.auth.controller.AccountController;
+import com.cottongallery.backend.auth.controller.validator.AccountCreateRequestValidator;
+import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
+import com.cottongallery.backend.auth.exception.account.UsernameAlreadyExistsException;
+import com.cottongallery.backend.auth.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

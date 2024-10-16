@@ -1,11 +1,5 @@
 package com.cottongallery.backend.auth.config;
 
-import com.cottongallery.backend.security.AccountDetailsService;
-import com.cottongallery.backend.security.JwtAccessDeniedHandler;
-import com.cottongallery.backend.security.JwtAuthenticationEntryPoint;
-import com.cottongallery.backend.security.JwtAuthenticationFilter;
-import com.cottongallery.backend.security.TokenProvider;
-
 import lombok.AllArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -20,6 +14,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.cottongallery.backend.auth.utils.AccountDetailsService;
+import com.cottongallery.backend.auth.utils.JwtAccessDeniedHandler;
+import com.cottongallery.backend.auth.utils.JwtAuthenticationEntryPoint;
+import com.cottongallery.backend.auth.utils.JwtAuthenticationFilter;
+import com.cottongallery.backend.auth.utils.TokenProvider;
 
 @Configuration
 @EnableWebSecurity
