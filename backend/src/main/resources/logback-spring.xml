@@ -1,0 +1,25 @@
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+
+    <!-- INFO 레벨 로그 출력 -->
+    <appender name="COLORED_INFO" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %cyan(%logger{36}) {
+                "level": "%clr(${LOG_LEVEL_PATTERN:-%p})",
+                "pid": "%clr(${PID:- }){magenta}",
+                "thread": "%clr(%thread)",
+                "message": "%msg",
+                "exception": "%ex{short}",
+                }%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="COLORED_INFO" />
+    </root>
+</configuration>
