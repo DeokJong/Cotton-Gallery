@@ -1,9 +1,9 @@
 package com.cottongallery.backend.util;
 
-import com.cottongallery.backend.constants.Role;
-import com.cottongallery.backend.domain.Account;
-import com.cottongallery.backend.domain.Address;
-import com.cottongallery.backend.dto.account.request.AccountCreateRequest;
+import com.cottongallery.backend.auth.domain.Account;
+import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
+import com.cottongallery.backend.common.constants.Role;
+import com.cottongallery.backend.common.domain.Address;
 
 public final class AccountTestData {
     public static final Long ID = 1L;
@@ -33,14 +33,14 @@ public final class AccountTestData {
     }
 
     public static Account createTestAccount() {
-        Account account = Account.createAccount(NAME, USERNAME, PASSWORD, EMAIL, PHONE_NUMBER, Role.USER);
+        Account account = Account.createAccount(NAME, USERNAME, PASSWORD, EMAIL, PHONE_NUMBER, Role.ROLE_USER);
         account.addAddress(new Address(ZIPCODE, STREET, DETAIL));
 
         return account;
     }
 
     public static Account createTestAccountWithId() {
-        Account account = Account.createAccountWithId(ID, NAME, USERNAME, PASSWORD, EMAIL, PHONE_NUMBER, Role.USER);
+        Account account = Account.createAccountWithId(ID, NAME, USERNAME, PASSWORD, EMAIL, PHONE_NUMBER, Role.ROLE_ADMIN);
         account.addAddress(new Address(ZIPCODE, STREET, DETAIL));
 
         return account;
