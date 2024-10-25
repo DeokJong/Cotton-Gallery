@@ -37,7 +37,6 @@ public class AuthController {
     Cookie cookie = new Cookie("Authorization", token);
     cookie.setHttpOnly(true);
     cookie.setPath("/");
-    cookie.setSecure(true); // HTTPS 사용 시 true로 설정
     cookie.setMaxAge((int) (tokenProvider.getExpiration(token) / 1000));
     response.addCookie(cookie);
 
@@ -56,7 +55,6 @@ public class AuthController {
           Cookie deleteCookie = new Cookie("Authorization", null);
           deleteCookie.setPath("/");
           deleteCookie.setHttpOnly(true);
-          deleteCookie.setSecure(true); // HTTPS 사용 시 true로 설정
           deleteCookie.setMaxAge(0);
           response.addCookie(deleteCookie);
         }
