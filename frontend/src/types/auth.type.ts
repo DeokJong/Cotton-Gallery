@@ -29,5 +29,5 @@ export type AuthStoreType = {
   setZipcode: (zipcode: string) => void;
   setStreet: (street: string) => void;
   setDetail: (detail: string) => void;
-  setError: (error: Partial<AuthStoreType["error"]>) => void;
+  setError: (error: Record<string, string>) => void;
 };

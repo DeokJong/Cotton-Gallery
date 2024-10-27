@@ -7,7 +7,7 @@ type PropsType = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   text: string;
-  error: Record<string, string>;
+  error: string;
   //ishide?: boolean;
   //setHide?: Dispatch<SetStateAction<boolean>>;
 };
@@ -28,7 +28,7 @@ const InputBox = ({ id, type, placeholder, value, onChange, text, error }: Props
         className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
       />
       {/* 아이콘 위치 */}
-      <p>{error[id]}</p>
+      <p className="pt-1 indent-3 text-sm text-red-500">{error}</p>
     </div>
   );
 };

@@ -35,7 +35,7 @@ const SignUp = () => {
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
     // Todo : 에러메세지 수정
-    setError({ ...error, username: "아이디에러메세지" });
+    setError("username", "");
   };
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -61,11 +61,13 @@ const SignUp = () => {
 
   const handleSubmitSignUpForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // Todo : 요청 보내기 전 휴대폰번호 상태값 정규식 검사
+    // Todo : 요청 보내기 전 비밀번호, 비밀번호 확인 값 같은지 검사
 
     const response = await fetch("/api/sign-up", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json" // 헤더 추가
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         name,
@@ -82,8 +84,50 @@ const SignUp = () => {
 
     const result = await response.json();
     console.log(result);
-    //console.log(typeof phoneNumber);
-    //console.log(name, username, password, phoneNumber, passwordConfirm, email, zipcode, street, detail);
+
+    if (result.data) {
+      const blank = result.data.filter((error: Record<string, string>) => error.code === "NotBlank");
+      blank.forEach((error: Record<string, string>) => {
+        switch (error.field) {
+          //console.log("Current error state:", useAuthStore.getState().error);
+          case "username":
+            setError("username", "아이디를 입력해주세요");
+            break;
+          case "password":
+            setError("password", "비밀번호를 입력해주세요");
+            break;
+          case "confirmPassword":
+            setError("passwordConfirm", "비밀번호를 한 번 더 입력해주세요");
+            break;
+          case "name":
+            setError("name", "이름을 입력해주세요");
+            break;
+          case "phoneNumber":
+            setError("phoneNumber", "휴대폰 번호를 입력해주세요");
+            break;
+          case "street":
+          case "detail":
+            setError("street", "주소를 입력해주세요");
+            break;
+          default:
+            break;
+        }
+      });
+
+      const minLength = result.data.filter((error: Record<string, string>) => error.code === "Size");
+      minLength.forEach((error: Record<string, string>) => {
+        switch (error.field) {
+          case "password":
+            setError("password", "비밀번호를 8자 이상 입력해주세요");
+            break;
+          case "confirmPassword":
+            setError("passwordConfirm", "비밀번호를 8자 이상 입력해주세요");
+            break;
+          default:
+            break;
+        }
+      });
+    }
   };
 
   return (
@@ -97,7 +141,7 @@ const SignUp = () => {
           type="text"
           value={username}
           onChange={handleUsernameChange}
-          error={error}
+          error={error.username}
         />
         <InputBox
           id="password"
@@ -106,7 +150,7 @@ const SignUp = () => {
           type="password"
           value={password}
           onChange={handlePasswordChange}
-          error={error}
+          error={error.password}
         />
         <InputBox
           id="passwordConfirm"
@@ -115,7 +159,7 @@ const SignUp = () => {
           type="password"
           value={passwordConfirm}
           onChange={handlePasswordConfirmChange}
-          error={error}
+          error={error.passwordConfirm}
         />
         <InputBox
           id="name"
@@ -124,7 +168,7 @@ const SignUp = () => {
           type="text"
           value={name}
           onChange={handleNameChange}
-          error={error}
+          error={error.name}
         />
         <InputBox
           id="email"
@@ -133,7 +177,7 @@ const SignUp = () => {
           type="email"
           value={email}
           onChange={handleEmailChange}
-          error={error}
+          error={error.email}
         />
         <InputBox
           id="phoneNumber"
@@ -142,7 +186,7 @@ const SignUp = () => {
           type="text"
           value={phoneNumber}
           onChange={handlePhoneNumberChange}
-          error={error}
+          error={error.phoneNumber}
         />
         <div className="text-xl">
           <label htmlFor="address" className="ml-3">
@@ -175,6 +219,7 @@ const SignUp = () => {
             onChange={handleDetailChange}
             className="w-[36.25rem] h-[3.75rem] mt-2 indent-5 rounded-[35px] bg-gray-200"
           />
+          <p className="pt-1 indent-3 text-sm text-red-500">{error.street}</p>
           <AddressModal
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}

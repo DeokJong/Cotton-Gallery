@@ -14,7 +14,7 @@ const Login = () => {
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
     // Todo : 에러메세지 수정
-    setError({ ...error, username: "아이디에러메세지" });
+    setError("username", "");
   };
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
@@ -54,7 +54,7 @@ const Login = () => {
           type="text"
           value={username}
           onChange={handleUsernameChange}
-          error={error}
+          error={error.password}
         />
         <InputBox
           id="password"
@@ -63,7 +63,7 @@ const Login = () => {
           type="password"
           value={password}
           onChange={handlePasswordChange}
-          error={error}
+          error={error.password}
         />
         <div className="flex justify-between ml-2 mr-2 text-gray-500 ">
           <p>아직 회원이 아니신가요?</p>
