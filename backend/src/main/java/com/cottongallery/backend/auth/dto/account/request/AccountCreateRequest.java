@@ -33,8 +33,8 @@ public class AccountCreateRequest {
     private String phoneNumber;
 
     @NotNull
-    @Digits(integer = 5, fraction = 0)
-    private Integer zipcode;
+    @Size(min = 5, max = 5)
+    private String zipcode;
 
     @NotBlank
     private String street;

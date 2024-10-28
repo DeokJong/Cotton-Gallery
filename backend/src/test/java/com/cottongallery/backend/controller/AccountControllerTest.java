@@ -1,11 +1,16 @@
 package com.cottongallery.backend.controller;
 
+import com.cottongallery.backend.auth.config.CorsConfig;
 import com.cottongallery.backend.auth.config.SecurityConfig;
 import com.cottongallery.backend.auth.controller.AccountController;
 import com.cottongallery.backend.auth.controller.validator.AccountCreateRequestValidator;
 import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.auth.exception.account.UsernameAlreadyExistsException;
 import com.cottongallery.backend.auth.service.AccountService;
+import com.cottongallery.backend.auth.utils.AccountDetailsService;
+import com.cottongallery.backend.auth.utils.JwtAccessDeniedHandler;
+import com.cottongallery.backend.auth.utils.JwtAuthenticationEntryPoint;
+import com.cottongallery.backend.auth.utils.TokenProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,9 +37,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, CorsConfig.class})
 @WebMvcTest(AccountController.class)
 class AccountControllerTest {
+
+    @MockBean
+    private TokenProvider tokenProvider;
+
+    @MockBean
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    @MockBean
+    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
+    @MockBean
+    private AccountDetailsService accountDetailsService;
 
     @Autowired
     MockMvc mockMvc;
@@ -137,7 +154,7 @@ class AccountControllerTest {
 
         // when
         ResultActions resultActions = mockMvc
-                .perform(get("/api/accounts/check-username")
+                .perform(get("/api/public/accounts/check-username")
                 .params(info));
 
         // then
@@ -164,7 +181,7 @@ class AccountControllerTest {
 
         // when
         ResultActions resultActions = mockMvc
-                .perform(get("/api/accounts/check-username")
+                .perform(get("/api/public/accounts/check-username")
                 .params(info));
 
         // then
