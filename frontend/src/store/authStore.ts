@@ -32,5 +32,11 @@ export const useAuthStore = create<AuthStoreType>((set) => ({
   setZipcode: (zipcode: string) => set({ zipcode }),
   setStreet: (street: string) => set({ street }),
   setDetail: (detail: string) => set({ detail }),
-  setError: (error) => set((state) => ({ error: { ...state.error, error } }))
+  setError: (field: string, message: string) =>
+    set((state) => ({
+      error: {
+        ...state.error,
+        [field]: message
+      }
+    }))
 }));
