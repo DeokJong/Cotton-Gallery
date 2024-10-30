@@ -18,11 +18,11 @@ public class AccountCreateRequest {
     private String username;
 
     @NotBlank
-    @Size(min = 8)
+    @Size(min = 8, max=15)
     private String password;
 
     @NotBlank
-    @Size(min = 8)
+    @Size(min = 8, max=15)
     private String confirmPassword;
 
     @Email
