@@ -44,7 +44,7 @@ public class SecurityConfig {
             .accessDeniedHandler(jwtAccessDeniedHandler))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api/login", "/api/sign-up", "/api/public/**").permitAll()
+            .requestMatchers("/api/auth/**","/api/sign-up", "/api/public/**").permitAll()
             .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
             .requestMatchers("/api/admin/**").hasRole("ADMIN")
             .requestMatchers("/api/user/**").hasRole("USER")

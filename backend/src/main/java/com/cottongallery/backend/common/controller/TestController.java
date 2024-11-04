@@ -1,4 +1,4 @@
-package com.cottongallery.backend.auth.controller;
+package com.cottongallery.backend.common.controller;
 
 import com.cottongallery.backend.common.argumentResolver.annotation.Login;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
@@ -22,6 +22,11 @@ public class TestController {
   public String adminTest() {
     // Logic to verify ADMIN role
     return "Admin test endpoint accessed";
+  }
+
+  @GetMapping("/public/test")
+  public String publicTest() {
+    return "Public test endpoint accessed";
   }
 
 }
