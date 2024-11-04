@@ -24,7 +24,7 @@ public class Address {
     private Account account;
 
     @Column(nullable = false)
-    private int zipcode;
+    private String zipcode;
 
     @Column(nullable = false)
     private String street;
@@ -32,7 +32,7 @@ public class Address {
     @Column(nullable = false)
     private String detail;
 
-    public Address(int zipcode, String street, String detail) {
+    public Address(String zipcode, String street, String detail) {
         this.zipcode = zipcode;
         this.street = street;
         this.detail = detail;

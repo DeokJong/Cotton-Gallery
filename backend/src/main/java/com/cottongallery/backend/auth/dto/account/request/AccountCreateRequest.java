@@ -18,11 +18,11 @@ public class AccountCreateRequest {
     private String username;
 
     @NotBlank
-    @Size(min = 8)
+    @Size(min = 8, max=15)
     private String password;
 
     @NotBlank
-    @Size(min = 8)
+    @Size(min = 8, max=15)
     private String confirmPassword;
 
     @Email
@@ -33,8 +33,8 @@ public class AccountCreateRequest {
     private String phoneNumber;
 
     @NotNull
-    @Digits(integer = 5, fraction = 0)
-    private Integer zipcode;
+    @Size(min = 5, max = 5)
+    private String zipcode;
 
     @NotBlank
     private String street;

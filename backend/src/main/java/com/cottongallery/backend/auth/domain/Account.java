@@ -3,6 +3,7 @@ package com.cottongallery.backend.auth.domain;
 import com.cottongallery.backend.common.constants.Role;
 import com.cottongallery.backend.common.domain.Address;
 
+import com.cottongallery.backend.domain.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Account {
+public class Account extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

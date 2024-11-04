@@ -12,7 +12,7 @@ public final class AccountTestData {
     public static final String PASSWORD = "testtest";
     public static final String EMAIL = "test@test";
     public static final String PHONE_NUMBER = "12345678901";
-    public static final int ZIPCODE = 11111;
+    public static final String ZIPCODE = "11111";
     public static final String STREET = "testStreet";
     public static final String DETAIL = "testDetail";
 
