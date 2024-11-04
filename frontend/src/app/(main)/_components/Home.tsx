@@ -1,6 +1,10 @@
 "use client";
 
 import React from "react";
+import GoodsCard from "./GoodsCard";
+
+const categoryList = ["카테고리", "신상품", "베스트", "단독특가", "이벤트/특가"];
+const cardList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const Home = () => {
   // Todo : 메인 페이지 와이어프레임
@@ -23,10 +27,22 @@ const Home = () => {
 
   return (
     <div className="flex flex-col items-center">
-      메인페이지
-      <button className="w-20 bg-slate-200" onClick={handleLogoutBtn}>
+      {/* <button className="w-20 bg-slate-200" onClick={handleLogoutBtn}>
         로그아웃
-      </button>
+      </button> */}
+      <ul>
+        {categoryList.map((category) => (
+          <li key={category}>{category}</li>
+        ))}
+      </ul>
+
+      <ul className="w-[73.75rem] flex flex-wrap justify-between">
+        {cardList.map((card) => (
+          <li key={card} className="mb-[1.25rem]">
+            <GoodsCard />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
