@@ -13,15 +13,25 @@ const Login = () => {
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
-    // Todo : 에러메세지 수정
-    setError("username", "");
+    if (e.target.value.length > 0) {
+      setError("username", "");
+    }
   };
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    if (e.target.value.length > 0) {
+      setError("password", "");
+    }
   };
 
   const handleSubmitLoginForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!username || !password) {
+      if (!username) setError("username", "아이디를 입력해주세요");
+      if (!password) setError("password", "비밀번호를 입력해주세요");
+      return;
+    }
 
     const response = await fetch("http://localhost:8080/api/login", {
       method: "POST",
@@ -54,7 +64,7 @@ const Login = () => {
           type="text"
           value={username}
           onChange={handleUsernameChange}
-          error={error.password}
+          error={error.username}
         />
         <InputBox
           id="password"
