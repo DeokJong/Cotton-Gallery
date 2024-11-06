@@ -1,9 +1,12 @@
 package com.cottongallery.backend.common.domain;
 
+import com.cottongallery.backend.item.domain.Item;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 import static jakarta.persistence.FetchType.*;
 
@@ -29,12 +32,12 @@ public class OrderItem {
     private Integer orderPrice;
 
     @Column(updatable = false, nullable = false)
-    private Integer discountPercent;
+    private BigDecimal discountPercent;
 
     @Column(updatable = false, nullable = false)
     private Integer count;
 
-    private OrderItem(Item item, Integer orderPrice, Integer discountPercent, Integer count) {
+    private OrderItem(Item item, Integer orderPrice, BigDecimal discountPercent, Integer count) {
         this.item = item;
         this.orderPrice = orderPrice;
         this.discountPercent = discountPercent;
