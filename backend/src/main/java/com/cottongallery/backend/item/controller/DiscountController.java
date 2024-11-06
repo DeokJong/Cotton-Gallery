@@ -3,6 +3,7 @@ package com.cottongallery.backend.item.controller;
 import com.cottongallery.backend.common.dto.DataResponse;
 import com.cottongallery.backend.common.dto.PageInfo;
 import com.cottongallery.backend.common.dto.Response;
+import com.cottongallery.backend.common.exception.InvalidRequestException;
 import com.cottongallery.backend.item.dto.request.DiscountCreateRequest;
 import com.cottongallery.backend.item.dto.request.DiscountUpdateRequest;
 import com.cottongallery.backend.item.dto.response.DiscountListResponse;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +30,11 @@ public class DiscountController {
     private final DiscountService discountService;
 
     @PostMapping
-    public ResponseEntity<Response> addDiscount(@RequestBody DiscountCreateRequest discountCreateRequest) {
+    public ResponseEntity<Response> addDiscount(@Validated @RequestBody DiscountCreateRequest discountCreateRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException("할인 생성 요청 값이 올바르지 않습니다. 다시 확인해 주세요.", bindingResult);
+        }
+
         discountService.createDiscount(discountCreateRequest);
 
         return new ResponseEntity<>(new Response(HttpServletResponse.SC_OK, "할인 생성에 성공했습니다."), HttpStatus.OK);
@@ -48,7 +55,13 @@ public class DiscountController {
     }
 
     @PatchMapping("/{discountId}")
-    public ResponseEntity<Response> editDiscount(@PathVariable Long discountId, @RequestBody DiscountUpdateRequest discountUpdateRequest) {
+    public ResponseEntity<Response> editDiscount(@PathVariable Long discountId,
+                                                 @Validated @RequestBody DiscountUpdateRequest discountUpdateRequest,
+                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException("할인 수정 요청 값이 올바르지 않습니다. 다시 확인해 주세요.", bindingResult);
+        }
+
         discountService.updateDiscount(discountId, discountUpdateRequest);
 
         return new ResponseEntity<>(new Response(HttpServletResponse.SC_OK, "할인 " + discountId + " 수정에 성공했습니다."), HttpStatus.OK);

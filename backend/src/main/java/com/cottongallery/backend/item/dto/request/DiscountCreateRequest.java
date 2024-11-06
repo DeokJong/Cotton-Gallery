@@ -1,5 +1,6 @@
 package com.cottongallery.backend.item.dto.request;
 
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +10,19 @@ import java.time.LocalDate;
 @Getter @Setter
 public class DiscountCreateRequest {
 
+    @NotBlank
     private String name;
+
+    @NotNull
+    @Positive
+    @Max(100)
     private BigDecimal discountPercent;
+
+    @NotNull
+    @FutureOrPresent
     private LocalDate startDate;
+
+    @NotNull
+    @FutureOrPresent
     private LocalDate endDate;
 }
