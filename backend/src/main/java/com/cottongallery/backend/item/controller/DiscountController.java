@@ -51,7 +51,7 @@ public class DiscountController {
 
         DiscountListResponse discountListResponse = new DiscountListResponse(pageInfo, content);
 
-        return new ResponseEntity<>(new DataResponse(HttpServletResponse.SC_OK, "할인 생성에 성공했습니다.", discountListResponse), HttpStatus.OK);
+        return new ResponseEntity<>(new DataResponse(HttpServletResponse.SC_OK, "할인 조회에 성공했습니다.", discountListResponse), HttpStatus.OK);
     }
 
     @PatchMapping("/{discountId}")
