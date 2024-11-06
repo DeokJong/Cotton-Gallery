@@ -19,23 +19,19 @@ import com.cottongallery.backend.auth.utils.AccountDetailsService;
 import com.cottongallery.backend.auth.utils.JwtAccessDeniedHandler;
 import com.cottongallery.backend.auth.utils.JwtAuthenticationEntryPoint;
 import com.cottongallery.backend.auth.utils.JwtAuthenticationFilter;
-import com.cottongallery.backend.auth.utils.TokenProvider;
 
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
-
-  private final TokenProvider tokenProvider;
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
   private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
   private final AccountDetailsService accountDetailsService;
   private final CorsConfig corsConfig;
-
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(tokenProvider);
-
     http
     .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
         .csrf(csrf -> csrf.disable())
@@ -44,7 +40,7 @@ public class SecurityConfig {
             .accessDeniedHandler(jwtAccessDeniedHandler))
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api/login", "/api/sign-up", "/api/public/**").permitAll()
+            .requestMatchers("/api/auth/**","/api/sign-up", "/api/public/**").permitAll()
             .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
             .requestMatchers("/api/admin/**").hasRole("ADMIN")
             .requestMatchers("/api/user/**").hasRole("USER")

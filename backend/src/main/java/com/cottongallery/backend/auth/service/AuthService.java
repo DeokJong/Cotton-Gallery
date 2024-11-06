@@ -4,24 +4,27 @@ import com.cottongallery.backend.auth.dto.auth.AuthRequest;
 import com.cottongallery.backend.auth.utils.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
-    private static final Logger logger = LoggerFactory.getLogger(AuthService.class); // 올바르게 설정됨
+    private final RefreshTokenService refreshTokenService;
 
-    public String login(AuthRequest authRequest) {
-        logger.info("Login request for user in Auth Service: {} {}", authRequest.getUsername(), authRequest.getPassword());
+    public Map<String, String> login(AuthRequest authRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -29,16 +32,29 @@ public class AuthService {
                     authRequest.getPassword()
                 )
             );
-            logger.info("Authentication successful for user: {}", authRequest.getUsername());
+            log.info("Authentication successful for user: {}", authRequest.getUsername());
 
             // 토큰 생성
-            String token = tokenProvider.createToken(authentication);
-            logger.info("Generated Token: {}", token);
+            String accessToken = tokenProvider.createToken(authentication);
+            String refreshToken = tokenProvider.createRefreshToken(authentication);
 
-            return token;
+            // Refresh Token 저장
+            refreshTokenService.saveRefreshToken(authRequest.getUsername(), refreshToken);
+
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("accessToken", accessToken);
+            tokens.put("refreshToken", refreshToken);
+
+            return tokens;
         } catch (AuthenticationException e) {
-            logger.error("Authentication failed for user: {}", authRequest.getUsername(), e);
-            throw e; // 예외를 다시 던져서 컨트롤러에서 처리하게 함
+            log.error("Authentication failed for user: {}", authRequest.getUsername(), e);
+            throw e;
         }
+    }
+
+    public void logout(String username) {
+        // Refresh Token 삭제
+        refreshTokenService.deleteRefreshToken(username);
+        log.info("Logged out user: {}", username);
     }
 }

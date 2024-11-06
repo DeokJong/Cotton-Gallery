@@ -2,13 +2,11 @@ package com.cottongallery.backend.auth.utils;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,20 +15,20 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JWT 인증 필터 클래스
  */
-@AllArgsConstructor
+@Slf4j
+@RequiredArgsConstructor
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
-
-    // 요청 헤더와 토큰 접두사 상수
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-
-    private final TokenProvider tokenProvider;
+  @Value("${jwt.authorization-header}")
+  private String AUTHORIZATION_HEADER;
+  private final TokenProvider tokenProvider;
 
     /**
      * Request에서 토큰 추출
@@ -68,20 +66,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             // 요청에서 토큰 추출
             String token = resolveToken(request);
-            logger.info("Extracted JWT token: {}", token);
+            log.info("Extracted JWT token: {}", token);
             // 토큰 유효성 검증 및 인증 객체 설정
             if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
                 Authentication authentication = tokenProvider.getAuthentication(token);
                 // SecurityContextHolder에 인증 객체 설정
                 SecurityContextHolder.getContext().setAuthentication(authentication); 
-                logger.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(),
+                log.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(),
                              request.getRequestURI());
-            } else {
-                logger.info("유효한 JWT 토큰이 없습니다, uri: {}", request.getRequestURI());
             }
         } catch (Exception e) {
             // 예외 발생 시 로깅 및 SecurityContext 초기화
-            logger.error("JWT 토큰 인증 과정에서 에러가 발생했습니다: {}", e.getMessage());
+            log.error("JWT 토큰 인증 과정에서 에러가 발생했습니다: {}", e.getMessage());
             SecurityContextHolder.clearContext();
         }
 
