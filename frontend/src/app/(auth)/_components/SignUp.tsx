@@ -102,6 +102,9 @@ const SignUp = () => {
           case "name":
             setError("name", "이름을 입력해주세요");
             break;
+          case "email":
+            setError("email", "이메일을 입력해주세요.");
+            break;
           case "phoneNumber":
             setError("phoneNumber", "휴대폰 번호를 입력해주세요");
             break;
@@ -118,10 +121,10 @@ const SignUp = () => {
       minLength.forEach((error: Record<string, string>) => {
         switch (error.field) {
           case "password":
-            setError("password", "비밀번호를 8자 이상 입력해주세요");
+            setError("password", "비밀번호를 8자~15자 이내로 입력해주세요");
             break;
           case "confirmPassword":
-            setError("passwordConfirm", "비밀번호를 8자 이상 입력해주세요");
+            setError("passwordConfirm", "비밀번호를 8자~15자 이내로 입력해주세요");
             break;
           default:
             break;
