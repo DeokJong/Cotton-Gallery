@@ -27,7 +27,7 @@ public class DiscountService {
 
         Discount savedDiscount = discountRepository.save(discount);
 
-        log.debug("할인 생성 성공: discountName={}", savedDiscount.getName());
+        log.debug("할인 생성 성공: name={}", savedDiscount.getName());
 
         return savedDiscount.getId();
     }
@@ -42,6 +42,8 @@ public class DiscountService {
                 discountUpdateRequest.getStartDate(),
                 discountUpdateRequest.getEndDate());
 
+        log.debug("할인 수정 성공: name={}", discount.getName());
+
         return discount.getId();
     }
 
@@ -55,6 +57,8 @@ public class DiscountService {
         Discount discount = discountRepository
                 .findById(discountId)
                 .orElseThrow(DiscountNotFoundException::new);
+
+        log.debug("할인 삭제 성공: discountId={}", discountId);
 
         discountRepository.delete(discount);
     }

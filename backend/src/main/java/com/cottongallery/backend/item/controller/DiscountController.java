@@ -11,6 +11,7 @@ import com.cottongallery.backend.item.dto.response.DiscountResponse;
 import com.cottongallery.backend.item.service.DiscountService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/discounts")
 @RequiredArgsConstructor
@@ -37,6 +39,8 @@ public class DiscountController {
 
         discountService.createDiscount(discountCreateRequest);
 
+        log.info("할인 생성 요청 완료: name={}", discountCreateRequest.getName());
+
         return new ResponseEntity<>(new Response(HttpServletResponse.SC_OK, "할인 생성에 성공했습니다."), HttpStatus.OK);
     }
 
@@ -51,6 +55,8 @@ public class DiscountController {
 
         DiscountListResponse discountListResponse = new DiscountListResponse(pageInfo, content);
 
+        log.info("할인 리스트 조회 완료: size={}", content.size());
+
         return new ResponseEntity<>(new DataResponse(HttpServletResponse.SC_OK, "할인 조회에 성공했습니다.", discountListResponse), HttpStatus.OK);
     }
 
@@ -64,12 +70,16 @@ public class DiscountController {
 
         discountService.updateDiscount(discountId, discountUpdateRequest);
 
+        log.info("할인 수정 요청 완료: discountId={}", discountId);
+
         return new ResponseEntity<>(new Response(HttpServletResponse.SC_OK, "할인 " + discountId + " 수정에 성공했습니다."), HttpStatus.OK);
     }
 
     @DeleteMapping("/{discountId}")
     public ResponseEntity<Response> removeDiscount(@PathVariable Long discountId) {
         discountService.deleteDiscount(discountId);
+
+        log.info("할인 삭제 요청 완료: discountId={}", discountId);
 
         return new ResponseEntity<>(new Response(HttpServletResponse.SC_OK, "할인 " + discountId + " 삭제에 성공했습니다."), HttpStatus.OK);
     }
