@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthController {
     private final AuthService authService;
     private final TokenProvider tokenProvider;
+    
+    @Value("${jwt.authorization-header-access}")
+    private String AUTHORIZATION_HEADER_ACCESS;
+    
+    @Value("${jwt.authorization-header-refresh}")
+    private String AUTHORIZATION_HEADER_REFRESH;
+
+    private Cookie createCookie(String name, String value, long maxAge) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge((int) (maxAge / 1000));
+        return cookie;
+    }
+
+    private void deleteCookie(HttpServletResponse response, String name) {
+        Cookie deleteCookie = new Cookie(name, null);
+        deleteCookie.setPath("/");
+        deleteCookie.setHttpOnly(true);
+        deleteCookie.setMaxAge(0);
+        response.addCookie(deleteCookie);
+    }
 
     @PostMapping("/login")
     public ResponseEntity<Response> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
@@ -37,23 +60,27 @@ public class AuthController {
         Map<String, String> tokens = authService.login(authRequest);
 
         // Access Token 설정
-        Cookie accessTokenCookie = new Cookie("AccessToken", tokens.get("accessToken"));
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge((int) (tokenProvider.getExpiration(tokens.get("accessToken")) / 1000));
+        Cookie accessTokenCookie = createCookie(
+            AUTHORIZATION_HEADER_ACCESS,
+            tokens.get("accessToken"),
+            tokenProvider.getExpiration(tokens.get("accessToken"))
+        );
         response.addCookie(accessTokenCookie);
 
         // Refresh Token 설정
-        Cookie refreshTokenCookie = new Cookie("RefreshToken", tokens.get("refreshToken"));
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge((int) (tokenProvider.getRefreshTokenExpiration(tokens.get("refreshToken")) / 1000));
+        Cookie refreshTokenCookie = createCookie(
+            AUTHORIZATION_HEADER_REFRESH,
+            tokens.get("refreshToken"),
+            tokenProvider.getRefreshTokenExpiration(tokens.get("refreshToken"))
+        );
         response.addCookie(refreshTokenCookie);
 
         LoginResponse loginResponse = new LoginResponse(authRequest.getUsername());
 
-        return new ResponseEntity<>(new DataResponse(HttpStatus.OK.value(), "로그인이 성공적으로 완료되었습니다.", loginResponse),
-                HttpStatus.OK);
+        return new ResponseEntity<>(
+            new DataResponse(HttpStatus.OK.value(), "로그인이 성공적으로 완료되었습니다.", loginResponse),
+            HttpStatus.OK
+        );
     }
 
     @PostMapping("/logout")
@@ -63,20 +90,12 @@ public class AuthController {
         String refreshToken = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("AccessToken".equals(cookie.getName())) {
-                    Cookie deleteCookie = new Cookie("AccessToken", null);
-                    deleteCookie.setPath("/");
-                    deleteCookie.setHttpOnly(true);
-                    deleteCookie.setMaxAge(0);
-                    response.addCookie(deleteCookie);
+                if (AUTHORIZATION_HEADER_ACCESS.equals(cookie.getName())) {
+                    deleteCookie(response, AUTHORIZATION_HEADER_ACCESS);
                 }
-                if ("RefreshToken".equals(cookie.getName())) {
+                if (AUTHORIZATION_HEADER_REFRESH.equals(cookie.getName())) {
                     refreshToken = cookie.getValue();
-                    Cookie deleteCookie = new Cookie("RefreshToken", null);
-                    deleteCookie.setPath("/");
-                    deleteCookie.setHttpOnly(true);
-                    deleteCookie.setMaxAge(0);
-                    response.addCookie(deleteCookie);
+                    deleteCookie(response, AUTHORIZATION_HEADER_REFRESH);
                 }
             }
         }
@@ -87,8 +106,7 @@ public class AuthController {
             authService.logout(username);
         }
 
-        return new ResponseEntity<>(new Response(HttpStatus.NO_CONTENT.value(), "로그아웃이 성공적으로 완료되었습니다."),
-                HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new Response(HttpStatus.NO_CONTENT.value(), "로그아웃이 성공적으로 완료되었습니다."), HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/refresh")
@@ -98,7 +116,7 @@ public class AuthController {
         String refreshToken = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("RefreshToken".equals(cookie.getName())) {
+                if (AUTHORIZATION_HEADER_REFRESH.equals(cookie.getName())) {
                     refreshToken = cookie.getValue();
                 }
             }
@@ -108,16 +126,16 @@ public class AuthController {
             String newAccessToken = tokenProvider.createTokenFromRefreshToken(refreshToken);
 
             // 새로운 Access Token 설정
-            Cookie accessTokenCookie = new Cookie("AccessToken", newAccessToken);
-            accessTokenCookie.setHttpOnly(true);
-            accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge((int) (tokenProvider.getExpiration(newAccessToken) / 1000));
+            Cookie accessTokenCookie = createCookie(
+                AUTHORIZATION_HEADER_ACCESS,
+                newAccessToken,
+                tokenProvider.getExpiration(newAccessToken)
+            );
             response.addCookie(accessTokenCookie);
 
             return new ResponseEntity<>(new Response(HttpStatus.OK.value(), "토큰이 갱신되었습니다."), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new Response(HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 Refresh Token입니다."),
-                    HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new Response(HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 Refresh Token입니다."), HttpStatus.UNAUTHORIZED);
         }
     }
 }
