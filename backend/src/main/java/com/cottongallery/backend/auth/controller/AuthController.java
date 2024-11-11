@@ -4,8 +4,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cottongallery.backend.auth.dto.auth.AuthRequest;
+import com.cottongallery.backend.auth.dto.auth.LoginResponse;
 import com.cottongallery.backend.auth.service.AuthService;
 import com.cottongallery.backend.auth.utils.TokenProvider;
+import com.cottongallery.backend.common.dto.DataResponse;
 import com.cottongallery.backend.common.dto.Response;
 
 import jakarta.servlet.http.Cookie;
@@ -48,7 +50,9 @@ public class AuthController {
         refreshTokenCookie.setMaxAge((int) (tokenProvider.getRefreshTokenExpiration(tokens.get("refreshToken")) / 1000));
         response.addCookie(refreshTokenCookie);
 
-        return new ResponseEntity<>(new Response(HttpStatus.OK.value(), "로그인이 성공적으로 완료되었습니다."),
+        LoginResponse loginResponse = new LoginResponse(authRequest.getUsername());
+
+        return new ResponseEntity<>(new DataResponse(HttpStatus.OK.value(), "로그인이 성공적으로 완료되었습니다.", loginResponse),
                 HttpStatus.OK);
     }
 
