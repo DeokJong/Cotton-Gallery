@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cottongallery.backend.auth.dto.auth.AuthRequest;
 import com.cottongallery.backend.auth.dto.auth.LoginResponse;
+import com.cottongallery.backend.auth.repository.AccountRepository;
 import com.cottongallery.backend.auth.service.AuthService;
 import com.cottongallery.backend.auth.utils.TokenProvider;
 import com.cottongallery.backend.common.dto.DataResponse;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthController {
     private final AuthService authService;
     private final TokenProvider tokenProvider;
+    private final AccountRepository accountRepository;
     
     @Value("${jwt.authorization-header-access}")
     private String AUTHORIZATION_HEADER_ACCESS;
@@ -75,7 +77,7 @@ public class AuthController {
         );
         response.addCookie(refreshTokenCookie);
 
-        LoginResponse loginResponse = new LoginResponse(authRequest.getUsername());
+        LoginResponse loginResponse = new LoginResponse(accountRepository.findByUsername(authRequest.getUsername()).get().getName());
 
         return new ResponseEntity<>(
             new DataResponse(HttpStatus.OK.value(), "로그인이 성공적으로 완료되었습니다.", loginResponse),
