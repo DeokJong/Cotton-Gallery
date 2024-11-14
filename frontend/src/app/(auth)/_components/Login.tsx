@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 const Login = () => {
   const router = useRouter();
-  const { username, password, error, setUsername, setPassword, setError } = useAuthStore();
+  const { username, password, error, setName, setUsername, setPassword, setError } = useAuthStore();
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -33,7 +33,7 @@ const Login = () => {
       return;
     }
 
-    const response = await fetch("http://localhost:8080/api/login", {
+    const response = await fetch("http://localhost:8080/api/auth/login", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -47,6 +47,9 @@ const Login = () => {
     const result = await response.json();
     console.log(result);
     if (result.status === 200) {
+      if (result.data.name) {
+        setName(result.data.name);
+      }
       router.push("/");
     }
     //console.log(typeof phoneNumber);
