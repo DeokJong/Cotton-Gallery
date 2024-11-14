@@ -1,6 +1,5 @@
 package com.cottongallery.backend.item.controller;
 
-import com.cottongallery.backend.common.dto.DataResponse;
 import com.cottongallery.backend.common.dto.PageInfo;
 import com.cottongallery.backend.common.dto.Response;
 import com.cottongallery.backend.common.exception.InvalidRequestException;
@@ -32,7 +31,7 @@ public class DiscountController {
     private final DiscountService discountService;
 
     @PostMapping
-    public ResponseEntity<Response> addDiscount(@Validated @RequestBody DiscountCreateRequest discountCreateRequest, BindingResult bindingResult) {
+    public ResponseEntity<Response<?>> addDiscount(@Validated @RequestBody DiscountCreateRequest discountCreateRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidRequestException("할인 생성 요청 값이 올바르지 않습니다. 다시 확인해 주세요.", bindingResult);
         }
@@ -41,11 +40,11 @@ public class DiscountController {
 
         log.info("할인 생성 요청 완료: name={}", discountCreateRequest.getName());
 
-        return new ResponseEntity<>(new Response(HttpServletResponse.SC_OK, "할인 생성에 성공했습니다."), HttpStatus.OK);
+        return new ResponseEntity<>(Response.createResponseWithoutData(HttpServletResponse.SC_OK, "할인 생성에 성공했습니다."), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<DataResponse> retrieveDiscounts(@RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<Response<DiscountListResponse>> retrieveDiscounts(@RequestParam(defaultValue = "1") int page) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdBy"));
 
         Slice<DiscountResponse> discounts = discountService.getDiscounts(pageRequest);
@@ -57,11 +56,11 @@ public class DiscountController {
 
         log.info("할인 리스트 조회 완료: size={}", content.size());
 
-        return new ResponseEntity<>(new DataResponse(HttpServletResponse.SC_OK, "할인 조회에 성공했습니다.", discountListResponse), HttpStatus.OK);
+        return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_OK, "할인 조회에 성공했습니다.", discountListResponse), HttpStatus.OK);
     }
 
     @PatchMapping("/{discountId}")
-    public ResponseEntity<Response> editDiscount(@PathVariable Long discountId,
+    public ResponseEntity<Response<?>> editDiscount(@PathVariable Long discountId,
                                                  @Validated @RequestBody DiscountUpdateRequest discountUpdateRequest,
                                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -72,15 +71,15 @@ public class DiscountController {
 
         log.info("할인 수정 요청 완료: discountId={}", discountId);
 
-        return new ResponseEntity<>(new Response(HttpServletResponse.SC_OK, "할인 " + discountId + " 수정에 성공했습니다."), HttpStatus.OK);
+        return new ResponseEntity<>(Response.createResponseWithoutData(HttpServletResponse.SC_OK, "할인 " + discountId + " 수정에 성공했습니다."), HttpStatus.OK);
     }
 
     @DeleteMapping("/{discountId}")
-    public ResponseEntity<Response> removeDiscount(@PathVariable Long discountId) {
+    public ResponseEntity<Response<?>> removeDiscount(@PathVariable Long discountId) {
         discountService.deleteDiscount(discountId);
 
         log.info("할인 삭제 요청 완료: discountId={}", discountId);
 
-        return new ResponseEntity<>(new Response(HttpServletResponse.SC_OK, "할인 " + discountId + " 삭제에 성공했습니다."), HttpStatus.OK);
+        return new ResponseEntity<>(Response.createResponseWithoutData(HttpServletResponse.SC_OK, "할인 " + discountId + " 삭제에 성공했습니다."), HttpStatus.OK);
     }
 }
