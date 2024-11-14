@@ -8,7 +8,7 @@ import com.cottongallery.backend.item.dto.request.DiscountCreateRequest;
 import com.cottongallery.backend.item.dto.request.DiscountUpdateRequest;
 import com.cottongallery.backend.item.dto.response.DiscountListResponse;
 import com.cottongallery.backend.item.dto.response.DiscountResponse;
-import com.cottongallery.backend.item.service.DiscountService;
+import com.cottongallery.backend.item.service.impl.DiscountService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
