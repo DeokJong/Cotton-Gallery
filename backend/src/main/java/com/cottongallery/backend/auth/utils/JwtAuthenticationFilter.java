@@ -26,8 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-  @Value("${jwt.authorization-header}")
-  private String AUTHORIZATION_HEADER;
+  @Value("${jwt.authorization-header-access}")
+  private String AUTHORIZATION_HEADER_ACCESS;
   private final TokenProvider tokenProvider;
 
     /**
@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (AUTHORIZATION_HEADER.equals(cookie.getName())) {
+                if (AUTHORIZATION_HEADER_ACCESS.equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }
