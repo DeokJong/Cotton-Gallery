@@ -6,6 +6,8 @@ import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
 import com.cottongallery.backend.item.dto.response.ItemListResponse;
+import com.cottongallery.backend.item.exception.DiscountNotFoundException;
+import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import com.cottongallery.backend.item.repository.DiscountRepository;
 import com.cottongallery.backend.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,7 @@ public class ItemService extends BaseEntity {
         Discount discount = null;
 
         if (discountId != null) {
-            discount = discountRepository.findById(discountId).orElseThrow(RuntimeException::new);
+            discount = discountRepository.findById(discountId).orElseThrow(DiscountNotFoundException::new);
         }
 
         Item item = Item.createItem(itemCreateRequest.getName(),
@@ -52,7 +54,7 @@ public class ItemService extends BaseEntity {
     public Long updateItem(ItemUpdateRequest itemUpdateRequest, Long itemId, Long discountId) {
         Discount discount = discountRepository.findById(discountId).orElse(null);
 
-        Item item = itemRepository.findById(itemId).orElseThrow(RuntimeException::new);
+        Item item = itemRepository.findById(itemId).orElseThrow(ItemNotFoundException::new);
 
         item.update(itemUpdateRequest.getName(),
                 itemUpdateRequest.getPrice(),
