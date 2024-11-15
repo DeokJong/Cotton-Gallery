@@ -5,7 +5,6 @@ import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
 import com.cottongallery.backend.item.dto.response.ItemListResponse;
-import com.cottongallery.backend.item.exception.DiscountNotFoundException;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import com.cottongallery.backend.item.repository.DiscountRepository;
 import com.cottongallery.backend.item.repository.ItemRepository;
