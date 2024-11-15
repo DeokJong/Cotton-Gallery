@@ -17,6 +17,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @Transactional
@@ -28,11 +30,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Long createItem(ItemCreateRequest itemCreateRequest, Long discountId) {
-        Discount discount = null;
-
-        if (discountId != null) {
-            discount = discountRepository.findById(discountId).orElseThrow(DiscountNotFoundException::new);
-        }
+        Discount discount = Optional.ofNullable(discountId)
+                .flatMap(discountRepository::findById)
+                .orElse(null);
 
         Item item = Item.createItem(itemCreateRequest.getName(),
                 itemCreateRequest.getPrice(),
@@ -55,7 +55,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Long updateItem(ItemUpdateRequest itemUpdateRequest, Long itemId, Long discountId) {
-        Discount discount = discountRepository.findById(discountId).orElse(null);
+        Discount discount = Optional.ofNullable(discountId)
+                .flatMap(discountRepository::findById)
+                .orElse(null);
 
         Item item = itemRepository.findById(itemId).orElseThrow(ItemNotFoundException::new);
 
