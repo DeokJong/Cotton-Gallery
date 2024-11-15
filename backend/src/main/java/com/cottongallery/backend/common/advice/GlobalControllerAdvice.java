@@ -1,7 +1,7 @@
 package com.cottongallery.backend.common.advice;
 
-import com.cottongallery.backend.common.dto.DataResponse;
 import com.cottongallery.backend.common.dto.FieldErrorResponse;
+import com.cottongallery.backend.common.dto.Response;
 import com.cottongallery.backend.common.exception.InvalidRequestException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.util.List;
 public class GlobalControllerAdvice {
 
     @ExceptionHandler
-    public ResponseEntity<DataResponse> handleInvalidRequestException(InvalidRequestException e) {
+    public ResponseEntity<Response<List<FieldErrorResponse>>> handleInvalidRequestException(InvalidRequestException e) {
         log.warn("[ExceptionHandle]", e);
 
         List<FieldErrorResponse> errors = e.getBindingResult().getFieldErrors().stream().map(fieldError ->
@@ -25,7 +25,7 @@ public class GlobalControllerAdvice {
 
         ).toList();
 
-        return new ResponseEntity<>(new DataResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), errors),
+        return new ResponseEntity<>(Response.createResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), errors),
                 HttpStatus.BAD_REQUEST);
     }
 }

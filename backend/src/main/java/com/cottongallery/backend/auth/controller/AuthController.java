@@ -8,7 +8,6 @@ import com.cottongallery.backend.auth.dto.auth.LoginResponse;
 import com.cottongallery.backend.auth.repository.AccountRepository;
 import com.cottongallery.backend.auth.service.AuthService;
 import com.cottongallery.backend.auth.utils.TokenProvider;
-import com.cottongallery.backend.common.dto.DataResponse;
 import com.cottongallery.backend.common.dto.Response;
 
 import jakarta.servlet.http.Cookie;
@@ -57,7 +56,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Response> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
+    public ResponseEntity<Response<?>> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
         log.info("Login request for user: {}", authRequest.getUsername());
         Map<String, String> tokens = authService.login(authRequest);
 
@@ -79,7 +78,7 @@ public class AuthController {
         LoginResponse loginResponse = new LoginResponse(accountRepository.findByUsername(authRequest.getUsername()).get().getName());
 
         return new ResponseEntity<>(
-            new DataResponse(HttpStatus.OK.value(), "로그인이 성공적으로 완료되었습니다.", loginResponse),
+            Response.createResponse(HttpStatus.OK.value(), "로그인이 성공적으로 완료되었습니다.", loginResponse),
             HttpStatus.OK
         );
     }
@@ -107,11 +106,11 @@ public class AuthController {
             authService.logout(username, refreshToken);
         }
 
-        return new ResponseEntity<>(new Response(HttpStatus.NO_CONTENT.value(), "로그아웃이 성공적으로 완료되었습니다."), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(Response.createResponseWithoutData(HttpStatus.NO_CONTENT.value(), "로그아웃이 성공적으로 완료되었습니다."), HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<Response> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Response<?>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         // Refresh Token 가져오기
         Cookie[] cookies = request.getCookies();
         String refreshToken = null;
@@ -134,9 +133,9 @@ public class AuthController {
             );
             response.addCookie(accessTokenCookie);
 
-            return new ResponseEntity<>(new Response(HttpStatus.OK.value(), "토큰이 갱신되었습니다."), HttpStatus.OK);
+            return new ResponseEntity<>(Response.createResponseWithoutData(HttpStatus.OK.value(), "토큰이 갱신되었습니다."), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new Response(HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 Refresh Token입니다."), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(Response.createResponseWithoutData(HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 Refresh Token입니다."), HttpStatus.UNAUTHORIZED);
         }
     }
 }

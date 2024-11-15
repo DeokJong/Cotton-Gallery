@@ -1,4 +1,4 @@
-package com.cottongallery.backend.item.service;
+package com.cottongallery.backend.item.service.impl;
 
 import com.cottongallery.backend.item.domain.Discount;
 import com.cottongallery.backend.item.dto.request.DiscountCreateRequest;
