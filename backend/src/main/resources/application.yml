@@ -31,7 +31,7 @@ logging:
 
 jwt:
   secret: OtItGKqtKQiR1loQhhVkfZAnzMfoNmQgH9pEdKt4nSQ=
-  token-validity-in-seconds: 3600
+  access-token-validity-in-seconds: 3600
   refresh-token-validity-in-seconds: 604800
   authorization-header-access: AccessToken
   authorization-header-refresh: RefreshToken

@@ -38,7 +38,7 @@ public class TokenProvider {
 
     public TokenProvider(
       @Value("${jwt.secret}") String secret,
-      @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds,
+      @Value("${jwt.access-token-validity-in-seconds}") long tokenValidityInSeconds,
       @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInSeconds,
       UserDetailsService userDetailsService) {
 

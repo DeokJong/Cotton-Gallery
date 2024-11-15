@@ -67,7 +67,6 @@ public class AuthController {
             tokenProvider.getExpiration(tokens.get("accessToken"))
         );
         response.addCookie(accessTokenCookie);
-
         // Refresh Token 설정
         Cookie refreshTokenCookie = createCookie(
             AUTHORIZATION_HEADER_REFRESH,
@@ -85,10 +84,10 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Response<?>> logout(HttpServletRequest request, HttpServletResponse response) {
-        // 쿠키에서 토큰 삭제
+    public ResponseEntity<Response> logout(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
         String refreshToken = null;
+
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (AUTHORIZATION_HEADER_ACCESS.equals(cookie.getName())) {
@@ -104,7 +103,7 @@ public class AuthController {
         if (refreshToken != null) {
             // Refresh Token 무효화
             String username = tokenProvider.getUsernameFromToken(refreshToken);
-            authService.logout(username);
+            authService.logout(username, refreshToken);
         }
 
         return new ResponseEntity<>(Response.createResponseWithoutData(HttpStatus.NO_CONTENT.value(), "로그아웃이 성공적으로 완료되었습니다."), HttpStatus.NO_CONTENT);
