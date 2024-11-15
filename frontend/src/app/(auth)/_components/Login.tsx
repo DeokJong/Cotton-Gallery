@@ -9,21 +9,31 @@ import { useRouter } from "next/navigation";
 
 const Login = () => {
   const router = useRouter();
-  const { username, password, error, setUsername, setPassword, setError } = useAuthStore();
+  const { username, password, error, setName, setUsername, setPassword, setError } = useAuthStore();
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
-    // Todo : 에러메세지 수정
-    setError("username", "");
+    if (e.target.value.length > 0) {
+      setError("username", "");
+    }
   };
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    if (e.target.value.length > 0) {
+      setError("password", "");
+    }
   };
 
   const handleSubmitLoginForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const response = await fetch("http://localhost:8080/api/login", {
+    if (!username || !password) {
+      if (!username) setError("username", "아이디를 입력해주세요");
+      if (!password) setError("password", "비밀번호를 입력해주세요");
+      return;
+    }
+
+    const response = await fetch("http://localhost:8080/api/auth/login", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -37,6 +47,9 @@ const Login = () => {
     const result = await response.json();
     console.log(result);
     if (result.status === 200) {
+      if (result.data.name) {
+        setName(result.data.name);
+      }
       router.push("/");
     }
     //console.log(typeof phoneNumber);
@@ -54,7 +67,7 @@ const Login = () => {
           type="text"
           value={username}
           onChange={handleUsernameChange}
-          error={error.password}
+          error={error.username}
         />
         <InputBox
           id="password"
