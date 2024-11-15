@@ -52,9 +52,9 @@ public class AuthService {
         }
     }
 
-    public void logout(String username) {
+    public void logout(String username, String refreshToken) {
         // Refresh Token 삭제
-        refreshTokenService.deleteRefreshToken(username);
+        refreshTokenService.deleteRefreshToken(username, refreshToken);
         log.info("Logged out user: {}", username);
     }
 }
