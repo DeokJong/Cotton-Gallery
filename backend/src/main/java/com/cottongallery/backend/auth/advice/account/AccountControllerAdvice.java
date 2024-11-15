@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class AccountControllerAdvice {
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<Response> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e) {
+    public ResponseEntity<Response<?>> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e) {
         log.warn("[ExceptionHandle]", e);
 
-        return new ResponseEntity<>(new Response(HttpStatus.CONFLICT.value(), e.getMessage()),
+        return new ResponseEntity<>(Response.createResponseWithoutData(HttpStatus.CONFLICT.value(), e.getMessage()),
                 HttpStatus.CONFLICT);
     }
 }
