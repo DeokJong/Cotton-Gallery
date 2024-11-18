@@ -3,7 +3,8 @@ package com.cottongallery.backend.util;
 import com.cottongallery.backend.auth.domain.Account;
 import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.common.constants.Role;
-import com.cottongallery.backend.common.domain.Address;
+import com.cottongallery.backend.order.domain.Address;
+import com.cottongallery.backend.order.domain.AddressType;
 
 public final class AccountTestData {
     public static final Long ID = 1L;
@@ -34,14 +35,14 @@ public final class AccountTestData {
 
     public static Account createTestAccount() {
         Account account = Account.createAccount(NAME, USERNAME, PASSWORD, EMAIL, PHONE_NUMBER, Role.ROLE_USER);
-        account.addAddress(new Address(ZIPCODE, STREET, DETAIL));
+        account.addAddress(new Address(ZIPCODE, STREET, DETAIL, AddressType.PRIMARY));
 
         return account;
     }
 
     public static Account createTestAccountWithId() {
         Account account = Account.createAccountWithId(ID, NAME, USERNAME, PASSWORD, EMAIL, PHONE_NUMBER, Role.ROLE_ADMIN);
-        account.addAddress(new Address(ZIPCODE, STREET, DETAIL));
+        account.addAddress(new Address(ZIPCODE, STREET, DETAIL, AddressType.PRIMARY));
 
         return account;
     }

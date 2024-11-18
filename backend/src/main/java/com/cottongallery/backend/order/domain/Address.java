@@ -1,4 +1,4 @@
-package com.cottongallery.backend.common.domain;
+package com.cottongallery.backend.order.domain;
 
 import com.cottongallery.backend.auth.domain.Account;
 
@@ -32,9 +32,14 @@ public class Address {
     @Column(nullable = false)
     private String detail;
 
-    public Address(String zipcode, String street, String detail) {
+    @Enumerated(EnumType.STRING) // Enum을 문자열로 저장
+    @Column(nullable = false)
+    private AddressType addressType;
+
+    public Address(String zipcode, String street, String detail, AddressType addressType) {
         this.zipcode = zipcode;
         this.street = street;
         this.detail = detail;
+        this.addressType = addressType;
     }
 }
