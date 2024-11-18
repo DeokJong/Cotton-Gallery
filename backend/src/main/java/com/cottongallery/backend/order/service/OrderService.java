@@ -1,12 +1,15 @@
 package com.cottongallery.backend.order.service;
 
 import com.cottongallery.backend.auth.domain.Account;
+import com.cottongallery.backend.auth.exception.account.AccountNotFoundException;
+import com.cottongallery.backend.auth.exception.address.AddressNotFoundException;
 import com.cottongallery.backend.auth.repository.AccountRepository;
 import com.cottongallery.backend.auth.repository.AddressRepository;
 import com.cottongallery.backend.common.constants.OrderStatus;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.item.domain.Discount;
 import com.cottongallery.backend.item.domain.Item;
+import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import com.cottongallery.backend.item.repository.ItemRepository;
 import com.cottongallery.backend.order.domain.Address;
 import com.cottongallery.backend.order.domain.Order;
@@ -14,6 +17,7 @@ import com.cottongallery.backend.order.domain.OrderItem;
 import com.cottongallery.backend.order.dto.request.OrderItemCreateRequest;
 import com.cottongallery.backend.order.dto.response.OrderItemResponse;
 import com.cottongallery.backend.order.dto.response.OrderListResponse;
+import com.cottongallery.backend.order.exception.OrderNotFoundException;
 import com.cottongallery.backend.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +46,7 @@ public class OrderService {
     public Long createOrder(AccountSessionDTO accountSessionDTO, List<OrderItemCreateRequest> orderItemCreateRequestList, Long addressId) {
         Account account = getAccountByUsername(accountSessionDTO.getUsername());
 
-        Address address = addressRepository.findById(addressId).orElseThrow(NoSuchElementException::new);
+        Address address = addressRepository.findById(addressId).orElseThrow(AddressNotFoundException::new);
 
         List<OrderItem> orderItemList = createOrderItem(orderItemCreateRequestList);
 
@@ -56,7 +60,7 @@ public class OrderService {
 
     public void cancelOrder(Long orderId) {
         //주문 엔티티 조회
-        Order order = orderRepository.findById(orderId).orElseThrow(NoSuchElementException::new);
+        Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
         //주문 취소
         order.cancel();
     }
@@ -79,7 +83,7 @@ public class OrderService {
     public void cancelOrder(Long orderId, AccountSessionDTO accountSessionDTO) {
         Account account = getAccountByUsername(accountSessionDTO.getUsername());
 
-        Order order = orderRepository.findByAccountAndId(account, orderId).orElseThrow(NoSuchElementException::new);
+        Order order = orderRepository.findByAccountAndId(account, orderId).orElseThrow(OrderNotFoundException::new);
 
         order.changeOrderStatus(OrderStatus.CANCEL);
     }
@@ -87,14 +91,14 @@ public class OrderService {
     private Account getAccountByUsername(String username) {
         return accountRepository
                 .findByUsername(username)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(AccountNotFoundException::new);
     }
 
     private List<OrderItem> createOrderItem(List<OrderItemCreateRequest> orderItemCreateRequestList) {
         List<OrderItem> orderItemList = new ArrayList<>();
 
         for (OrderItemCreateRequest orderItemCreateRequest : orderItemCreateRequestList) {
-            Item item = itemRepository.findById(orderItemCreateRequest.getItemId()).orElseThrow(NoSuchElementException::new);
+            Item item = itemRepository.findById(orderItemCreateRequest.getItemId()).orElseThrow(ItemNotFoundException::new);
 
             BigDecimal discountPercent = Optional.ofNullable(item.getDiscount())
                     .map(Discount::getDiscountPercent)

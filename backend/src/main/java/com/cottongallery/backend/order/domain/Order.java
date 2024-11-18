@@ -4,6 +4,7 @@ import com.cottongallery.backend.auth.domain.Account;
 import com.cottongallery.backend.common.constants.OrderStatus;
 
 import com.cottongallery.backend.domain.base.BaseEntity;
+import com.cottongallery.backend.order.exception.OrderAlreadyCompletedException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -77,7 +78,7 @@ public class Order extends BaseEntity {
     /** 주문 취소 */
     public void cancel() {
         if (status == OrderStatus.COMP) {
-            throw new RuntimeException();
+            throw new OrderAlreadyCompletedException();
         }
 
        changeOrderStatus(OrderStatus.CANCEL);
