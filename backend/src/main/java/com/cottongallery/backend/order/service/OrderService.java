@@ -7,6 +7,7 @@ import com.cottongallery.backend.auth.repository.AccountRepository;
 import com.cottongallery.backend.auth.repository.AddressRepository;
 import com.cottongallery.backend.common.constants.OrderStatus;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
+import com.cottongallery.backend.common.dto.PageInfo;
 import com.cottongallery.backend.item.domain.Discount;
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
@@ -29,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -59,9 +59,7 @@ public class OrderService {
     }
 
     public void cancelOrder(Long orderId) {
-        //주문 엔티티 조회
         Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
-        //주문 취소
         order.cancel();
     }
 
@@ -76,7 +74,9 @@ public class OrderService {
                     .map(OrderItemResponse::fromOrderItem)
                     .toList();
 
-            return new OrderListResponse(order.getId(), order.getCreatedDate(), order.getStatus().name(), orderItems);
+            PageInfo pageInfo = new PageInfo(pageable.getPageNumber() + 1, orders.hasNext(), orders.hasPrevious());
+
+            return new OrderListResponse(order.getId(), order.getCreatedDate(), order.getStatus().name(), pageInfo, orderItems);
         });
     }
 

@@ -48,16 +48,13 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<Response<ListResponse<List<OrderListResponse>>>> getOrders(@Login AccountSessionDTO accountSessionDTO, @RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<Response<List<OrderListResponse>>> getOrders(@Login AccountSessionDTO accountSessionDTO, @RequestParam(defaultValue = "1") int page) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdDate"));
 
         Slice<OrderListResponse> orders = orderService.getOrderListResponses(accountSessionDTO, pageRequest);
         List<OrderListResponse> content = orders.getContent();
-        PageInfo pageInfo = new PageInfo(page, orders.hasNext(), orders.hasPrevious());
 
-        ListResponse<List<OrderListResponse>> orderResponse = new ListResponse<>(pageInfo, content);
-
-        return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_OK, "주문 " + page + " 페이지 조회에 성공했습니다.", orderResponse), HttpStatus.OK);
+        return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_OK, "주문 " + page + " 페이지 조회에 성공했습니다.", content), HttpStatus.OK);
     }
 
     @PatchMapping("/{orderId}")
