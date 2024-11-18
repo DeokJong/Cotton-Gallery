@@ -85,7 +85,7 @@ public class OrderService {
 
         Order order = orderRepository.findByAccountAndId(account, orderId).orElseThrow(OrderNotFoundException::new);
 
-        order.changeOrderStatus(OrderStatus.CANCEL);
+        order.cancel();
     }
 
     private Account getAccountByUsername(String username) {
