@@ -31,7 +31,7 @@ public class OrderItem {
     @Column(updatable = false, nullable = false)
     private Integer orderPrice;
 
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false)
     private BigDecimal discountPercent;
 
     @Column(updatable = false, nullable = false)
