@@ -43,12 +43,22 @@ public class OrderController {
 
         Long orderId = orderService.createOrder(accountSessionDTO, orderCreateRequest.getOrderItemCreateRequestList(), orderCreateRequest.getAddressId());
 
-        return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_CREATED, "주문에 성공했습니다.", new OrderResponse(orderId)),
+        OrderResponse orderResponse = orderService.getOrderResponse(orderId, accountSessionDTO);
+
+        return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_CREATED, "주문에 성공했습니다.", orderResponse),
                 HttpStatus.CREATED);
     }
 
+    @GetMapping("/{orderId}")
+    public ResponseEntity<Response<?>> retrieveOrder(@PathVariable Long orderId, @Login AccountSessionDTO accountSessionDTO) {
+        OrderResponse orderResponse = orderService.getOrderResponse(orderId, accountSessionDTO);
+
+        return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_OK, "주문 조회에 성공했습니다.", orderResponse),
+                HttpStatus.OK);
+    }
+
     @GetMapping
-    public ResponseEntity<Response<List<OrderListResponse>>> getOrders(@Login AccountSessionDTO accountSessionDTO, @RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<Response<List<OrderListResponse>>> retrieveOrderList(@Login AccountSessionDTO accountSessionDTO, @RequestParam(defaultValue = "1") int page) {
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "createdDate"));
 
         Slice<OrderListResponse> orders = orderService.getOrderListResponses(accountSessionDTO, pageRequest);

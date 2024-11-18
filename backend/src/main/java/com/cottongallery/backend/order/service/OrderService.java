@@ -18,6 +18,7 @@ import com.cottongallery.backend.order.domain.OrderItem;
 import com.cottongallery.backend.order.dto.request.OrderItemCreateRequest;
 import com.cottongallery.backend.order.dto.response.OrderItemResponse;
 import com.cottongallery.backend.order.dto.response.OrderListResponse;
+import com.cottongallery.backend.order.dto.response.OrderResponse;
 import com.cottongallery.backend.order.exception.OrderNotFoundException;
 import com.cottongallery.backend.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,15 @@ public class OrderService {
     public void cancelOrder(Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
         order.cancel();
+    }
+
+    public OrderResponse getOrderResponse(Long orderId, AccountSessionDTO accountSessionDTO) {
+        Account account = getAccountByUsername(accountSessionDTO.getUsername());
+        Order order = orderRepository.findByAccountAndId(account, orderId).orElseThrow(OrderNotFoundException::new);
+
+        List<OrderItem> orderItems = order.getOrderItems();
+
+        return OrderResponse.fromOrder(order);
     }
 
     @Transactional(readOnly = true)
