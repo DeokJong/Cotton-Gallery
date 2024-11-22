@@ -1,4 +1,4 @@
-package com.cottongallery.backend.common.domain;
+package com.cottongallery.backend.order.domain;
 
 import com.cottongallery.backend.item.domain.Item;
 import jakarta.persistence.*;
@@ -31,7 +31,7 @@ public class OrderItem {
     @Column(updatable = false, nullable = false)
     private Integer orderPrice;
 
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false)
     private BigDecimal discountPercent;
 
     @Column(updatable = false, nullable = false)
@@ -44,12 +44,19 @@ public class OrderItem {
         this.count = count;
     }
 
-    public static OrderItem createOrderItem(Item item, Integer orderPrice, Integer count) {
-        OrderItem orderItem = new OrderItem(item, orderPrice, item.getDiscount().getDiscountPercent(), count);
+    public static OrderItem createOrderItem(Item item, Integer orderPrice, BigDecimal discountPercent,Integer count) {
+        OrderItem orderItem = new OrderItem(item, orderPrice, discountPercent, count);
 
         item.reduceStockQuantity(count);
 
         return orderItem;
+    }
+
+    /**
+     * 주문 취소
+     */
+    public void cancel() {
+        getItem().addStockQuantity(count);
     }
 
     public void assignOrder(Order order) {

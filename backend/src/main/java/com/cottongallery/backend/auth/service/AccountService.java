@@ -3,10 +3,11 @@ package com.cottongallery.backend.auth.service;
 import com.cottongallery.backend.auth.exception.account.UsernameAlreadyExistsException;
 import com.cottongallery.backend.auth.repository.AccountRepository;
 import com.cottongallery.backend.common.constants.Role;
-import com.cottongallery.backend.common.domain.Address;
+import com.cottongallery.backend.order.domain.Address;
 import com.cottongallery.backend.auth.domain.Account;
 import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
 
+import com.cottongallery.backend.order.domain.AddressType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class AccountService {
 
     account.addAddress(new Address(accountCreateRequest.getZipcode(),
         accountCreateRequest.getStreet(),
-        accountCreateRequest.getDetail()));
+        accountCreateRequest.getDetail(), AddressType.PRIMARY));
 
     Account savedAccount = accountRepository.save(account);
 

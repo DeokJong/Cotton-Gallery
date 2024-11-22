@@ -1,8 +1,10 @@
-package com.cottongallery.backend.common.domain;
+package com.cottongallery.backend.order.domain;
 
 import com.cottongallery.backend.auth.domain.Account;
 import com.cottongallery.backend.common.constants.OrderStatus;
 
+import com.cottongallery.backend.domain.base.BaseEntity;
+import com.cottongallery.backend.order.exception.OrderAlreadyCompletedException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,7 +20,7 @@ import static jakarta.persistence.FetchType.*;
 @Getter
 @Table(name = "orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order {
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue
@@ -34,7 +36,7 @@ public class Order {
     private Address delivery;
 
     @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "coupon_id", nullable = false)
+    @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 
     @Column(updatable = false, nullable = false)
@@ -54,7 +56,7 @@ public class Order {
         this.status = OrderStatus.ORDER;
     }
 
-    public static Order createOrder(Account account, Address delivery, Coupon coupon, OrderItem... orderItems) {
+    public static Order createOrder(Account account, Address delivery, Coupon coupon, List<OrderItem> orderItems) {
         Order order = new Order(account, delivery);
 
         for (OrderItem orderItem : orderItems) {
@@ -71,5 +73,23 @@ public class Order {
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
         orderItem.assignOrder(this);
+    }
+
+    /** 주문 취소 */
+    public void cancel() {
+        if (status == OrderStatus.COMP) {
+            throw new OrderAlreadyCompletedException();
+        }
+
+       changeOrderStatus(OrderStatus.CANCEL);
+
+        for (OrderItem orderItem : orderItems) {
+            orderItem.cancel();
+        }
+    }
+
+    /** 주문 상태 변경 */
+    public void changeOrderStatus(OrderStatus orderStatus) {
+        this.status = orderStatus;
     }
 }

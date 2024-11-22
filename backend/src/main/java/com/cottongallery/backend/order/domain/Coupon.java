@@ -1,4 +1,4 @@
-package com.cottongallery.backend.common.domain;
+package com.cottongallery.backend.order.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
