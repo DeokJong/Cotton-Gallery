@@ -1,5 +1,6 @@
 package com.cottongallery.backend.auth.controller.command;
 
+import com.cottongallery.backend.auth.controller.command.api.AccountCommandApi;
 import com.cottongallery.backend.auth.controller.validator.AccountCreateRequestValidator;
 import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.auth.service.command.AccountCommandService;
@@ -20,7 +21,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class AccountCommandController {
+public class AccountCommandController implements AccountCommandApi {
 
     private final AccountCommandService accountCommandService;
     private final AccountCreateRequestValidator accountCreateRequestValidator;
@@ -30,7 +31,8 @@ public class AccountCommandController {
         dataBinder.addValidators(accountCreateRequestValidator);
     }
 
-    @PostMapping(value = "/sign-up", consumes = APPLICATION_JSON_VALUE)
+    @Override
+    @PostMapping(value = "/sign-up", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<?>> addAccount(@Validated @RequestBody AccountCreateRequest accountCreateRequest,
                                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

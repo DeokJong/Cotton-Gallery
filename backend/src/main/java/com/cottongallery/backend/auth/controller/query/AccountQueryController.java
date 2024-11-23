@@ -1,11 +1,13 @@
 package com.cottongallery.backend.auth.controller.query;
 
+import com.cottongallery.backend.auth.controller.query.api.AccountQueryApi;
 import com.cottongallery.backend.auth.dto.account.response.AccountCheckUsernameResponse;
 import com.cottongallery.backend.auth.service.query.AccountQueryService;
 import com.cottongallery.backend.common.dto.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,11 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class AccountQueryController {
+public class AccountQueryController implements AccountQueryApi {
 
     private final AccountQueryService accountQueryService;
 
-    @GetMapping("/public/accounts/check-username")
+    @Override
+    @GetMapping(value = "/public/accounts/check-username", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<AccountCheckUsernameResponse>> checkUsername(@RequestParam("username") String username) {
         Boolean isDuplicated = accountQueryService.isUsernameDuplicate(username);
 

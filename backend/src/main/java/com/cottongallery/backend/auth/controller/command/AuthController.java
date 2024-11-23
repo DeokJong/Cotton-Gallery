@@ -1,5 +1,6 @@
-package com.cottongallery.backend.auth.controller;
+package com.cottongallery.backend.auth.controller.command;
 
+import com.cottongallery.backend.auth.controller.command.api.AuthApi;
 import com.cottongallery.backend.auth.service.query.AccountQueryService;
 import com.cottongallery.backend.auth.utils.CookieUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController implements AuthApi {
     private final AccountQueryService accountQueryService;
 
     private final AuthService authService;
@@ -42,6 +43,7 @@ public class AuthController {
     @Value("${jwt.authorization-header-refresh}")
     private String AUTHORIZATION_HEADER_REFRESH;
 
+    @Override
     @PostMapping("/login")
     public ResponseEntity<Response<?>> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
         log.info("Login request for user: {}", authRequest.getUsername());
@@ -69,6 +71,7 @@ public class AuthController {
         );
     }
 
+    @Override
     @PostMapping("/logout")
     public ResponseEntity<Response> logout(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
@@ -95,6 +98,7 @@ public class AuthController {
         return new ResponseEntity<>(Response.createResponseWithoutData(HttpStatus.NO_CONTENT.value(), "로그아웃이 성공적으로 완료되었습니다."), HttpStatus.NO_CONTENT);
     }
 
+    @Override
     @PostMapping("/refresh")
     public ResponseEntity<Response<?>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         // Refresh Token 가져오기
