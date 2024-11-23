@@ -1,6 +1,9 @@
 package com.cottongallery.backend.auth.controller.query.api;
 
 import com.cottongallery.backend.auth.dto.account.response.AccountCheckUsernameResponse;
+import com.cottongallery.backend.auth.dto.account.response.AccountNicknameResponse;
+import com.cottongallery.backend.common.argumentResolver.annotation.Login;
+import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.common.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,5 +22,10 @@ public interface AccountQueryApi {
     })
     ResponseEntity<Response<AccountCheckUsernameResponse>> checkUsername(@Parameter(description = "중복 체크할 사용자명") @RequestParam("username") String username);
 
+    @Operation(summary = "사용자 닉네임 조회", description = "로그인된 사용자의 닉네임을 반환합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "사용자 닉네임 조회 성공")
+    })
+    ResponseEntity<Response<AccountNicknameResponse>> retrieveNickname(@Login AccountSessionDTO accountSessionDTO);
 }
 
