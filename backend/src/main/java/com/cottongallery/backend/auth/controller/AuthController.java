@@ -1,11 +1,12 @@
 package com.cottongallery.backend.auth.controller;
 
+import com.cottongallery.backend.auth.service.query.AccountQueryService;
+import com.cottongallery.backend.auth.utils.CookieUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cottongallery.backend.auth.dto.auth.AuthRequest;
 import com.cottongallery.backend.auth.dto.auth.LoginResponse;
-import com.cottongallery.backend.auth.repository.AccountRepository;
 import com.cottongallery.backend.auth.service.AuthService;
 import com.cottongallery.backend.auth.utils.TokenProvider;
 import com.cottongallery.backend.common.dto.Response;
@@ -29,31 +30,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
+    private final AccountQueryService accountQueryService;
+
     private final AuthService authService;
     private final TokenProvider tokenProvider;
-    private final AccountRepository accountRepository;
-    
+    private final CookieUtils cookieUtils;
+
     @Value("${jwt.authorization-header-access}")
     private String AUTHORIZATION_HEADER_ACCESS;
     
     @Value("${jwt.authorization-header-refresh}")
     private String AUTHORIZATION_HEADER_REFRESH;
-
-    private Cookie createCookie(String name, String value, long maxAge) {
-        Cookie cookie = new Cookie(name, value);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge((int) (maxAge / 1000));
-        return cookie;
-    }
-
-    private void deleteCookie(HttpServletResponse response, String name) {
-        Cookie deleteCookie = new Cookie(name, null);
-        deleteCookie.setPath("/");
-        deleteCookie.setHttpOnly(true);
-        deleteCookie.setMaxAge(0);
-        response.addCookie(deleteCookie);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<Response<?>> login(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
@@ -61,21 +48,20 @@ public class AuthController {
         Map<String, String> tokens = authService.login(authRequest);
 
         // Access Token 설정
-        Cookie accessTokenCookie = createCookie(
+        Cookie accessTokenCookie = cookieUtils.createCookie(
             AUTHORIZATION_HEADER_ACCESS,
             tokens.get("accessToken"),
             tokenProvider.getExpiration(tokens.get("accessToken"))
         );
         response.addCookie(accessTokenCookie);
         // Refresh Token 설정
-        Cookie refreshTokenCookie = createCookie(
+        Cookie refreshTokenCookie = cookieUtils.createCookie(
             AUTHORIZATION_HEADER_REFRESH,
             tokens.get("refreshToken"),
             tokenProvider.getRefreshTokenExpiration(tokens.get("refreshToken"))
         );
         response.addCookie(refreshTokenCookie);
-
-        LoginResponse loginResponse = new LoginResponse(accountRepository.findByUsername(authRequest.getUsername()).get().getName());
+        LoginResponse loginResponse = new LoginResponse(accountQueryService.getNameByUsername(authRequest.getUsername()));
 
         return new ResponseEntity<>(
             Response.createResponse(HttpStatus.OK.value(), "로그인이 성공적으로 완료되었습니다.", loginResponse),
@@ -91,11 +77,11 @@ public class AuthController {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (AUTHORIZATION_HEADER_ACCESS.equals(cookie.getName())) {
-                    deleteCookie(response, AUTHORIZATION_HEADER_ACCESS);
+                    cookieUtils.deleteCookie(response, AUTHORIZATION_HEADER_ACCESS);
                 }
                 if (AUTHORIZATION_HEADER_REFRESH.equals(cookie.getName())) {
                     refreshToken = cookie.getValue();
-                    deleteCookie(response, AUTHORIZATION_HEADER_REFRESH);
+                    cookieUtils.deleteCookie(response, AUTHORIZATION_HEADER_REFRESH);
                 }
             }
         }
@@ -126,7 +112,7 @@ public class AuthController {
             String newAccessToken = tokenProvider.createTokenFromRefreshToken(refreshToken);
 
             // 새로운 Access Token 설정
-            Cookie accessTokenCookie = createCookie(
+            Cookie accessTokenCookie = cookieUtils.createCookie(
                 AUTHORIZATION_HEADER_ACCESS,
                 newAccessToken,
                 tokenProvider.getExpiration(newAccessToken)
