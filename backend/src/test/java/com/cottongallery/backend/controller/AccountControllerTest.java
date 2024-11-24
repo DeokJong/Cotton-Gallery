@@ -1,24 +1,18 @@
 package com.cottongallery.backend.controller;
 
-import com.cottongallery.backend.auth.config.CorsConfig;
-import com.cottongallery.backend.auth.config.SecurityConfig;
-import com.cottongallery.backend.auth.controller.AccountController;
 import com.cottongallery.backend.auth.controller.validator.AccountCreateRequestValidator;
 import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.auth.exception.account.UsernameAlreadyExistsException;
-import com.cottongallery.backend.auth.service.AccountService;
-import com.cottongallery.backend.auth.utils.AccountDetailsService;
-import com.cottongallery.backend.auth.utils.JwtAccessDeniedHandler;
-import com.cottongallery.backend.auth.utils.JwtAuthenticationEntryPoint;
-import com.cottongallery.backend.auth.utils.TokenProvider;
+import com.cottongallery.backend.auth.service.command.AccountCommandService;
+import com.cottongallery.backend.auth.service.query.AccountQueryService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -37,27 +31,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import({SecurityConfig.class, CorsConfig.class})
-@WebMvcTest(AccountController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class AccountControllerTest {
 
-    @MockBean
-    private TokenProvider tokenProvider;
+    @Autowired MockMvc mockMvc;
 
     @MockBean
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private AccountCommandService accountCommandService;
 
     @MockBean
-    private JwtAccessDeniedHandler jwtAccessDeniedHandler;
-
-    @MockBean
-    private AccountDetailsService accountDetailsService;
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @MockBean
-    private AccountService accountService;
+    private AccountQueryService accountQueryService;
 
     @SpyBean
     private AccountCreateRequestValidator accountCreateRequestValidator;
@@ -70,7 +54,7 @@ class AccountControllerTest {
         // given
         AccountCreateRequest accountCreateRequest = createTestAccountCreateRequest();
 
-        given(accountService
+        given(accountCommandService
                 .signUp(any(AccountCreateRequest.class)))
                 .willReturn(1L);
 
@@ -87,7 +71,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.status").value(201))
                 .andDo(print());
 
-        verify(accountService, times(1)).signUp(any(AccountCreateRequest.class));
+        verify(accountCommandService, times(1)).signUp(any(AccountCreateRequest.class));
     }
 
     @Test
@@ -112,7 +96,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.data").isNotEmpty())
                 .andDo(print());
 
-        verify(accountService, times(0)).signUp(any(AccountCreateRequest.class));
+        verify(accountCommandService, times(0)).signUp(any(AccountCreateRequest.class));
     }
 
     @Test
@@ -121,7 +105,7 @@ class AccountControllerTest {
         // given
         AccountCreateRequest accountCreateRequest = createTestAccountCreateRequest();
 
-        given(accountService
+        given(accountCommandService
                 .signUp(any(AccountCreateRequest.class)))
                 .willThrow(new UsernameAlreadyExistsException());
 
@@ -138,7 +122,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.status").value(409))
                 .andDo(print());
 
-        verify(accountService, times(1)).signUp(any(AccountCreateRequest.class));
+        verify(accountCommandService, times(1)).signUp(any(AccountCreateRequest.class));
     }
 
     @Test
@@ -148,7 +132,7 @@ class AccountControllerTest {
         MultiValueMap<String, String> info = new LinkedMultiValueMap<>();
         info.add("username", NAME);
 
-        given(accountService
+        given(accountQueryService
                 .isUsernameDuplicate(any(String.class)))
                 .willReturn(true);
 
@@ -165,7 +149,7 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.data.isDuplicated").value(true))
                 .andDo(print());
 
-        verify(accountService, times(1)).isUsernameDuplicate(any(String.class));
+        verify(accountQueryService, times(1)).isUsernameDuplicate(any(String.class));
     }
 
     @Test
@@ -175,7 +159,7 @@ class AccountControllerTest {
         MultiValueMap<String, String> info = new LinkedMultiValueMap<>();
         info.add("username", NAME);
 
-        given(accountService
+        given(accountQueryService
                 .isUsernameDuplicate(any(String.class)))
                 .willReturn(false);
 
@@ -192,6 +176,6 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$.data.isDuplicated").value(false))
                 .andDo(print());
 
-        verify(accountService, times(1)).isUsernameDuplicate(any(String.class));
+        verify(accountQueryService, times(1)).isUsernameDuplicate(any(String.class));
     }
 }

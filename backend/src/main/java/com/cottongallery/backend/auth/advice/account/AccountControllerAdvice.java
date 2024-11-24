@@ -1,6 +1,6 @@
 package com.cottongallery.backend.auth.advice.account;
 
-import com.cottongallery.backend.auth.controller.AccountController;
+import com.cottongallery.backend.auth.controller.command.AccountCommandController;
 import com.cottongallery.backend.auth.exception.account.UsernameAlreadyExistsException;
 import com.cottongallery.backend.common.dto.Response;
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@RestControllerAdvice(assignableTypes = AccountController.class)
+@RestControllerAdvice(assignableTypes = AccountCommandController.class)
 public class AccountControllerAdvice {
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
