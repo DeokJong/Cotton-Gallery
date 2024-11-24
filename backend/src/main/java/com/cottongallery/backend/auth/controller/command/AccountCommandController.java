@@ -2,8 +2,10 @@ package com.cottongallery.backend.auth.controller.command;
 
 import com.cottongallery.backend.auth.controller.command.api.AccountCommandApi;
 import com.cottongallery.backend.auth.controller.validator.AccountCreateRequestValidator;
+import com.cottongallery.backend.auth.controller.validator.AccountUpdatePasswordRequestValidator;
 import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.auth.dto.account.request.AccountUpdateEmailRequest;
+import com.cottongallery.backend.auth.dto.account.request.AccountUpdatePasswordRequest;
 import com.cottongallery.backend.auth.service.command.AccountCommandService;
 import com.cottongallery.backend.common.argumentResolver.annotation.Login;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
@@ -29,10 +31,16 @@ public class AccountCommandController implements AccountCommandApi {
 
     private final AccountCommandService accountCommandService;
     private final AccountCreateRequestValidator accountCreateRequestValidator;
+    private final AccountUpdatePasswordRequestValidator accountUpdatePasswordRequestValidator;
 
     @InitBinder("accountCreateRequest")
     public void init(WebDataBinder dataBinder) {
         dataBinder.addValidators(accountCreateRequestValidator);
+    }
+
+    @InitBinder("accountUpdatePasswordRequest")
+    public void initAccountUpdatePasswordRequestBinder(WebDataBinder dataBinder) {
+        dataBinder.addValidators(accountUpdatePasswordRequestValidator);
     }
 
     @Override
@@ -65,5 +73,21 @@ public class AccountCommandController implements AccountCommandApi {
         log.info("이메일 변경 요청 완료");
 
         return new ResponseEntity<>(Response.createResponseWithoutData(HttpServletResponse.SC_OK, "이메일 변경이 성공적으로 완료되었습니다."), HttpStatus.OK);
+    }
+
+    @Override
+    @PatchMapping("/user/accounts/change-password")
+    public ResponseEntity<Response<?>> editAccountPassword(@Login AccountSessionDTO accountSessionDTO,
+                                                           @Validated @RequestBody AccountUpdatePasswordRequest accountUpdatePasswordRequest,
+                                                           BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException("비밀번호 변경 요청 값이 올바르지 않습니다. 다시 확인해 주세요.", bindingResult);
+        }
+
+        accountCommandService.updatePassword(accountUpdatePasswordRequest, accountSessionDTO);
+
+        log.info("비밀번호 변경 요청 완료");
+
+        return new ResponseEntity<>(Response.createResponseWithoutData(HttpServletResponse.SC_OK, "비밀번호 변경이 성공적으로 완료되었습니다."), HttpStatus.OK);
     }
 }

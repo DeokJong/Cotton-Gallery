@@ -3,6 +3,7 @@ package com.cottongallery.backend.auth.service.command.impl;
 import com.cottongallery.backend.auth.domain.Account;
 import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
 import com.cottongallery.backend.auth.dto.account.request.AccountUpdateEmailRequest;
+import com.cottongallery.backend.auth.dto.account.request.AccountUpdatePasswordRequest;
 import com.cottongallery.backend.auth.exception.account.UsernameAlreadyExistsException;
 import com.cottongallery.backend.auth.repository.AccountRepository;
 import com.cottongallery.backend.auth.service.command.AccountCommandService;
@@ -59,5 +60,12 @@ public class AccountCommandServiceImpl implements AccountCommandService {
         Account account = accountQueryService.getAccountEntityByUsername(accountSessionDTO.getUsername());
 
         account.changeEmail(accountUpdateEmailRequest.getEmail());
+    }
+
+    @Override
+    public void updatePassword(AccountUpdatePasswordRequest accountUpdatePasswordRequest, AccountSessionDTO accountSessionDTO) {
+        Account account = accountQueryService.getAccountEntityByUsername(accountSessionDTO.getUsername());
+
+        account.changePassword(passwordEncoder.encode(accountUpdatePasswordRequest.getPassword()));
     }
 }
