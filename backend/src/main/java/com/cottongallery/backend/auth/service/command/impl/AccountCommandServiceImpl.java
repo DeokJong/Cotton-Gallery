@@ -2,11 +2,13 @@ package com.cottongallery.backend.auth.service.command.impl;
 
 import com.cottongallery.backend.auth.domain.Account;
 import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
+import com.cottongallery.backend.auth.dto.account.request.AccountUpdateEmailRequest;
 import com.cottongallery.backend.auth.exception.account.UsernameAlreadyExistsException;
 import com.cottongallery.backend.auth.repository.AccountRepository;
 import com.cottongallery.backend.auth.service.command.AccountCommandService;
 import com.cottongallery.backend.auth.service.query.AccountQueryService;
 import com.cottongallery.backend.common.constants.Role;
+import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.order.domain.Address;
 import com.cottongallery.backend.order.domain.AddressType;
 import lombok.RequiredArgsConstructor;
@@ -50,5 +52,12 @@ public class AccountCommandServiceImpl implements AccountCommandService {
         log.debug("계정 생성 성공: username={}", account.getUsername());
 
         return savedAccount.getId();
+    }
+
+    @Override
+    public void updateEmail(AccountUpdateEmailRequest accountUpdateEmailRequest, AccountSessionDTO accountSessionDTO) {
+        Account account = accountQueryService.getAccountEntityByUsername(accountSessionDTO.getUsername());
+
+        account.changeEmail(accountUpdateEmailRequest.getEmail());
     }
 }

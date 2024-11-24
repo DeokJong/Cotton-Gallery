@@ -29,4 +29,9 @@ public class AccountQueryServiceImpl implements AccountQueryService {
                 .map(Account::getName)
                 .orElseThrow(AccountNotFoundException::new);
     }
+
+    @Override
+    public Account getAccountEntityByUsername(String username) {
+        return accountRepository.findByUsername(username).orElseThrow(AccountNotFoundException::new);
+    }
 }

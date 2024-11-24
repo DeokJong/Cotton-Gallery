@@ -71,4 +71,8 @@ public class Account extends BaseTimeEntity {
         this.addressList.add(address);
         address.setAccount(this);
     }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
 }
