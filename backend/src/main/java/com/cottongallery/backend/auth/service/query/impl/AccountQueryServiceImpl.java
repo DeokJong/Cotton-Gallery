@@ -27,11 +27,13 @@ public class AccountQueryServiceImpl implements AccountQueryService {
         return accountRepository
                 .findByUsername(username)
                 .map(Account::getName)
-                .orElseThrow(AccountNotFoundException::new);
+                .orElseThrow(() -> new AccountNotFoundException("사용자 이름 " + username + "에 해당하는 계정을 찾을 수 없습니다."));
     }
 
     @Override
     public Account getAccountEntityByUsername(String username) {
-        return accountRepository.findByUsername(username).orElseThrow(AccountNotFoundException::new);
+        return accountRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new AccountNotFoundException("사용자 이름 " + username + "에 해당하는 계정을 찾을 수 없습니다."));
     }
 }

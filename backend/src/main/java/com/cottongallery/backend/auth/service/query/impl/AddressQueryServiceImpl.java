@@ -40,7 +40,9 @@ public class AddressQueryServiceImpl implements AddressQueryService {
         return addressRepository
                 .findByAddressTypeAndAccount(AddressType.PRIMARY, account)
                 .map(AddressResponse::fromAddress)
-                .orElseThrow(PrimaryAddressNotFoundException::new);
+                .orElseThrow(() -> new PrimaryAddressNotFoundException(
+                        "사용자 이름 " + username + "에 대한 기본 주소를 찾을 수 없습니다."
+                ));
     }
 
     @Override
@@ -49,7 +51,9 @@ public class AddressQueryServiceImpl implements AddressQueryService {
 
         return addressRepository
                 .findByIdAndAccount(addressId, account)
-                .orElseThrow(AddressNotFoundException::new);
+                .orElseThrow(() -> new AddressNotFoundException(
+                        "주소 ID " + addressId + "에 대한 정보를 사용자 " + username + "의 계정에서 찾을 수 없습니다."
+                ));
     }
 
     @Override
@@ -58,6 +62,8 @@ public class AddressQueryServiceImpl implements AddressQueryService {
 
         return addressRepository
                 .findByAddressTypeAndAccount(AddressType.PRIMARY, account)
-                .orElseThrow(PrimaryAddressNotFoundException::new);
+                .orElseThrow(() -> new PrimaryAddressNotFoundException(
+                        "사용자 이름 " + username + "에 대한 기본 주소를 찾을 수 없습니다."
+                ));
     }
 }
