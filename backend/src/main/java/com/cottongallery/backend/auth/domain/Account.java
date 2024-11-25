@@ -1,7 +1,6 @@
 package com.cottongallery.backend.auth.domain;
 
 import com.cottongallery.backend.common.constants.Role;
-import com.cottongallery.backend.order.domain.Address;
 
 import com.cottongallery.backend.domain.base.BaseTimeEntity;
 import jakarta.persistence.*;

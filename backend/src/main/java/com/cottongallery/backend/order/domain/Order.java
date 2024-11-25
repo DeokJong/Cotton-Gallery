@@ -1,6 +1,7 @@
 package com.cottongallery.backend.order.domain;
 
 import com.cottongallery.backend.auth.domain.Account;
+import com.cottongallery.backend.auth.domain.Address;
 import com.cottongallery.backend.common.constants.OrderStatus;
 
 import com.cottongallery.backend.domain.base.BaseEntity;

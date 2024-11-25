@@ -1,4 +1,4 @@
-package com.cottongallery.backend.order.domain;
+package com.cottongallery.backend.auth.domain;
 
 public enum AddressType {
     PRIMARY,   // 기본 주소

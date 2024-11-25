@@ -10,8 +10,8 @@ import com.cottongallery.backend.auth.service.command.AccountCommandService;
 import com.cottongallery.backend.auth.service.query.AccountQueryService;
 import com.cottongallery.backend.common.constants.Role;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
-import com.cottongallery.backend.order.domain.Address;
-import com.cottongallery.backend.order.domain.AddressType;
+import com.cottongallery.backend.auth.domain.Address;
+import com.cottongallery.backend.auth.domain.AddressType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,7 +44,7 @@ public class AccountCommandServiceImpl implements AccountCommandService {
                 accountCreateRequest.getPhoneNumber(),
                 Role.ROLE_USER);
 
-        account.addAddress(new Address(accountCreateRequest.getZipcode(),
+        account.addAddress(Address.createAddressWithoutAccount(accountCreateRequest.getZipcode(),
                 accountCreateRequest.getStreet(),
                 accountCreateRequest.getDetail(), AddressType.PRIMARY));
 
