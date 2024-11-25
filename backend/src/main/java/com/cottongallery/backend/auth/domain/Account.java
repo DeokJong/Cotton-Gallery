@@ -1,7 +1,6 @@
 package com.cottongallery.backend.auth.domain;
 
 import com.cottongallery.backend.common.constants.Role;
-import com.cottongallery.backend.order.domain.Address;
 
 import com.cottongallery.backend.domain.base.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -70,5 +69,13 @@ public class Account extends BaseTimeEntity {
     public void addAddress(Address address) {
         this.addressList.add(address);
         address.setAccount(this);
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
     }
 }

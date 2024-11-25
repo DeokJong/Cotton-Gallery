@@ -5,14 +5,13 @@ import com.cottongallery.backend.auth.exception.account.AccountNotFoundException
 import com.cottongallery.backend.auth.exception.address.AddressNotFoundException;
 import com.cottongallery.backend.auth.repository.AccountRepository;
 import com.cottongallery.backend.auth.repository.AddressRepository;
-import com.cottongallery.backend.common.constants.OrderStatus;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.common.dto.PageInfo;
 import com.cottongallery.backend.item.domain.Discount;
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import com.cottongallery.backend.item.repository.ItemRepository;
-import com.cottongallery.backend.order.domain.Address;
+import com.cottongallery.backend.auth.domain.Address;
 import com.cottongallery.backend.order.domain.Order;
 import com.cottongallery.backend.order.domain.OrderItem;
 import com.cottongallery.backend.order.dto.request.OrderItemCreateRequest;
