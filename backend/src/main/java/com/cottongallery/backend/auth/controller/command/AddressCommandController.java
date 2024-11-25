@@ -11,10 +11,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.MediaType.*;
 
 @Slf4j
 @RestController
@@ -25,7 +28,7 @@ public class AddressCommandController implements AddressCommandApi {
     private final AddressCommandService addressCommandService;
 
     @Override
-    @PostMapping
+    @PostMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<?>> addAddress(@Login AccountSessionDTO accountSessionDTO,
                                                   @Validated @RequestBody AddressCreateRequest addressCreateRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -38,7 +41,7 @@ public class AddressCommandController implements AddressCommandApi {
     }
 
     @Override
-    @PatchMapping("/{addressId}/primary")
+    @PatchMapping(value = "/{addressId}/primary", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<?>> editPrimaryAddress(@Login AccountSessionDTO accountSessionDTO,
                                                           @PathVariable Long addressId) {
 
@@ -48,7 +51,7 @@ public class AddressCommandController implements AddressCommandApi {
     }
 
     @Override
-    @DeleteMapping("/{addressId}")
+    @DeleteMapping(value = "/{addressId}", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<?>> removeAddress(@Login AccountSessionDTO accountSessionDTO,
                                                      @PathVariable Long addressId) {
 

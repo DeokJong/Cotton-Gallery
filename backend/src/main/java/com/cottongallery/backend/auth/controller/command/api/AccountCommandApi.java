@@ -30,7 +30,8 @@ public interface AccountCommandApi {
     @Operation(summary = "이메일 변경", description = "사용자 이메일 정보를 변경합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "이메일 변경 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터")
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
+            @ApiResponse(responseCode = "404", description = "이메일 변경에 필요한 리소스를 찾을 수 없습니다.")
     })
     ResponseEntity<Response<?>> editAccountEmail(@Login AccountSessionDTO accountSessionDTO,
                                                         @Validated @RequestBody AccountUpdateEmailRequest accountUpdateEmailRequest,
@@ -39,7 +40,8 @@ public interface AccountCommandApi {
     @Operation(summary = "비밀번호 변경", description = "사용자 비밀번호를 변경합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "비밀번호 변경 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터")
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
+            @ApiResponse(responseCode = "404", description = "비밀번호 변경에 필요한 리소스를 찾을 수 없습니다.")
     })
     ResponseEntity<Response<?>> editAccountPassword(@Login AccountSessionDTO accountSessionDTO,
                                                     @Validated @RequestBody AccountUpdatePasswordRequest accountUpdatePasswordRequest,

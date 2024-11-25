@@ -24,7 +24,8 @@ public interface AccountQueryApi {
 
     @Operation(summary = "사용자 닉네임 조회", description = "로그인된 사용자의 닉네임을 반환합니다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "사용자 닉네임 조회 성공")
+            @ApiResponse(responseCode = "200", description = "사용자 닉네임 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "사용자 닉네임 조회에 필요한 리소스를 찾을 수 없습니다.")
     })
     ResponseEntity<Response<AccountNicknameResponse>> retrieveNickname(@Login AccountSessionDTO accountSessionDTO);
 }
