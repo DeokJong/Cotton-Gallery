@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface AddressRepository extends JpaRepository<Address, Long> {
     List<Address> findAllByAccount(Account account);
 
-    Optional<Address> findByIdAndCreatedBy(Long addressId, String createBy);
+    Optional<Address> findByIdAndAccount(Long addressId, Account account);
     Optional<Address> findByAddressTypeAndAccount(AddressType addressType, Account account);
 }

@@ -8,6 +8,6 @@ public interface AddressQueryService {
     AddressListResponse getAddressListResponseByAccountUsername(String username);
     AddressResponse getPrimaryAddressResponseByUsername(String username);
 
-    Address getPrimaryAddressEntityResponseByUsername(String username);
-    Address getAddressEntityByIdAndCreateBy(Long addressId, String createBy);
+    Address getPrimaryAddressEntityByUsername(String username);
+    Address getAddressEntityByIdAndUsername(Long addressId, String username);
 }

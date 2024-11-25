@@ -44,14 +44,16 @@ public class AddressQueryServiceImpl implements AddressQueryService {
     }
 
     @Override
-    public Address getAddressEntityByIdAndCreateBy(Long addressId, String createBy) {
+    public Address getAddressEntityByIdAndUsername(Long addressId, String username) {
+        Account account = accountQueryService.getAccountEntityByUsername(username);
+
         return addressRepository
-                .findByIdAndCreatedBy(addressId, createBy)
+                .findByIdAndAccount(addressId, account)
                 .orElseThrow(AddressNotFoundException::new);
     }
 
     @Override
-    public Address getPrimaryAddressEntityResponseByUsername(String username) {
+    public Address getPrimaryAddressEntityByUsername(String username) {
         Account account = accountQueryService.getAccountEntityByUsername(username);
 
         return addressRepository

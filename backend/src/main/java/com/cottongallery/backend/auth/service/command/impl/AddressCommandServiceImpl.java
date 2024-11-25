@@ -37,16 +37,16 @@ public class AddressCommandServiceImpl implements AddressCommandService {
 
     @Override
     public void updatePrimaryAddressById(Long addressId, AccountSessionDTO accountSessionDTO) {
-        Address primaryAddress = addressQueryService.getPrimaryAddressEntityResponseByUsername(accountSessionDTO.getUsername());
+        Address primaryAddress = addressQueryService.getPrimaryAddressEntityByUsername(accountSessionDTO.getUsername());
         primaryAddress.changeAddressType(AddressType.SECONDARY);
 
-        Address address = addressQueryService.getAddressEntityByIdAndCreateBy(addressId, accountSessionDTO.getUsername());
+        Address address = addressQueryService.getAddressEntityByIdAndUsername(addressId, accountSessionDTO.getUsername());
         address.changeAddressType(AddressType.PRIMARY);
     }
 
     @Override
     public void deleteAddress(Long addressId, AccountSessionDTO accountSessionDTO) {
-        Address address = addressQueryService.getAddressEntityByIdAndCreateBy(addressId, accountSessionDTO.getUsername());
+        Address address = addressQueryService.getAddressEntityByIdAndUsername(addressId, accountSessionDTO.getUsername());
 
         addressRepository.delete(address);
     }
