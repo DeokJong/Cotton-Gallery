@@ -1,5 +1,6 @@
 package com.cottongallery.backend.auth.controller.query;
 
+import com.cottongallery.backend.auth.controller.query.api.AddressQueryApi;
 import com.cottongallery.backend.auth.dto.address.response.AddressListResponse;
 import com.cottongallery.backend.auth.dto.address.response.AddressResponse;
 import com.cottongallery.backend.auth.service.query.AddressQueryService;
@@ -15,16 +16,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.http.MediaType.*;
+
 
 @Slf4j
 @RestController
 @RequestMapping("/api/user/address")
 @RequiredArgsConstructor
-public class AddressQueryController {
+public class AddressQueryController implements AddressQueryApi {
 
     private final AddressQueryService addressQueryService;
 
-    @GetMapping
+    @Override
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<AddressListResponse>> retrieveAddressList(@Login AccountSessionDTO accountSessionDTO) {
 
         AddressListResponse addressListResponse = addressQueryService.getAddressListResponseByAccountUsername(accountSessionDTO.getUsername());
@@ -32,7 +36,8 @@ public class AddressQueryController {
         return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_OK, "주소 리스트 조회에 성공했습니다.", addressListResponse), HttpStatus.OK);
     }
 
-    @GetMapping("/primary")
+    @Override
+    @GetMapping(value = "/primary", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<AddressResponse>> retrievePrimaryAddress(@Login AccountSessionDTO accountSessionDTO) {
 
         AddressResponse primaryAddress = addressQueryService.getPrimaryAddressResponseByUsername(accountSessionDTO.getUsername());

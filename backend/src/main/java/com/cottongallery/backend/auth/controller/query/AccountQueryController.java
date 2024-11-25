@@ -40,6 +40,7 @@ public class AccountQueryController implements AccountQueryApi {
                 HttpStatus.OK);
     }
 
+    @Override
     @GetMapping(value = "/user/accounts/nickname", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<AccountNicknameResponse>> retrieveNickname(@Login AccountSessionDTO accountSessionDTO) {
         String nickname = accountQueryService.getNameByUsername(accountSessionDTO.getUsername());
