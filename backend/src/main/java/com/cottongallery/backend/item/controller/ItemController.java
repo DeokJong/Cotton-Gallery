@@ -8,7 +8,8 @@ import com.cottongallery.backend.item.controller.api.ItemApi;
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
 import com.cottongallery.backend.item.dto.response.ItemListResponse;
-import com.cottongallery.backend.item.service.ItemService;
+import com.cottongallery.backend.item.service.command.ItemCommandService;
+import com.cottongallery.backend.item.service.query.ItemQueryService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,8 @@ import java.util.List;
 @RequestMapping("/api/items")
 public class ItemController implements ItemApi {
 
-    private final ItemService itemService;
+    private final ItemQueryService itemQueryService;
+    private final ItemCommandService itemCommandService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<?>> addItem(@RequestParam(required = false) Long discountId,
@@ -41,7 +43,7 @@ public class ItemController implements ItemApi {
             throw new InvalidRequestException("상품 생성 요청 값이 올바르지 않습니다. 다시 확인해 주세요.", bindingResult);
         }
 
-        Long savedItemId = itemService.createItem(itemCreateRequest, discountId);
+        Long savedItemId = itemCommandService.createItem(itemCreateRequest, discountId);
 
         log.info("상품 생성 요청 완료: itemId={}", savedItemId);
 
@@ -52,7 +54,7 @@ public class ItemController implements ItemApi {
     public ResponseEntity<Response<ListResponse<List<ItemListResponse>>>> retrieveItems(@RequestParam(defaultValue = "1") int page) {
         PageRequest pageRequest = PageRequest.of(page -1, 10, Sort.by(Sort.Direction.DESC, "createdBy"));
 
-        Slice<ItemListResponse> items = itemService.getItemResponses(pageRequest);
+        Slice<ItemListResponse> items = itemQueryService.getItemResponses(pageRequest);
         List<ItemListResponse> content = items.getContent();
 
         ListResponse<List<ItemListResponse>> itemResponse = new ListResponse<>(new PageInfo(page, items.hasNext(), items.hasPrevious()), content);
@@ -69,7 +71,7 @@ public class ItemController implements ItemApi {
             throw new InvalidRequestException("상품 수정 요청 값이 올바르지 않습니다. 다시 확인해 주세요.", bindingResult);
         }
 
-        Long savedItemId = itemService.updateItem(itemUpdateRequest, itemId, discountId);
+        Long savedItemId = itemCommandService.updateItem(itemUpdateRequest, itemId, discountId);
 
         log.info("상품 수정 요청 완료: itemId={}", savedItemId);
 
@@ -78,7 +80,7 @@ public class ItemController implements ItemApi {
 
     @DeleteMapping(value = "/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<?>> removeItem(@PathVariable Long itemId) {
-        itemService.deleteItem(itemId);
+        itemCommandService.deleteItem(itemId);
 
         log.info("상품 삭제 요청 완료: itemId={}", itemId);
 

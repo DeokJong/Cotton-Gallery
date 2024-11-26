@@ -1,19 +1,15 @@
-package com.cottongallery.backend.item.service.impl;
+package com.cottongallery.backend.item.service.command.impl;
 
 import com.cottongallery.backend.item.domain.Discount;
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
-import com.cottongallery.backend.item.dto.response.ItemListResponse;
-import com.cottongallery.backend.item.exception.DiscountNotFoundException;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import com.cottongallery.backend.item.repository.DiscountRepository;
 import com.cottongallery.backend.item.repository.ItemRepository;
-import com.cottongallery.backend.item.service.ItemService;
+import com.cottongallery.backend.item.service.command.ItemCommandService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +19,10 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService {
+public class ItemCommandServiceImpl implements ItemCommandService {
 
-    private final ItemRepository itemRepository;
     private final DiscountRepository discountRepository;
+    private final ItemRepository itemRepository;
 
     @Override
     public Long createItem(ItemCreateRequest itemCreateRequest, Long discountId) {
@@ -43,14 +39,6 @@ public class ItemServiceImpl implements ItemService {
         Item savedItem = itemRepository.save(item);
 
         return savedItem.getId();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Slice<ItemListResponse> getItemResponses(Pageable pageable) {
-        return itemRepository
-                .findAll(pageable)
-                .map(ItemListResponse::fromItem);
     }
 
     @Override
