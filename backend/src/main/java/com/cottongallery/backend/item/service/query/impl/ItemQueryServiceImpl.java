@@ -2,7 +2,7 @@ package com.cottongallery.backend.item.service.query.impl;
 
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.domain.ItemStatus;
-import com.cottongallery.backend.item.dto.response.ItemListResponse;
+import com.cottongallery.backend.item.dto.response.ItemResponse;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import com.cottongallery.backend.item.repository.ItemRepository;
 import com.cottongallery.backend.item.service.query.ItemQueryService;
@@ -22,10 +22,10 @@ public class ItemQueryServiceImpl implements ItemQueryService {
     private final ItemRepository itemRepository;
 
     @Override
-    public Slice<ItemListResponse> getItemResponses(Pageable pageable) {
+    public Slice<ItemResponse> getItemResponses(Pageable pageable) {
         return itemRepository
                 .findAllByItemStatus(pageable, ItemStatus.ACTIVE)
-                .map(ItemListResponse::fromItem);
+                .map(ItemResponse::fromItem);
     }
 
     @Override

@@ -20,5 +20,5 @@ public interface ItemQueryApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "특정 페이지 상품 목록 조회 성공")
     })
-    ResponseEntity<Response<ListResponse<List<ItemListResponse>>>> retrieveItems(@Parameter(description = "조회할 페이지 번호") @RequestParam(defaultValue = "1") int page);
+    ResponseEntity<Response<ItemListResponse>> retrieveItems(@Parameter(description = "조회할 페이지 번호") @RequestParam(defaultValue = "1") int page);
 }

@@ -1,10 +1,10 @@
 package com.cottongallery.backend.item.controller.query;
 
-import com.cottongallery.backend.common.dto.ListResponse;
 import com.cottongallery.backend.common.dto.PageInfo;
 import com.cottongallery.backend.common.dto.Response;
 import com.cottongallery.backend.item.controller.query.api.ItemQueryApi;
 import com.cottongallery.backend.item.dto.response.ItemListResponse;
+import com.cottongallery.backend.item.dto.response.ItemResponse;
 import com.cottongallery.backend.item.service.query.ItemQueryService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +32,13 @@ public class ItemQueryController implements ItemQueryApi {
 
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<ListResponse<List<ItemListResponse>>>> retrieveItems(@RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<Response<ItemListResponse>> retrieveItems(@RequestParam(defaultValue = "1") int page) {
         PageRequest pageRequest = PageRequest.of(page -1, 9, Sort.by(Sort.Direction.DESC, "createdDate"));
 
-        Slice<ItemListResponse> items = itemQueryService.getItemResponses(pageRequest);
-        List<ItemListResponse> content = items.getContent();
+        Slice<ItemResponse> items = itemQueryService.getItemResponses(pageRequest);
+        List<ItemResponse> content = items.getContent();
 
-        ListResponse<List<ItemListResponse>> itemResponse = new ListResponse<>(new PageInfo(page, items.hasNext(), items.hasPrevious()), content);
+        ItemListResponse itemResponse = ItemListResponse.fromItemResponse(content, new PageInfo(page, items.hasNext(), items.hasPrevious()));
 
         return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_OK, "상품 " + page + " 페이지 조회에 성공했습니다.", itemResponse), HttpStatus.OK);
     }

@@ -1,30 +1,18 @@
 package com.cottongallery.backend.item.dto.response;
 
-import com.cottongallery.backend.item.domain.Item;
+import com.cottongallery.backend.common.dto.PageInfo;
 import lombok.*;
 
-import java.util.Optional;
+import java.util.List;
 
 @Getter @Setter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemListResponse {
-    private Long itemId;
-    private String name;
-    private Integer price;
-    private Integer stockQuantity;
+    private List<ItemResponse> items;
+    private PageInfo pageInfo;
 
-    private DiscountResponse discountResponse;
-
-    public static ItemListResponse fromItem(Item item) {
-        DiscountResponse discountResponse = Optional.ofNullable(item.getDiscount())
-                .map(DiscountResponse::fromDiscount)
-                .orElse(null);
-
-        return new ItemListResponse(item.getId(),
-                item.getName(),
-                item.getPrice(),
-                item.getStockQuantity(),
-                discountResponse);
+    public static ItemListResponse fromItemResponse(List<ItemResponse> itemResponses, PageInfo pageInfo) {
+        return new ItemListResponse(itemResponses, pageInfo);
     }
 }
