@@ -1,6 +1,9 @@
 package com.cottongallery.backend.item.service.query.impl;
 
+import com.cottongallery.backend.item.domain.Item;
+import com.cottongallery.backend.item.domain.ItemStatus;
 import com.cottongallery.backend.item.dto.response.ItemListResponse;
+import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import com.cottongallery.backend.item.repository.ItemRepository;
 import com.cottongallery.backend.item.service.query.ItemQueryService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +24,15 @@ public class ItemQueryServiceImpl implements ItemQueryService {
     @Override
     public Slice<ItemListResponse> getItemResponses(Pageable pageable) {
         return itemRepository
-                .findAll(pageable)
+                .findAllByItemStatus(pageable, ItemStatus.ACTIVE)
                 .map(ItemListResponse::fromItem);
     }
+
+    @Override
+    public Item getItemEntityById(Long itemId) {
+        return itemRepository
+                .findById(itemId)
+                .orElseThrow(ItemNotFoundException::new);
+    }
+
 }

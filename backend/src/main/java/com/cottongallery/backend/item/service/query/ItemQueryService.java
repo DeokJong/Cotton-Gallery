@@ -1,6 +1,8 @@
 package com.cottongallery.backend.item.service.query;
 
+import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.dto.response.ItemListResponse;
+import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
@@ -12,4 +14,6 @@ public interface ItemQueryService {
      * @return 페이지된 상품 목록
      */
     Slice<ItemListResponse> getItemResponses(Pageable pageable);
+
+    Item getItemEntityById(Long itemId);
 }
