@@ -17,9 +17,10 @@ public class BackendApplication {
 		SpringApplication.run(BackendApplication.class, args);
 	}
 
-	@Bean
-	public AuditorAware<String> auditorProvider() {
-		return () -> Optional
-				.of(SecurityContextHolder.getContext().getAuthentication().getName());
-	}
+  @Bean
+  public AuditorAware<String> auditorProvider() {
+      return () -> Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+              .map(auth -> auth.getName())
+              .or(() -> Optional.of("system")); // 인증되지 않은 경우 기본값 반환
+  }
 }
