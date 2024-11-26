@@ -63,11 +63,6 @@ public class OrderQueryServiceImpl implements OrderQueryService {
     }
 
     @Override
-    public Order getOrderEntityById(Long orderId) {
-        return orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
-    }
-
-    @Override
     public Order getOrderEntityByAccountAndId(Account account, Long orderId) {
         return orderRepository
                 .findByAccountAndId(account, orderId)
