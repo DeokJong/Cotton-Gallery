@@ -4,6 +4,7 @@ import com.cottongallery.backend.common.argumentResolver.annotation.Login;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.common.dto.Response;
 import com.cottongallery.backend.common.exception.InvalidRequestException;
+import com.cottongallery.backend.order.controller.command.api.OrderCommandApi;
 import com.cottongallery.backend.order.dto.request.OrderCreateRequest;
 import com.cottongallery.backend.order.service.command.OrderCommandService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,13 +20,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/orders")
-public class OrderCommandController {
+public class OrderCommandController implements OrderCommandApi {
 
     private final OrderCommandService orderCommandService;
 
+    @Override
     @PostMapping
     public ResponseEntity<Response<?>> addOrder(@Login AccountSessionDTO accountSessionDTO,
-                                                            @RequestBody @Validated OrderCreateRequest orderCreateRequest,
+                                                @RequestBody @Validated OrderCreateRequest orderCreateRequest,
                                                             BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -38,6 +40,7 @@ public class OrderCommandController {
                 HttpStatus.CREATED);
     }
 
+    @Override
     @PatchMapping("/{orderId}")
     public ResponseEntity<Response<?>> cancelOrder(@PathVariable Long orderId, @Login AccountSessionDTO accountSessionDTO) {
         orderCommandService.cancelOrder(orderId, accountSessionDTO);
