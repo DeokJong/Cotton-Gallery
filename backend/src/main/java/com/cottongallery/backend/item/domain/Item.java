@@ -34,20 +34,25 @@ public class Item extends BaseEntity {
     @JoinColumn(name = "discount_id")
     private Discount discount;
 
-    private Item(String name, Integer price, Integer stockQuantity, String content, Discount discount) {
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ItemStatus itemStatus;
+
+    private Item(String name, Integer price, Integer stockQuantity, String content, ItemStatus itemStatus,Discount discount) {
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.content = content;
         this.discount = discount;
+        this.itemStatus = itemStatus;
     }
 
-    public static Item createItemWithoutDiscount(String name, Integer price, Integer stockQuantity, String content) {
-        return new Item(name, price, stockQuantity, content, null);
-    }
+//    public static Item createItemWithoutDiscount(String name, Integer price, Integer stockQuantity, String content) {
+//        return new Item(name, price, stockQuantity, content, null);
+//    }
 
-    public static Item createItem(String name, Integer price, Integer stockQuantity, String content, Discount discount) {
-        return new Item(name, price, stockQuantity, content, discount);
+    public static Item createItem(String name, Integer price, Integer stockQuantity, String content, ItemStatus itemStatus, Discount discount) {
+        return new Item(name, price, stockQuantity, content, itemStatus, discount);
     }
 
     public void reduceStockQuantity(Integer quantity) {
@@ -64,5 +69,9 @@ public class Item extends BaseEntity {
         this.stockQuantity = stockQuantity;
         this.content = content;
         this.discount = discount;
+    }
+
+    public void changeItemStatus(ItemStatus itemStatus) {
+        this.itemStatus = itemStatus;
     }
 }
