@@ -1,6 +1,7 @@
 package com.cottongallery.backend.item.domain;
 
 import com.cottongallery.backend.domain.base.BaseEntity;
+import com.cottongallery.backend.order.exception.NotEnoughStockQuantityException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -56,6 +57,10 @@ public class Item extends BaseEntity {
     }
 
     public void reduceStockQuantity(Integer quantity) {
+        if (stockQuantity - quantity < 0) {
+            throw new NotEnoughStockQuantityException("재고가 부족합니다. 현재 재고: " + stockQuantity);
+        }
+
         stockQuantity = stockQuantity - quantity;
     }
 

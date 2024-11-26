@@ -1,4 +1,4 @@
-package com.cottongallery.backend.common.constants;
+package com.cottongallery.backend.order.domain;
 
 public enum OrderStatus {
     ORDER, COMP, CANCEL;
