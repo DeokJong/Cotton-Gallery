@@ -27,7 +27,6 @@ public interface ItemCommandService {
      * @param discountId 변경할 할인 ID
      * @return 업데이트된 상품의 ID
      * @throws ItemNotFoundException 해당 ID에 대한 상품 엔티티가 없는 경우 발생
-     * @throws DiscountNotFoundException 해당 ID에 대한 할인 엔티티가 없는 경우 발생
      */
     Long updateItem(ItemUpdateRequest itemUpdateRequest, Long itemId, Long discountId);
 
