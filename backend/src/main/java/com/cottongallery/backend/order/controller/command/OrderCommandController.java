@@ -6,6 +6,7 @@ import com.cottongallery.backend.common.dto.Response;
 import com.cottongallery.backend.common.exception.InvalidRequestException;
 import com.cottongallery.backend.order.controller.command.api.OrderCommandApi;
 import com.cottongallery.backend.order.dto.request.OrderCreateRequest;
+import com.cottongallery.backend.order.dto.response.OrderCreateResponse;
 import com.cottongallery.backend.order.service.command.OrderCommandService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class OrderCommandController implements OrderCommandApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<Response<?>> addOrder(@Login AccountSessionDTO accountSessionDTO,
+    public ResponseEntity<Response<OrderCreateResponse>> addOrder(@Login AccountSessionDTO accountSessionDTO,
                                                 @RequestBody @Validated OrderCreateRequest orderCreateRequest,
                                                             BindingResult bindingResult) {
 
@@ -36,7 +37,7 @@ public class OrderCommandController implements OrderCommandApi {
 
         Long orderId = orderCommandService.createOrder(accountSessionDTO, orderCreateRequest.getOrderItemCreateRequestList(), orderCreateRequest.getAddressId());
 
-        return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_CREATED, "주문에 성공했습니다.", orderId),
+        return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_CREATED, "주문에 성공했습니다.", new OrderCreateResponse(orderId)),
                 HttpStatus.CREATED);
     }
 
