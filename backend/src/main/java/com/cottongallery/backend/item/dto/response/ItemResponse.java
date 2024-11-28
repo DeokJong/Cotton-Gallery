@@ -13,6 +13,8 @@ public class ItemResponse {
     private String name;
     private Integer price;
     private Integer stockQuantity;
+    private int likeCount;
+    private boolean likedByMe;
 
     private DiscountResponse discountResponse;
 
@@ -25,6 +27,8 @@ public class ItemResponse {
                 item.getName(),
                 item.getPrice(),
                 item.getStockQuantity(),
+                item.getLikeCount(),
+                false,
                 discountResponse);
     }
 }

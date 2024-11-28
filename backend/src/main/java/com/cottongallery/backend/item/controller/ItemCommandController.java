@@ -1,11 +1,11 @@
-package com.cottongallery.backend.item.controller.command;
+package com.cottongallery.backend.item.controller;
 
 import com.cottongallery.backend.common.dto.Response;
 import com.cottongallery.backend.common.exception.InvalidRequestException;
-import com.cottongallery.backend.item.controller.command.api.ItemCommandApi;
+import com.cottongallery.backend.item.controller.api.ItemCommandApi;
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
-import com.cottongallery.backend.item.service.command.ItemCommandService;
+import com.cottongallery.backend.item.service.ItemCommandService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

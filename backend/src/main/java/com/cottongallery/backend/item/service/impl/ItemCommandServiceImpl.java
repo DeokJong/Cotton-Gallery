@@ -1,4 +1,4 @@
-package com.cottongallery.backend.item.service.command.impl;
+package com.cottongallery.backend.item.service.impl;
 
 import com.cottongallery.backend.item.domain.Discount;
 import com.cottongallery.backend.item.domain.Item;
@@ -7,8 +7,8 @@ import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
 import com.cottongallery.backend.item.repository.DiscountRepository;
 import com.cottongallery.backend.item.repository.ItemRepository;
-import com.cottongallery.backend.item.service.command.ItemCommandService;
-import com.cottongallery.backend.item.service.query.ItemQueryService;
+import com.cottongallery.backend.item.service.ItemCommandService;
+import com.cottongallery.backend.item.service.ItemQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
