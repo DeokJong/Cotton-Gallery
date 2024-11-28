@@ -1,4 +1,4 @@
-package com.cottongallery.backend.item.service.command.impl;
+package com.cottongallery.backend.item.service.impl;
 
 import com.cottongallery.backend.auth.domain.Account;
 import com.cottongallery.backend.auth.service.query.AccountQueryService;
@@ -7,8 +7,8 @@ import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.domain.Like;
 import com.cottongallery.backend.item.domain.LikeStatus;
 import com.cottongallery.backend.item.repository.LikeRepository;
-import com.cottongallery.backend.item.service.command.LikeCommandService;
-import com.cottongallery.backend.item.service.query.ItemQueryService;
+import com.cottongallery.backend.item.service.LikeCommandService;
+import com.cottongallery.backend.item.service.ItemQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

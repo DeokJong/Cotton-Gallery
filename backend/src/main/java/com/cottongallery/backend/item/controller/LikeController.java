@@ -3,7 +3,7 @@ package com.cottongallery.backend.item.controller;
 import com.cottongallery.backend.common.argumentResolver.annotation.Login;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.common.dto.Response;
-import com.cottongallery.backend.item.service.command.LikeCommandService;
+import com.cottongallery.backend.item.service.LikeCommandService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

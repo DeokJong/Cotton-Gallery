@@ -1,4 +1,4 @@
-package com.cottongallery.backend.item.service.command;
+package com.cottongallery.backend.item.service;
 
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;

@@ -1,11 +1,11 @@
-package com.cottongallery.backend.item.service.query.impl;
+package com.cottongallery.backend.item.service.impl;
 
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.domain.ItemStatus;
 import com.cottongallery.backend.item.dto.response.ItemResponse;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import com.cottongallery.backend.item.repository.ItemRepository;
-import com.cottongallery.backend.item.service.query.ItemQueryService;
+import com.cottongallery.backend.item.service.ItemQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
