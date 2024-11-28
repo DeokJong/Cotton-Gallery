@@ -1,4 +1,4 @@
-package com.cottongallery.backend.item.controller.query.api;
+package com.cottongallery.backend.item.controller.api;
 
 import com.cottongallery.backend.common.argumentResolver.annotation.Login;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
@@ -11,8 +11,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Tag(name = "상품 관리", description = "상품 관련 API")
 public interface ItemQueryApi {

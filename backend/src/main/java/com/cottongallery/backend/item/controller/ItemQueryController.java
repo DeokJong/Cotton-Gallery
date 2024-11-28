@@ -1,10 +1,10 @@
-package com.cottongallery.backend.item.controller.query;
+package com.cottongallery.backend.item.controller;
 
 import com.cottongallery.backend.common.argumentResolver.annotation.Login;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.common.dto.PageInfo;
 import com.cottongallery.backend.common.dto.Response;
-import com.cottongallery.backend.item.controller.query.api.ItemQueryApi;
+import com.cottongallery.backend.item.controller.api.ItemQueryApi;
 import com.cottongallery.backend.item.dto.response.ItemListResponse;
 import com.cottongallery.backend.item.dto.response.ItemResponse;
 import com.cottongallery.backend.item.service.ItemQueryService;

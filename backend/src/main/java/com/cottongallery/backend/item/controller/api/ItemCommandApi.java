@@ -1,4 +1,4 @@
-package com.cottongallery.backend.item.controller.command.api;
+package com.cottongallery.backend.item.controller.api;
 
 import com.cottongallery.backend.common.dto.Response;
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
