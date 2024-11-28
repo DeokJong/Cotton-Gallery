@@ -28,7 +28,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/public/items")
+@RequestMapping("/api/items")
 public class ItemQueryController implements ItemQueryApi {
 
     private final ItemQueryService itemQueryService;
