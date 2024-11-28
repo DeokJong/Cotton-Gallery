@@ -1,7 +1,7 @@
 package com.cottongallery.backend.service;
 
 import com.cottongallery.backend.auth.repository.AccountRepository;
-import com.cottongallery.backend.auth.service.query.impl.AccountQueryServiceImpl;
+import com.cottongallery.backend.auth.service.impl.AccountQueryServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

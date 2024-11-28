@@ -1,7 +1,7 @@
 package com.cottongallery.backend.item.service.impl;
 
 import com.cottongallery.backend.auth.domain.Account;
-import com.cottongallery.backend.auth.service.query.AccountQueryService;
+import com.cottongallery.backend.auth.service.AccountQueryService;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.domain.LikeStatus;

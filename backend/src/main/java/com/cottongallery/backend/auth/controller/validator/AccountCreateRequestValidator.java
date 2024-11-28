@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.cottongallery.backend.auth.dto.account.request.AccountCreateRequest;
+import com.cottongallery.backend.auth.dto.request.AccountCreateRequest;
 
 @Slf4j
 @Component

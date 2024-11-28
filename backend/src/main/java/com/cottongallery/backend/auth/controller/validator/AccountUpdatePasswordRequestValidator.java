@@ -1,6 +1,6 @@
 package com.cottongallery.backend.auth.controller.validator;
 
-import com.cottongallery.backend.auth.dto.account.request.AccountUpdatePasswordRequest;
+import com.cottongallery.backend.auth.dto.request.AccountUpdatePasswordRequest;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

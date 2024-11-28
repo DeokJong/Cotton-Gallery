@@ -1,6 +1,6 @@
 package com.cottongallery.backend.item.domain;
 
-import com.cottongallery.backend.domain.base.BaseEntity;
+import com.cottongallery.backend.common.domain.base.BaseEntity;
 import com.cottongallery.backend.order.exception.NotEnoughStockQuantityException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
