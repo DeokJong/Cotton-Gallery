@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import static jakarta.persistence.FetchType.*;
 
@@ -38,6 +39,9 @@ public class Item extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ItemStatus itemStatus;
+
+    @Formula("(SELECT COUNT(l.item_id) FROM likes l WHERE l.item_id = item_id AND l.like_status = 'ACTIVE')")
+    private int likeCount;
 
     private Item(String name, Integer price, Integer stockQuantity, String content, ItemStatus itemStatus,Discount discount) {
         this.name = name;
