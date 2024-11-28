@@ -2,7 +2,7 @@ package com.cottongallery.backend.auth.domain;
 
 import com.cottongallery.backend.common.constants.Role;
 
-import com.cottongallery.backend.domain.base.BaseTimeEntity;
+import com.cottongallery.backend.common.domain.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
