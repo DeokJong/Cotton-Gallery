@@ -22,9 +22,14 @@ public class ItemQueryServiceImpl implements ItemQueryService {
     private final ItemRepository itemRepository;
 
     @Override
-    public Slice<ItemResponse> getItemResponses(Pageable pageable) {
+    public Slice<ItemResponse> getItemResponses(Pageable pageable, String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return itemRepository
+                    .findAllByItemStatus(pageable, ItemStatus.ACTIVE)
+                    .map(ItemResponse::fromItem);
+        }
         return itemRepository
-                .findAllByItemStatus(pageable, ItemStatus.ACTIVE)
+                .findAllByItemStatusAndNameContaining(pageable, ItemStatus.ACTIVE, keyword)
                 .map(ItemResponse::fromItem);
     }
 

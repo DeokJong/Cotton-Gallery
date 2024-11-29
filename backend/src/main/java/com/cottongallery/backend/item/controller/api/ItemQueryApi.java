@@ -3,6 +3,7 @@ package com.cottongallery.backend.item.controller.api;
 import com.cottongallery.backend.common.argumentResolver.annotation.Login;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.common.dto.Response;
+import com.cottongallery.backend.item.controller.ItemSort;
 import com.cottongallery.backend.item.dto.response.ItemListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,5 +20,8 @@ public interface ItemQueryApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "특정 페이지 상품 목록 조회 성공")
     })
-    ResponseEntity<Response<ItemListResponse>> retrieveItems(@Login AccountSessionDTO accountSessionDTO , @Parameter(description = "조회할 페이지 번호")@RequestParam(defaultValue = "1") int page);
+    ResponseEntity<Response<ItemListResponse>> retrieveItems(@Login AccountSessionDTO accountSessionDTO ,
+                                                             @Parameter(description = "조회할 페이지 번호")@RequestParam(defaultValue = "1") int page,
+                                                             @RequestParam(required = false) String keyword,
+                                                             @RequestParam(defaultValue = "CREATED_DATE")ItemSort itemSort);
 }
