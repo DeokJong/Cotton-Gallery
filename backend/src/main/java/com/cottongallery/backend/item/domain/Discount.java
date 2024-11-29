@@ -1,10 +1,7 @@
 package com.cottongallery.backend.item.domain;
 
 import com.cottongallery.backend.common.domain.base.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,15 +31,20 @@ public class Discount extends BaseEntity {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    private Discount(String name, BigDecimal discountPercent, LocalDate startDate, LocalDate endDate) {
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DiscountStatus discountStatus;
+
+    private Discount(String name, BigDecimal discountPercent, LocalDate startDate, LocalDate endDate, DiscountStatus discountStatus) {
         this.name = name;
         this.discountPercent = discountPercent;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.discountStatus = discountStatus;
     }
 
-    public static Discount createDiscount(String name, BigDecimal discountPercent, LocalDate startDate, LocalDate endDate) {
-        return new Discount(name, discountPercent, startDate, endDate);
+    public static Discount createDiscount(String name, BigDecimal discountPercent, LocalDate startDate, LocalDate endDate, DiscountStatus discountStatus) {
+        return new Discount(name, discountPercent, startDate, endDate, discountStatus);
     }
 
     public void update(String name, BigDecimal discountPercent, LocalDate startDate, LocalDate endDate) {
@@ -50,5 +52,9 @@ public class Discount extends BaseEntity {
         this.discountPercent = discountPercent;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public void changeDiscountStatus(DiscountStatus discountStatus) {
+        this.discountStatus = discountStatus;
     }
 }

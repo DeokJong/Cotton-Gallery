@@ -13,7 +13,7 @@ public interface ItemQueryService {
      * @param pageable 페이지, 정렬 정보를 담고 있는 객체
      * @return 페이지된 상품 목록
      */
-    Slice<ItemResponse> getItemResponses(Pageable pageable);
+    Slice<ItemResponse> getItemResponses(Pageable pageable, String keyword);
 
     /**
      * 주어진 ID를 통해 아이템 엔티티를 조회합니다.

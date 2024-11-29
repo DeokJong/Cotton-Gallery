@@ -1,6 +1,7 @@
 package com.cottongallery.backend.item.service.impl;
 
 import com.cottongallery.backend.item.domain.Discount;
+import com.cottongallery.backend.item.domain.DiscountStatus;
 import com.cottongallery.backend.item.dto.request.DiscountCreateRequest;
 import com.cottongallery.backend.item.dto.request.DiscountUpdateRequest;
 import com.cottongallery.backend.item.dto.response.DiscountResponse;
@@ -25,7 +26,7 @@ public class DiscountService {
         Discount discount = Discount.createDiscount(discountCreateRequest.getName(),
                 discountCreateRequest.getDiscountPercent(),
                 discountCreateRequest.getStartDate(),
-                discountCreateRequest.getEndDate());
+                discountCreateRequest.getEndDate(), DiscountStatus.ACTIVE);
 
         Discount savedDiscount = discountRepository.save(discount);
 
@@ -52,7 +53,7 @@ public class DiscountService {
     @Transactional(readOnly = true)
     public Slice<DiscountResponse> getDiscounts(Pageable pageable) {
         return discountRepository
-                .findAll(pageable)
+                .findAllByDiscountStatus(pageable, DiscountStatus.ACTIVE)
                 .map(DiscountResponse::fromDiscount);
     }
 
@@ -63,6 +64,6 @@ public class DiscountService {
 
         log.debug("할인 삭제 성공: discountId={}", discountId);
 
-        discountRepository.delete(discount);
+       discount.changeDiscountStatus(DiscountStatus.INACTIVE);
     }
 }

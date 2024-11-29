@@ -6,7 +6,9 @@ import com.cottongallery.backend.auth.service.AccountQueryService;
 import com.cottongallery.backend.auth.service.AddressQueryService;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.item.domain.Discount;
+import com.cottongallery.backend.item.domain.DiscountStatus;
 import com.cottongallery.backend.item.domain.Item;
+import com.cottongallery.backend.item.domain.ItemStatus;
 import com.cottongallery.backend.item.service.ItemQueryService;
 import com.cottongallery.backend.order.domain.Order;
 import com.cottongallery.backend.order.domain.OrderItem;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,10 +74,16 @@ public class OrderCommandServiceImpl implements OrderCommandService {
             Item item = itemQueryService.getItemEntityById(orderItemCreateRequest.getItemId());
 
             BigDecimal discountPercent = Optional.ofNullable(item.getDiscount())
+                    .filter(discount -> discount.getDiscountStatus() == DiscountStatus.ACTIVE)
+                    .filter(discount -> discount.getEndDate() == null || !discount.getEndDate().isBefore(LocalDate.now()))
                     .map(Discount::getDiscountPercent)
                     .orElse(null);
 
             OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), discountPercent, orderItemCreateRequest.getCount());
+
+            if (item.getStockQuantity() == 0) {
+                item.changeItemStatus(ItemStatus.OUT_OF_STOCK);
+            }
 
             orderItemList.add(orderItem);
         }

@@ -36,10 +36,13 @@ public class ItemQueryController implements ItemQueryApi {
 
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<ItemListResponse>> retrieveItems(@Login AccountSessionDTO accountSessionDTO, @RequestParam(defaultValue = "1") int page) {
-        PageRequest pageRequest = PageRequest.of(page -1, 9, Sort.by(Sort.Direction.DESC, "createdDate"));
+    public ResponseEntity<Response<ItemListResponse>> retrieveItems(@Login AccountSessionDTO accountSessionDTO,
+                                                                    @RequestParam(defaultValue = "1") int page,
+                                                                    @RequestParam(required = false) String keyword,
+                                                                    @RequestParam(defaultValue = "CREATED_DATE") ItemSort itemSort) {
+        PageRequest pageRequest = PageRequest.of(page -1, 9, Sort.by(Sort.Direction.DESC, itemSort.getFieldName()));
 
-        Slice<ItemResponse> items = itemQueryService.getItemResponses(pageRequest);
+        Slice<ItemResponse> items = itemQueryService.getItemResponses(pageRequest, keyword);
         List<ItemResponse> content = items.getContent();
 
         content.forEach(item -> {
