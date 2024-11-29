@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,6 +72,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
             Item item = itemQueryService.getItemEntityById(orderItemCreateRequest.getItemId());
 
             BigDecimal discountPercent = Optional.ofNullable(item.getDiscount())
+                    .filter(discount -> discount.getEndDate() == null || !discount.getEndDate().isBefore(LocalDate.now()))
                     .map(Discount::getDiscountPercent)
                     .orElse(null);
 

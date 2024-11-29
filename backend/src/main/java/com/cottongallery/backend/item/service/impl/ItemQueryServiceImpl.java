@@ -1,5 +1,6 @@
 package com.cottongallery.backend.item.service.impl;
 
+import com.cottongallery.backend.item.domain.Discount;
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.domain.ItemStatus;
 import com.cottongallery.backend.item.dto.response.ItemResponse;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -23,14 +26,17 @@ public class ItemQueryServiceImpl implements ItemQueryService {
 
     @Override
     public Slice<ItemResponse> getItemResponses(Pageable pageable, String keyword) {
+        Slice<Item> items;
+
         if (keyword == null || keyword.trim().isEmpty()) {
-            return itemRepository
-                    .findAllByItemStatus(pageable, ItemStatus.ACTIVE)
-                    .map(ItemResponse::fromItem);
+            items = itemRepository
+                    .findAllByItemStatus(pageable, ItemStatus.ACTIVE);
         }
-        return itemRepository
-                .findAllByItemStatusAndNameContaining(pageable, ItemStatus.ACTIVE, keyword)
-                .map(ItemResponse::fromItem);
+        else {
+            items = itemRepository
+                    .findAllByItemStatusAndNameContaining(pageable, ItemStatus.ACTIVE, keyword);
+        }
+        return items.map(this::filterDiscountAndConvertToResponse);
     }
 
     @Override
@@ -38,6 +44,16 @@ public class ItemQueryServiceImpl implements ItemQueryService {
         return itemRepository
                 .findById(itemId)
                 .orElseThrow(ItemNotFoundException::new);
+    }
+
+    private ItemResponse filterDiscountAndConvertToResponse(Item item) {
+        Discount discount = item.getDiscount();
+
+        if (discount != null && discount.getEndDate().isBefore(LocalDate.now())) {
+            discount = null;
+        }
+
+        return ItemResponse.fromItem(item, discount);
     }
 
 }

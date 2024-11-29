@@ -1,5 +1,6 @@
 package com.cottongallery.backend.item.dto.response;
 
+import com.cottongallery.backend.item.domain.Discount;
 import com.cottongallery.backend.item.domain.Item;
 import lombok.*;
 
@@ -18,8 +19,8 @@ public class ItemResponse {
 
     private DiscountResponse discountResponse;
 
-    public static ItemResponse fromItem(Item item) {
-        DiscountResponse discountResponse = Optional.ofNullable(item.getDiscount())
+    public static ItemResponse fromItem(Item item, Discount discount) {
+        DiscountResponse discountResponse = Optional.ofNullable(discount)
                 .map(DiscountResponse::fromDiscount)
                 .orElse(null);
 
