@@ -1,6 +1,7 @@
 package com.cottongallery.backend.item.service.impl;
 
 import com.cottongallery.backend.item.domain.Discount;
+import com.cottongallery.backend.item.domain.DiscountStatus;
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.domain.ItemStatus;
 import com.cottongallery.backend.item.dto.response.ItemResponse;
@@ -49,7 +50,7 @@ public class ItemQueryServiceImpl implements ItemQueryService {
     private ItemResponse filterDiscountAndConvertToResponse(Item item) {
         Discount discount = item.getDiscount();
 
-        if (discount != null && discount.getEndDate().isBefore(LocalDate.now())) {
+        if (discount == null || discount.getDiscountStatus() != DiscountStatus.ACTIVE || discount.getEndDate().isBefore(LocalDate.now())) {
             discount = null;
         }
 

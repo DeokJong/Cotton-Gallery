@@ -6,6 +6,7 @@ import com.cottongallery.backend.auth.service.AccountQueryService;
 import com.cottongallery.backend.auth.service.AddressQueryService;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.item.domain.Discount;
+import com.cottongallery.backend.item.domain.DiscountStatus;
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.service.ItemQueryService;
 import com.cottongallery.backend.order.domain.Order;
@@ -72,6 +73,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
             Item item = itemQueryService.getItemEntityById(orderItemCreateRequest.getItemId());
 
             BigDecimal discountPercent = Optional.ofNullable(item.getDiscount())
+                    .filter(discount -> discount.getDiscountStatus() == DiscountStatus.ACTIVE)
                     .filter(discount -> discount.getEndDate() == null || !discount.getEndDate().isBefore(LocalDate.now()))
                     .map(Discount::getDiscountPercent)
                     .orElse(null);
