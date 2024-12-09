@@ -6,10 +6,10 @@ import Link from "next/link";
 import React from "react";
 
 const MainHeader = () => {
-  const { name } = useAuthStore();
+  const { name, setName } = useAuthStore();
 
   const handleLogoutBtn = async () => {
-    const response = await fetch("http://localhost:8080/api/logout", {
+    const response = await fetch("http://localhost:8080/api/auth/logout", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -20,6 +20,10 @@ const MainHeader = () => {
 
     const result = await response;
     console.log(result);
+    if (result.status === 204) {
+      alert("로그아웃 되었습니다");
+      setName("");
+    }
   };
 
   return (
