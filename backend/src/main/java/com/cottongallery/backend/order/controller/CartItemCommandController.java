@@ -3,6 +3,7 @@ package com.cottongallery.backend.order.controller;
 import com.cottongallery.backend.common.argumentResolver.annotation.Login;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.common.dto.Response;
+import com.cottongallery.backend.order.controller.api.CartItemCommandApi;
 import com.cottongallery.backend.order.dto.request.CartItemCreatRequest;
 import com.cottongallery.backend.order.service.CartItemCommandService;
 import com.cottongallery.backend.order.service.impl.QuantityChangeType;
@@ -17,10 +18,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
-public class CartItemCommandController {
+public class CartItemCommandController implements CartItemCommandApi {
     private final CartItemCommandService cartItemCommandService;
 
     // 장바구니 등록
+    @Override
     @PostMapping("/cartItem")
     public ResponseEntity<Response<?>> addCartItem(@Login AccountSessionDTO accountSessionDTO, @RequestBody CartItemCreatRequest cartItemCreatRequest) {
         cartItemCommandService.createCartItem(accountSessionDTO, cartItemCreatRequest);
@@ -29,6 +31,7 @@ public class CartItemCommandController {
     }
 
     // 장바구니 수량 변경
+    @Override
     @PatchMapping("/cartItem/{cartItemId}")
     public ResponseEntity<Response<?>> updateCartItemQuantity(@Login AccountSessionDTO accountSessionDTO,
                                                               @PathVariable Long cartItemId,

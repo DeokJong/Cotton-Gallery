@@ -3,6 +3,7 @@ package com.cottongallery.backend.order.controller;
 import com.cottongallery.backend.common.argumentResolver.annotation.Login;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.common.dto.Response;
+import com.cottongallery.backend.order.controller.api.CartItemQueryApi;
 import com.cottongallery.backend.order.dto.response.CartItemListResponse;
 import com.cottongallery.backend.order.service.CartItemQueryService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,10 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
-public class CartItemQueryController {
+public class CartItemQueryController implements CartItemQueryApi {
 
     private final CartItemQueryService cartItemQueryService;
 
+    @Override
     @GetMapping("/cartItem")
     public ResponseEntity<Response<CartItemListResponse>> retrieveCartItemList(@Login AccountSessionDTO accountSessionDTO) {
         CartItemListResponse cartItems = cartItemQueryService.getCartItemsByCreatedBy(accountSessionDTO.getUsername());
