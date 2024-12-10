@@ -23,4 +23,8 @@ public interface CartItemCommandApi {
     ResponseEntity<Response<?>> updateCartItemQuantity(@Login AccountSessionDTO accountSessionDTO,
                                                        @PathVariable Long cartItemId,
                                                        @RequestParam QuantityChangeType quantityChangeType);
+
+    @Operation(summary = "장바구니 특정 등록 상품 삭제", description = "장바구니에 등록된 특정 상품 한개를 삭제합니다.")
+    ResponseEntity<Response<?>> deleteCartItem(@Login AccountSessionDTO accountSessionDTO,
+                                               @PathVariable Long cartItemId);
 }

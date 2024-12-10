@@ -1,6 +1,7 @@
 package com.cottongallery.backend.order.dto.response;
 
 import com.cottongallery.backend.item.domain.Discount;
+import com.cottongallery.backend.item.domain.ItemStatus;
 import com.cottongallery.backend.order.domain.CartItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class CartItemResponse {
     private Long cartItemId;
     private BigDecimal discountPercent;
     private String name;
+    private ItemStatus itemStatus;
     private int price;
     private int quantity;
 
@@ -26,6 +28,7 @@ public class CartItemResponse {
                         .map(Discount::getDiscountPercent)
                         .orElse(null),
                 cartItem.getItem().getName(),
+                cartItem.getItem().getItemStatus(),
                 cartItem.getItem().getPrice(),
                 cartItem.getQuantity());
     }

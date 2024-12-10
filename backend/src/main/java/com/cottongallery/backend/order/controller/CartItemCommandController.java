@@ -40,4 +40,12 @@ public class CartItemCommandController implements CartItemCommandApi {
 
         return new ResponseEntity<>(Response.createResponseWithoutData(HttpServletResponse.SC_OK, "장바구니 상품 수량 변경에 성공했습니다."), HttpStatus.OK);
     }
+
+    @DeleteMapping("/cartItem/{cartItemId}")
+    public ResponseEntity<Response<?>> deleteCartItem(@Login AccountSessionDTO accountSessionDTO,
+                                                      @PathVariable Long cartItemId) {
+        cartItemCommandService.deleteCartItem(accountSessionDTO, cartItemId);
+
+        return new ResponseEntity<>(Response.createResponseWithoutData(HttpServletResponse.SC_OK, "특정 장바구니 등록 상품 삭제에 성공했습니다."), HttpStatus.OK);
+    }
 }
