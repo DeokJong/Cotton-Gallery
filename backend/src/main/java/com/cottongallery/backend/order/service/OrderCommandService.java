@@ -4,6 +4,7 @@ import com.cottongallery.backend.auth.exception.account.AccountNotFoundException
 import com.cottongallery.backend.auth.exception.address.AddressNotFoundException;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
+import com.cottongallery.backend.order.dto.request.OrderCartItemCreateRequest;
 import com.cottongallery.backend.order.dto.request.OrderItemCreateRequest;
 import com.cottongallery.backend.order.exception.OrderNotFoundException;
 
@@ -23,6 +24,8 @@ public interface OrderCommandService {
      * @throws AddressNotFoundException  주소를 찾을 수 없는 경우 발생.
      */
     Long createOrder(AccountSessionDTO accountSessionDTO, List<OrderItemCreateRequest> orderItemCreateRequestList, Long addressId);
+
+    Long createOrderFromCart(AccountSessionDTO accountSessionDTO, List<OrderCartItemCreateRequest> orderCartItemCreateCartRequestList, Long addressId);
 
     /**
      * 특정 주문을 취소합니다.

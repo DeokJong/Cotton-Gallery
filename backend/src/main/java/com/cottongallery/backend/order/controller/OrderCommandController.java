@@ -5,6 +5,7 @@ import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.common.dto.Response;
 import com.cottongallery.backend.common.exception.InvalidRequestException;
 import com.cottongallery.backend.order.controller.api.OrderCommandApi;
+import com.cottongallery.backend.order.dto.request.OrderCreateFromCartRequest;
 import com.cottongallery.backend.order.dto.request.OrderCreateRequest;
 import com.cottongallery.backend.order.dto.response.OrderCreateResponse;
 import com.cottongallery.backend.order.service.OrderCommandService;
@@ -38,6 +39,21 @@ public class OrderCommandController implements OrderCommandApi {
         Long orderId = orderCommandService.createOrder(accountSessionDTO, orderCreateRequest.getOrderItemCreateRequestList(), orderCreateRequest.getAddressId());
 
         return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_CREATED, "주문에 성공했습니다.", new OrderCreateResponse(orderId)),
+                HttpStatus.CREATED);
+    }
+
+    @PostMapping("/cartItem")
+    public ResponseEntity<Response<OrderCreateResponse>> addOrderFromCart(@Login AccountSessionDTO accountSessionDTO,
+                                                                        @RequestBody @Validated OrderCreateFromCartRequest orderCreateRequest,
+                                                                        BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRequestException("장바구니 주문 요청이 올바르지 않습니다. 다시 확인해 주세요.", bindingResult);
+        }
+
+        Long orderId = orderCommandService.createOrderFromCart(accountSessionDTO, orderCreateRequest.getOrderCartItems(), orderCreateRequest.getAddressId());
+
+        return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_CREATED, "장바구니 주문에 성공했습니다.", new OrderCreateResponse(orderId)),
                 HttpStatus.CREATED);
     }
 
