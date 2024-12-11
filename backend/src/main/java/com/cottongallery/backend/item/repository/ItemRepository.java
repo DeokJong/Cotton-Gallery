@@ -14,4 +14,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @EntityGraph(attributePaths = "discount")
     Slice<Item> findAllByItemStatusAndNameContaining(Pageable pageable, ItemStatus itemStatus, String keyword);
+
+    boolean existsByItemImagePath(String itemImagePath);
 }

@@ -47,6 +47,11 @@ public class ItemQueryServiceImpl implements ItemQueryService {
                 .orElseThrow(ItemNotFoundException::new);
     }
 
+    @Override
+    public boolean isItemRelatedToImage(String itemImagePath) {
+        return itemRepository.existsByItemImagePath(itemImagePath);
+    }
+
     private ItemResponse filterDiscountAndConvertToResponse(Item item) {
         Discount discount = item.getDiscount();
 

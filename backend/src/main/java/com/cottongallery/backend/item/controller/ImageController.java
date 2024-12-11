@@ -1,5 +1,8 @@
 package com.cottongallery.backend.item.controller;
 
+import com.cottongallery.backend.item.service.ItemQueryService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -10,12 +13,23 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.nio.file.Files;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/public")
+@RequiredArgsConstructor
 public class ImageController {
+
+    private final ItemQueryService itemQueryService;
 
     @GetMapping("/image")
     public ResponseEntity<Resource> getFile(@RequestParam String filename) {
+
+        boolean isValidItem = itemQueryService.isItemRelatedToImage(filename);
+
+        if (!isValidItem) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null); // 파일 접근 권한 없음
+        }
+
         try {
             // 파일 경로 설정
             File file = new File(filename);
@@ -29,8 +43,9 @@ public class ImageController {
 
             // Content-Type 설정
             String contentType = Files.probeContentType(file.toPath());
-            if (contentType == null) {
-                contentType = "application/octet-stream"; // 기본 MIME 타입
+            if (contentType == null || !contentType.startsWith("image/")) {
+                log.warn("이미지 파일이 아님: {}", filename);
+                return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
             }
 
             return ResponseEntity.ok()
