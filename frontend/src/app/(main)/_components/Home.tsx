@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import GoodsCard from "./GoodsCard";
 import usePageStore from "@/store/pageStore";
 
 const categoryList = ["카테고리", "신상품", "베스트", "단독특가", "이벤트/특가"];
-const cardList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+//const cardList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const getItemList = async (pageNumber: number) => {
   try {
@@ -26,20 +26,22 @@ const getItemList = async (pageNumber: number) => {
     return data;
   } catch (error) {
     console.error("Error fetching item list:", error);
-    return;
-  }
-};
-
-const fetchItems = async (pageNumber: number) => {
-  const items = await getItemList(pageNumber);
-  if (items) {
-    console.log("아이템 리스트:", items);
+    return null;
   }
 };
 
 const Home = () => {
   // Todo : 쿠키 가져와서 없는 경우에는 로그인 버튼 / 있으면 로그아웃 버튼 렌더링
   const { pageNumber } = usePageStore();
+  const [items, setItems] = useState([]);
+
+  const fetchItems = async (pageNumber: number) => {
+    const result = await getItemList(pageNumber);
+    if (result) {
+      console.log("아이템 리스트:", result.data.items);
+      setItems(result.data.items);
+    }
+  };
 
   useEffect(() => {
     fetchItems(pageNumber);
@@ -57,9 +59,15 @@ const Home = () => {
       </ul>
 
       <ul className="w-[73.75rem] flex flex-wrap justify-between">
-        {cardList.map((card) => (
+        {/* {cardList.map((card) => (
           <li key={card} className="mb-[1.25rem]">
             <GoodsCard />
+          </li>
+        ))} */}
+        {items.map((item, index) => (
+          <li key={index} className="mb-[1.25rem]">
+            {/* GoodsCard에 item 데이터를 props로 전달 */}
+            <GoodsCard item={item} />
           </li>
         ))}
       </ul>

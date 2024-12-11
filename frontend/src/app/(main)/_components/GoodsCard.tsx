@@ -1,7 +1,19 @@
 import Image from "next/image";
 import React from "react";
 
-const GoodsCard = () => {
+type PropsType = {
+  item: {
+    itemId: number; // 아이템 고유 ID
+    name: string; // 아이템 이름
+    price: number; // 가격
+    stockQuantity: number; // 재고 수량
+    likeCount: number; // 좋아요 개수
+    likedByMe: boolean; // 내가 좋아요를 눌렀는지 여부
+    discountResponse: string | null; // 할인 정보 (null일 수도 있음)
+  };
+};
+
+const GoodsCard = ({ item }: PropsType) => {
   return (
     <div className="w-[23.75rem] h-[13.125rem] border-2 rounded-sm">
       <div className="flex flex-col">
