@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import GoodsCard from "./GoodsCard";
+import GoodsCard, { Item } from "./GoodsCard";
 import usePageStore from "@/store/pageStore";
+import Link from "next/link";
 
 const categoryList = ["카테고리", "신상품", "베스트", "단독특가", "이벤트/특가"];
 //const cardList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -33,7 +34,7 @@ const getItemList = async (pageNumber: number) => {
 const Home = () => {
   // Todo : 쿠키 가져와서 없는 경우에는 로그인 버튼 / 있으면 로그아웃 버튼 렌더링
   const { pageNumber } = usePageStore();
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<Item[]>([]);
 
   const fetchItems = async (pageNumber: number) => {
     const result = await getItemList(pageNumber);
@@ -67,7 +68,9 @@ const Home = () => {
         {items.map((item, index) => (
           <li key={index} className="mb-[1.25rem]">
             {/* GoodsCard에 item 데이터를 props로 전달 */}
-            <GoodsCard item={item} />
+            <Link href={`/items/detail/${item.itemId}`}>
+              <GoodsCard item={item} />
+            </Link>
           </li>
         ))}
       </ul>
