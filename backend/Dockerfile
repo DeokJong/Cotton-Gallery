@@ -47,6 +47,8 @@ WORKDIR /app
 # Copy the built JAR from the Gradle build stage
 COPY --from=builder-app /workspace/build/libs/*.jar app.jar
 
+RUN mkdir -p /app/resources && chmod -R 755 /app/resources
+
 # Expose the application port
 EXPOSE 8080
 

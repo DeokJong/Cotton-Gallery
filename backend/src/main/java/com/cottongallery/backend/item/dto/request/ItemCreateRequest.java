@@ -16,7 +16,4 @@ public class ItemCreateRequest {
 
     @PositiveOrZero
     private Integer stockQuantity;
-
-    @NotBlank
-    private String content;
 }

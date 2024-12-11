@@ -6,6 +6,8 @@ import com.cottongallery.backend.item.exception.DiscountNotFoundException;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import jakarta.annotation.Nullable;
 
+import java.io.IOException;
+
 public interface ItemCommandService {
     /**
      * 새로운 상품을 만들고, 할인 ID가 있으면 할인 정보를 함께 등록합니다.
@@ -16,7 +18,7 @@ public interface ItemCommandService {
      *
      * @throws DiscountNotFoundException 해당 ID에 대한 할인 엔티티가 없는 경우 발생
      */
-    Long createItem(ItemCreateRequest itemCreateRequest, @Nullable Long discountId);
+    Long createItem(ItemCreateRequest itemCreateRequest, @Nullable Long discountId, String itemImageFullPath, String itemInfoImageFullPath);
 
 
     /**

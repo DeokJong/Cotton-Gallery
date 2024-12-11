@@ -28,7 +28,7 @@ public class ItemCommandServiceImpl implements ItemCommandService {
     private final ItemRepository itemRepository;
 
     @Override
-    public Long createItem(ItemCreateRequest itemCreateRequest, Long discountId) {
+    public Long createItem(ItemCreateRequest itemCreateRequest, Long discountId, String itemImageFullPath, String itemInfoImageFullPath) {
         Discount discount = Optional.ofNullable(discountId)
                 .flatMap(discountRepository::findById)
                 .orElse(null);
@@ -36,7 +36,8 @@ public class ItemCommandServiceImpl implements ItemCommandService {
         Item item = Item.createItem(itemCreateRequest.getName(),
                 itemCreateRequest.getPrice(),
                 itemCreateRequest.getStockQuantity(),
-                itemCreateRequest.getContent(),
+                itemImageFullPath,
+                itemInfoImageFullPath,
                 ItemStatus.ACTIVE,
                 discount);
 
@@ -56,7 +57,6 @@ public class ItemCommandServiceImpl implements ItemCommandService {
         item.update(itemUpdateRequest.getName(),
                 itemUpdateRequest.getPrice(),
                 itemUpdateRequest.getStockQuantity(),
-                itemUpdateRequest.getContent(),
                 discount);
 
         return item.getId();
