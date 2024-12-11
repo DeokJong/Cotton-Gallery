@@ -7,13 +7,16 @@ import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
 import com.cottongallery.backend.item.repository.DiscountRepository;
 import com.cottongallery.backend.item.repository.ItemRepository;
+import com.cottongallery.backend.item.service.ImageService;
 import com.cottongallery.backend.item.service.ItemCommandService;
 import com.cottongallery.backend.item.service.ItemQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Slf4j
@@ -23,15 +26,18 @@ import java.util.Optional;
 public class ItemCommandServiceImpl implements ItemCommandService {
 
     private final ItemQueryService itemQueryService;
+    private final ImageService imageService;
 
     private final DiscountRepository discountRepository;
     private final ItemRepository itemRepository;
 
     @Override
-    public Long createItem(ItemCreateRequest itemCreateRequest, Long discountId, String itemImageFullPath, String itemInfoImageFullPath) {
+    public Long createItem(ItemCreateRequest itemCreateRequest, Long discountId, MultipartFile itemImage, MultipartFile itemInfoImage) throws IOException {
         Discount discount = Optional.ofNullable(discountId)
                 .flatMap(discountRepository::findById)
                 .orElse(null);
+
+        String itemImageFullPath = imageService.saveFile(itemImage), itemInfoImageFullPath = imageService.saveFile(itemInfoImage);
 
         Item item = Item.createItem(itemCreateRequest.getName(),
                 itemCreateRequest.getPrice(),
@@ -63,9 +69,12 @@ public class ItemCommandServiceImpl implements ItemCommandService {
     }
 
     @Override
-    public void deleteItem(Long itemId) {
+    public void deleteItem(Long itemId) throws IOException {
         Item item = itemQueryService.getItemEntityById(itemId);
 
         item.changeItemStatus(ItemStatus.DELETED);
+
+        imageService.deleteImage(item.getItemImagePath());
+        imageService.deleteImage(item.getItemInfoImagePath());
     }
 }

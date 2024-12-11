@@ -48,6 +48,6 @@ public interface ItemCommandApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품 삭제 성공"),
     })
-    ResponseEntity<Response<?>> removeItem(@Parameter(description = "삭제할 상품 ID") @PathVariable Long itemId);
+    ResponseEntity<Response<?>> removeItem(@Parameter(description = "삭제할 상품 ID") @PathVariable Long itemId) throws IOException;
 
 }

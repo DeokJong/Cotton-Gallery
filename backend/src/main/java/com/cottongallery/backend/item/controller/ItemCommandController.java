@@ -47,9 +47,7 @@ public class ItemCommandController implements ItemCommandApi {
             throw new InvalidRequestException("상품 생성 요청 값이 올바르지 않습니다. 다시 확인해 주세요.", bindingResult);
         }
 
-        String itemImageFullPath = saveFile(itemImage), itemInfoImageFullPath = saveFile(itemInfoImage);
-
-        Long savedItemId = itemCommandService.createItem(itemCreateRequest, discountId, itemImageFullPath, itemInfoImageFullPath);
+        Long savedItemId = itemCommandService.createItem(itemCreateRequest, discountId, itemImage, itemInfoImage);
 
         log.info("상품 생성 요청 완료: itemId={}", savedItemId);
 
@@ -75,21 +73,11 @@ public class ItemCommandController implements ItemCommandApi {
 
     @Override
     @DeleteMapping(value = "/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<?>> removeItem(@PathVariable Long itemId) {
+    public ResponseEntity<Response<?>> removeItem(@PathVariable Long itemId) throws IOException {
         itemCommandService.deleteItem(itemId);
 
         log.info("상품 삭제 요청 완료: itemId={}", itemId);
 
         return new ResponseEntity<>(Response.createResponseWithoutData(HttpServletResponse.SC_OK, "상품 삭제에 성공했습니다."), HttpStatus.OK);
-    }
-
-    private String saveFile(MultipartFile file) throws IOException {
-        if (file.isEmpty()) {
-            return "";
-        }
-        String fullPath = defaultFilePath + UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        log.info("파일 저장 fullPath={}", fullPath);
-        file.transferTo(new File(fullPath));
-        return fullPath;
     }
 }

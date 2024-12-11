@@ -5,6 +5,7 @@ import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
 import com.cottongallery.backend.item.exception.DiscountNotFoundException;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import jakarta.annotation.Nullable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -18,7 +19,7 @@ public interface ItemCommandService {
      *
      * @throws DiscountNotFoundException 해당 ID에 대한 할인 엔티티가 없는 경우 발생
      */
-    Long createItem(ItemCreateRequest itemCreateRequest, @Nullable Long discountId, String itemImageFullPath, String itemInfoImageFullPath);
+    Long createItem(ItemCreateRequest itemCreateRequest, @Nullable Long discountId, MultipartFile itemImage, MultipartFile itemInfoImage) throws IOException;
 
 
     /**
@@ -37,5 +38,5 @@ public interface ItemCommandService {
      *
      * @param itemId 삭제할 상품의 ID
      */
-    void deleteItem(Long itemId);
+    void deleteItem(Long itemId) throws IOException;
 }
