@@ -100,22 +100,24 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
           </div>
           <div className="flex justify-between">
             <div className="flex justify-between items-center border-2 border-gray-400 w-[6.25rem]">
-              <button className="ml-1">
+              <button onClick={() => setCount((prev) => (prev > 0 ? prev - 1 : prev))} className="ml-1">
                 <FaMinus />
               </button>
               <p className=" text-center w-[2.813rem] font-[0.938rem] border-l-2 border-r-2 border-gray-400">{count}</p>
-              <button className="mr-1">
+              <button onClick={() => setCount((prev) => prev + 1)} className="mr-1">
                 <FaPlus />
               </button>
             </div>
-            <p className="text-xl font-semibold">{item?.price.toLocaleString()}원</p>
+            <p className="text-xl font-semibold">{((item?.price as number) * count).toLocaleString()}원</p>
           </div>
         </div>
         <div className="w-[33.438rem] flex justify-end">
           <div className="flex justify-between items-center w-[10.625rem] h-[5.313rem]">
             <p className="text-lg">합계</p>
             {/* 배송비 더한 값으로 변경 */}
-            <p className="text-3xl font-bold text-sky-400">{item?.price.toLocaleString()}원</p>
+            <p className="text-3xl font-bold text-sky-400">
+              {count !== 0 ? ((item?.price as number) * count + deliveryFee).toLocaleString() : 0}원
+            </p>
           </div>
         </div>
         <div className="flex justify-between w-[33.438rem] h-[3.125rem] text-[1.563rem] font-bold text-white">
