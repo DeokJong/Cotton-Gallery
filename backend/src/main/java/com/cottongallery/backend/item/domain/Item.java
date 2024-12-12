@@ -84,4 +84,12 @@ public class Item extends BaseEntity {
     public void changeItemStatus(ItemStatus itemStatus) {
         this.itemStatus = itemStatus;
     }
+
+    public void changeItemImagePath(String itemImagePath) {
+        this.itemImagePath = itemImagePath;
+    }
+
+    public void changeItemInfoImagePath(String itemInfoImagePath) {
+        this.itemInfoImagePath = itemInfoImagePath;
+    }
 }

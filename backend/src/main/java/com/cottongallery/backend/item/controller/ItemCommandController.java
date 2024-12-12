@@ -18,9 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -69,6 +67,13 @@ public class ItemCommandController implements ItemCommandApi {
         log.info("상품 수정 요청 완료: itemId={}", savedItemId);
 
         return new ResponseEntity<>(Response.createResponseWithoutData(HttpServletResponse.SC_OK, "상품 수정에 성공했습니다."), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Response<?>> editItemImage(@PathVariable Long itemId, @RequestParam MultipartFile itemImage, @RequestParam ImageType imageType) throws IOException {
+        itemCommandService.updateItemImage(itemId, itemImage, imageType);
+
+        return new ResponseEntity<>(Response.createResponseWithoutData(HttpServletResponse.SC_OK, "상품 사진 변경에 성공했습니다."), HttpStatus.OK);
     }
 
     @Override

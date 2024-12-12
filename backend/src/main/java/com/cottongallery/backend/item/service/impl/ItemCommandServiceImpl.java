@@ -1,5 +1,6 @@
 package com.cottongallery.backend.item.service.impl;
 
+import com.cottongallery.backend.item.controller.ImageType;
 import com.cottongallery.backend.item.domain.Discount;
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.domain.ItemStatus;
@@ -66,6 +67,22 @@ public class ItemCommandServiceImpl implements ItemCommandService {
                 discount);
 
         return item.getId();
+    }
+
+    @Override
+    public void updateItemImage(Long itemId, MultipartFile itemImage, ImageType imageType) throws IOException {
+        Item item = itemQueryService.getItemEntityById(itemId);
+
+        if (imageType == ImageType.ITEM_IMAGE) {
+            imageService.deleteImage(item.getItemImagePath());
+            String fullPath = imageService.saveFile(itemImage);
+            item.changeItemImagePath(fullPath);
+        }
+        else {
+            imageService.deleteImage(item.getItemInfoImagePath());
+            String fullPath = imageService.saveFile(itemImage);
+            item.changeItemInfoImagePath(fullPath);
+        }
     }
 
     @Override

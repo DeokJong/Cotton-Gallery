@@ -1,5 +1,6 @@
 package com.cottongallery.backend.item.service;
 
+import com.cottongallery.backend.item.controller.ImageType;
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
 import com.cottongallery.backend.item.exception.DiscountNotFoundException;
@@ -32,6 +33,8 @@ public interface ItemCommandService {
      * @throws ItemNotFoundException 해당 ID에 대한 상품 엔티티가 없는 경우 발생
      */
     Long updateItem(ItemUpdateRequest itemUpdateRequest, Long itemId, Long discountId);
+
+    void updateItemImage(Long itemId, MultipartFile itemImage, ImageType imageType) throws IOException;
 
     /**
      * 상품을 삭제합니다.
