@@ -1,6 +1,8 @@
 package com.cottongallery.backend.item.service;
 
+import com.cottongallery.backend.item.controller.ImageType;
 import com.cottongallery.backend.item.domain.Item;
+import com.cottongallery.backend.item.dto.response.ItemDetailResponse;
 import com.cottongallery.backend.item.dto.response.ItemResponse;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import org.springframework.data.domain.Pageable;
@@ -24,5 +26,7 @@ public interface ItemQueryService {
      */
     Item getItemEntityById(Long itemId);
 
-    boolean isItemRelatedToImage(String itemImagePath);
+    boolean isItemRelatedToImage(String itemImagePath, ImageType imageType);
+
+    ItemDetailResponse getItemDetailResponse(Long itemId);
 }

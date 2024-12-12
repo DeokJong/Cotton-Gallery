@@ -22,9 +22,9 @@ public class ImageController {
     private final ItemQueryService itemQueryService;
 
     @GetMapping("/image")
-    public ResponseEntity<Resource> getFile(@RequestParam String filename) {
+    public ResponseEntity<Resource> getFile(@RequestParam String filename, @RequestParam ImageType imageType) {
 
-        boolean isValidItem = itemQueryService.isItemRelatedToImage(filename);
+        boolean isValidItem = itemQueryService.isItemRelatedToImage(filename, imageType);
 
         if (!isValidItem) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null); // 파일 접근 권한 없음
