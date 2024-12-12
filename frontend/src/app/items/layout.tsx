@@ -1,11 +1,11 @@
 import { PropsWithChildren } from "react";
-import ItemsHeader from "./_components/ItemsHeader";
+import MainHeader from "../(main)/_components/MainHeader";
 
 const ItemsLayout = ({ children }: PropsWithChildren) => {
   return (
     <div className="w-full h-screen flex- flex-col overflow-y-auto scrollbar-hide scroll-smooth">
-      <ItemsHeader />
-      <div className="flex flex-col flex-grow relative">{children}</div>
+      <MainHeader />
+      <div className="flex flex-col flex-grow relative items-center">{children}</div>
     </div>
   );
 };

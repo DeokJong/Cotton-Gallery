@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { HiShoppingCart } from "react-icons/hi";
@@ -114,7 +114,6 @@ const GoodsCard = ({ item }: PropsType) => {
               <p className="font-bold text-xl">{item.price.toLocaleString()}원</p>
             </div>
             <div className="w-full h-[35px] pr-2 flex justify-end items-center border-t-2">
-              {/* TODO: likedByMe에 따라 하트 아이콘 변경*/}
               <button onClick={toggleLike}>{liked ? <FaHeart color="red" /> : <FaRegHeart />}</button>
               <button className="ml-2">
                 {/* TODO: 장바구니 담기*/}

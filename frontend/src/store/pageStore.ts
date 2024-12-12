@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-// Zustand store 정의
 interface PageStore {
   pageNumber: number;
   setPageNumber: (page: number) => void;
@@ -10,12 +9,12 @@ interface PageStore {
 const usePageStore = create(
   persist<PageStore>(
     (set) => ({
-      pageNumber: 1, // 초기 페이지 숫자
+      pageNumber: 1,
       setPageNumber: (page: number) => set({ pageNumber: page })
     }),
     {
-      name: "page-number-storage", // 로컬 스토리지의 key 이름
-      storage: createJSONStorage(() => sessionStorage) // 로컬 스토리지를 사용
+      name: "page-number-storage",
+      storage: createJSONStorage(() => sessionStorage)
     }
   )
 );
