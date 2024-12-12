@@ -58,16 +58,9 @@ const Home = () => {
           </li>
         ))}
       </ul>
-
       <ul className="w-[73.75rem] flex flex-wrap justify-between">
-        {/* {cardList.map((card) => (
-          <li key={card} className="mb-[1.25rem]">
-            <GoodsCard />
-          </li>
-        ))} */}
         {items.map((item, index) => (
           <li key={index} className="mb-[1.25rem]">
-            {/* GoodsCard에 item 데이터를 props로 전달 */}
             <Link href={`/items/detail/${item.itemId}`}>
               <GoodsCard item={item} />
             </Link>

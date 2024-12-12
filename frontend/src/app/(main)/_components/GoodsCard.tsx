@@ -1,5 +1,11 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { FaHeart } from "react-icons/fa";
+import { FaRegHeart } from "react-icons/fa";
+import { HiShoppingCart } from "react-icons/hi";
+import { HiOutlineShoppingCart } from "react-icons/hi";
 
 interface DiscountResponse {
   discountId: number; // 할인 고유 ID
@@ -24,6 +30,78 @@ type PropsType = {
 };
 
 const GoodsCard = ({ item }: PropsType) => {
+  const [liked, setLiked] = useState<boolean>(item.likedByMe);
+
+  const toggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    // 좋아요 취소 patch cors 설정 질문
+    try {
+      const method = liked ? "PATCH" : "POST";
+      const response = await fetch(`http://localhost:8080/api/user/likes/${item.itemId}`, {
+        method,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ itemId: item.itemId })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.status === 201) {
+        setLiked((prev) => !prev);
+      } else {
+        console.warn("Unexpected response status:", result.status);
+      }
+      console.log(result);
+    } catch (error) {
+      console.error("Failed to toggle like status:", error);
+    }
+
+    // e.preventDefault();
+
+    // if (!liked) {
+    //   const response = await fetch(`http://localhost:8080/api/user/likes/${item.itemId}`, {
+    //     method: "POST",
+    //     credentials: "include",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify({
+    //       itemId: item.itemId
+    //     })
+    //   });
+    //   const postResult = await response.json();
+    //   if (postResult.status === 201) {
+    //     setLiked((prev) => !prev);
+    //   }
+    //   console.log(postResult);
+    // }
+
+    // if (liked) {
+    //   const response = await fetch(`http://localhost:8080/api/user/likes/${item.itemId}`, {
+    //     method: "PATCH",
+    //     credentials: "include",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify({
+    //       itemId: item.itemId
+    //     })
+    //   });
+    //   const patchResult = await response.json();
+    //   if (patchResult.status === 201) {
+    //     setLiked((prev) => !prev);
+    //   }
+    //   console.log(patchResult);
+    //   console.log(liked, item.itemId);
+    // }
+  };
+
   return (
     <div className="w-[23.75rem] h-[13.125rem] border-2 rounded-sm">
       <div className="flex flex-col">
@@ -36,15 +114,18 @@ const GoodsCard = ({ item }: PropsType) => {
               <p className="font-bold text-xl">{item.price.toLocaleString()}원</p>
             </div>
             <div className="w-full h-[35px] pr-2 flex justify-end items-center border-t-2">
-              {/* TODO: 아이콘으로 변경 */}
-              {/* likedByMe에 따라 하트 아이콘 변경 ---- ? 상품 수정 api 질문 */}
-              <p>찜 </p>
-              <p>카트</p>
+              {/* TODO: likedByMe에 따라 하트 아이콘 변경*/}
+              <button onClick={toggleLike}>{liked ? <FaHeart color="red" /> : <FaRegHeart />}</button>
+              <button className="ml-2">
+                {/* TODO: 장바구니 담기*/}
+                <HiOutlineShoppingCart />
+                {/* <HiShoppingCart /> */}
+              </button>
             </div>
           </div>
         </div>
         <div className="w-full h-[45px] pl-2 pr-2 flex justify-between items-center border-t-2">
-          <p>♥ {item.likeCount} | 리뷰 (123)</p>
+          <p>찜 {item.likeCount}</p>
           <p>#해시태그</p>
         </div>
       </div>
