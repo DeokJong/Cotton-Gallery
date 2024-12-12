@@ -10,6 +10,8 @@ import { FaChevronRight } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { FaMinus } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
+import CommonModal from "@/components/CommonModal";
+import DeleteItemModal from "./DeleteItemModal";
 
 type ItemDetailPropsType = {
   itemId: number;
@@ -41,6 +43,7 @@ const getItemList = async (pageNumber: number) => {
 const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
   // TODO: 상품 하나만 조회할 수 있는 api 요청 ---
   const { pageNumber } = usePageStore();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [item, setItem] = useState<Item>();
   const [count, setCount] = useState<number>(0);
   const deliveryFee = 3000;
@@ -54,6 +57,12 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
       setItem(data);
     }
   };
+
+  const handleDeleteBtn = () => {
+    setIsModalOpen(true);
+  };
+
+  const handlemodifyBtn = async () => {};
 
   useEffect(() => {
     fetchItems(pageNumber);
@@ -77,8 +86,13 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
           <p className="text-xl mb-4">판매자</p>
           {/* 판매자 본인이 판매하는 상품인 경우 수정·삭제 버튼 렌더링 */}
           <div className="flex text-bold text-white gap-3">
-            <button className="w-16 h-9 rounded-md bg-gray-400">삭제</button>
-            <button className="w-16 h-9 rounded-md bg-gray-400">수정</button>
+            <DeleteItemModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} itemId={item?.itemId} />
+            <button onClick={handleDeleteBtn} className="w-16 h-9 rounded-md bg-gray-400">
+              삭제
+            </button>
+            <button onClick={handlemodifyBtn} className="w-16 h-9 rounded-md bg-gray-400">
+              수정
+            </button>
           </div>
         </div>
         <p className="text-[1.625rem] mb-4">{item?.name}</p>

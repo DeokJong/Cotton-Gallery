@@ -48,7 +48,7 @@ const Home = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <ul className="w-[73.75rem] flex flex-wrap justify-between">
+      <ul className="w-[73.75rem] flex flex-wrap gap-5 items-center">
         {items.map((item, index) => (
           <li key={index} className="mb-[1.25rem]">
             <Link href={`/items/detail/${item.itemId}`}>

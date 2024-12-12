@@ -34,20 +34,6 @@ const addressModalStyles: ReactModal.Styles = {
 
 const AddressModal = ({ isModalOpen, setIsModalOpen, setZipcode, setStreet }: PropsType) => {
   const handleComplete = (data: Address) => {
-    // let fullAddress = data.address;
-    // let extraAddress = "";
-
-    // if (data.addressType === "R") {
-    //   if (data.bname !== "") {
-    //     extraAddress += data.bname;
-    //   }
-    //   if (data.buildingName !== "") {
-    //     extraAddress += extraAddress !== "" ? `, ${data.buildingName}` : data.buildingName;
-    //   }
-    //   fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
-    // }
-
-    console.log(data.address, data.zonecode); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
     setIsModalOpen(false);
     setStreet(data?.address);
     setZipcode(data?.zonecode);
