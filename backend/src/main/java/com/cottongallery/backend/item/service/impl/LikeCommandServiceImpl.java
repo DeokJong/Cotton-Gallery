@@ -5,7 +5,7 @@ import com.cottongallery.backend.auth.service.AccountQueryService;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.domain.Like;
-import com.cottongallery.backend.item.domain.LikeStatus;
+import com.cottongallery.backend.item.constants.LikeStatus;
 import com.cottongallery.backend.item.repository.LikeRepository;
 import com.cottongallery.backend.item.service.LikeCommandService;
 import com.cottongallery.backend.item.service.ItemQueryService;

@@ -1,6 +1,6 @@
 package com.cottongallery.backend.item.service;
 
-import com.cottongallery.backend.item.controller.ImageType;
+import com.cottongallery.backend.item.constants.ImageType;
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.dto.response.ItemDetailResponse;
 import com.cottongallery.backend.item.dto.response.ItemResponse;

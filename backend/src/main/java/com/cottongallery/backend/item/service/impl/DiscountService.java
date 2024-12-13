@@ -1,7 +1,7 @@
 package com.cottongallery.backend.item.service.impl;
 
 import com.cottongallery.backend.item.domain.Discount;
-import com.cottongallery.backend.item.domain.DiscountStatus;
+import com.cottongallery.backend.item.constants.DiscountStatus;
 import com.cottongallery.backend.item.dto.request.DiscountCreateRequest;
 import com.cottongallery.backend.item.dto.request.DiscountUpdateRequest;
 import com.cottongallery.backend.item.dto.response.DiscountResponse;

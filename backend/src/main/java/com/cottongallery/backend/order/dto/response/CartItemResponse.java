@@ -1,7 +1,7 @@
 package com.cottongallery.backend.order.dto.response;
 
 import com.cottongallery.backend.item.domain.Discount;
-import com.cottongallery.backend.item.domain.ItemStatus;
+import com.cottongallery.backend.item.constants.ItemStatus;
 import com.cottongallery.backend.order.domain.CartItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

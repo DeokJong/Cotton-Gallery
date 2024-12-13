@@ -1,6 +1,6 @@
 package com.cottongallery.backend.item.service;
 
-import com.cottongallery.backend.item.controller.ImageType;
+import com.cottongallery.backend.item.constants.ImageType;
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
 import com.cottongallery.backend.item.exception.DiscountNotFoundException;

@@ -1,4 +1,4 @@
-package com.cottongallery.backend.item.controller;
+package com.cottongallery.backend.item.constants;
 
 public enum ItemSort {
     CREATED_DATE("createdDate"),

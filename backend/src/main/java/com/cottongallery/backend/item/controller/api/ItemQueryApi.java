@@ -3,7 +3,7 @@ package com.cottongallery.backend.item.controller.api;
 import com.cottongallery.backend.common.argumentResolver.annotation.Login;
 import com.cottongallery.backend.common.dto.AccountSessionDTO;
 import com.cottongallery.backend.common.dto.Response;
-import com.cottongallery.backend.item.controller.ItemSort;
+import com.cottongallery.backend.item.constants.ItemSort;
 import com.cottongallery.backend.item.dto.response.ItemListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

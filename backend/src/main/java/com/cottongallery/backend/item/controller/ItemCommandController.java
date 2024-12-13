@@ -2,6 +2,7 @@ package com.cottongallery.backend.item.controller;
 
 import com.cottongallery.backend.common.dto.Response;
 import com.cottongallery.backend.common.exception.InvalidRequestException;
+import com.cottongallery.backend.item.constants.ImageType;
 import com.cottongallery.backend.item.controller.api.ItemCommandApi;
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;

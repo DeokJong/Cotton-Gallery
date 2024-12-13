@@ -3,7 +3,7 @@ package com.cottongallery.backend.item.repository;
 import com.cottongallery.backend.auth.domain.Account;
 import com.cottongallery.backend.item.domain.Item;
 import com.cottongallery.backend.item.domain.Like;
-import com.cottongallery.backend.item.domain.LikeStatus;
+import com.cottongallery.backend.item.constants.LikeStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

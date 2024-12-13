@@ -1,5 +1,6 @@
 package com.cottongallery.backend.item.controller;
 
+import com.cottongallery.backend.item.constants.ImageType;
 import com.cottongallery.backend.item.service.ItemQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

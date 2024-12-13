@@ -1,10 +1,10 @@
 package com.cottongallery.backend.item.service.impl;
 
-import com.cottongallery.backend.item.controller.ImageType;
+import com.cottongallery.backend.item.constants.ImageType;
 import com.cottongallery.backend.item.domain.Discount;
-import com.cottongallery.backend.item.domain.DiscountStatus;
+import com.cottongallery.backend.item.constants.DiscountStatus;
 import com.cottongallery.backend.item.domain.Item;
-import com.cottongallery.backend.item.domain.ItemStatus;
+import com.cottongallery.backend.item.constants.ItemStatus;
 import com.cottongallery.backend.item.dto.response.ItemDetailResponse;
 import com.cottongallery.backend.item.dto.response.ItemResponse;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
