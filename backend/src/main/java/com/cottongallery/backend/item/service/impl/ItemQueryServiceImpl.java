@@ -1,9 +1,11 @@
 package com.cottongallery.backend.item.service.impl;
 
+import com.cottongallery.backend.item.constants.ImageType;
 import com.cottongallery.backend.item.domain.Discount;
-import com.cottongallery.backend.item.domain.DiscountStatus;
+import com.cottongallery.backend.item.constants.DiscountStatus;
 import com.cottongallery.backend.item.domain.Item;
-import com.cottongallery.backend.item.domain.ItemStatus;
+import com.cottongallery.backend.item.constants.ItemStatus;
+import com.cottongallery.backend.item.dto.response.ItemDetailResponse;
 import com.cottongallery.backend.item.dto.response.ItemResponse;
 import com.cottongallery.backend.item.exception.ItemNotFoundException;
 import com.cottongallery.backend.item.repository.ItemRepository;
@@ -37,7 +39,7 @@ public class ItemQueryServiceImpl implements ItemQueryService {
             items = itemRepository
                     .findAllByItemStatusAndNameContaining(pageable, ItemStatus.ACTIVE, keyword);
         }
-        return items.map(this::filterDiscountAndConvertToResponse);
+        return items.map(this::filterDiscountAndConvertToItemResponse);
     }
 
     @Override
@@ -47,7 +49,22 @@ public class ItemQueryServiceImpl implements ItemQueryService {
                 .orElseThrow(ItemNotFoundException::new);
     }
 
-    private ItemResponse filterDiscountAndConvertToResponse(Item item) {
+    @Override
+    public boolean isItemRelatedToImage(String itemImagePath, ImageType imageType) {
+        if (imageType == ImageType.ITEM_IMAGE)
+            return itemRepository.existsByItemImagePath(itemImagePath);
+
+        return itemRepository.existsByItemInfoImagePath(itemImagePath);
+    }
+
+    @Override
+    public ItemDetailResponse getItemDetailResponse(Long itemId) {
+        Item item = getItemEntityById(itemId);
+
+        return filterDiscountAndConvertToItemDetailResponse(item);
+    }
+
+    private ItemResponse filterDiscountAndConvertToItemResponse(Item item) {
         Discount discount = item.getDiscount();
 
         if (discount == null || discount.getDiscountStatus() != DiscountStatus.ACTIVE || discount.getEndDate().isBefore(LocalDate.now())) {
@@ -55,6 +72,16 @@ public class ItemQueryServiceImpl implements ItemQueryService {
         }
 
         return ItemResponse.fromItem(item, discount);
+    }
+
+    private ItemDetailResponse filterDiscountAndConvertToItemDetailResponse(Item item) {
+        Discount discount = item.getDiscount();
+
+        if (discount == null || discount.getDiscountStatus() != DiscountStatus.ACTIVE || discount.getEndDate().isBefore(LocalDate.now())) {
+            discount = null;
+        }
+
+        return ItemDetailResponse.fromItem(item, discount);
     }
 
 }

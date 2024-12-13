@@ -16,7 +16,4 @@ public class ItemUpdateRequest {
 
     @PositiveOrZero
     private Integer stockQuantity;
-
-    @NotBlank
-    private String content;
 }

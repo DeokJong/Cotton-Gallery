@@ -1,6 +1,7 @@
 package com.cottongallery.backend.item.domain;
 
 import com.cottongallery.backend.common.domain.base.BaseEntity;
+import com.cottongallery.backend.item.constants.ItemStatus;
 import com.cottongallery.backend.order.exception.NotEnoughStockQuantityException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,8 +30,9 @@ public class Item extends BaseEntity {
     @Column(nullable = false)
     private Integer stockQuantity;
 
-    @Column(nullable = false)
-    private String content;
+    private String itemImagePath;
+
+    private String itemInfoImagePath;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "discount_id")
@@ -43,11 +45,12 @@ public class Item extends BaseEntity {
     @Formula("(SELECT COUNT(l.item_id) FROM likes l WHERE l.item_id = item_id AND l.like_status = 'ACTIVE')")
     private int likeCount;
 
-    private Item(String name, Integer price, Integer stockQuantity, String content, ItemStatus itemStatus,Discount discount) {
+    private Item(String name, Integer price, Integer stockQuantity, String itemImagePath, String itemInfoImagePath, ItemStatus itemStatus,Discount discount) {
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
-        this.content = content;
+        this.itemImagePath = itemImagePath;
+        this.itemInfoImagePath = itemInfoImagePath;
         this.discount = discount;
         this.itemStatus = itemStatus;
     }
@@ -56,8 +59,8 @@ public class Item extends BaseEntity {
 //        return new Item(name, price, stockQuantity, content, null);
 //    }
 
-    public static Item createItem(String name, Integer price, Integer stockQuantity, String content, ItemStatus itemStatus, Discount discount) {
-        return new Item(name, price, stockQuantity, content, itemStatus, discount);
+    public static Item createItem(String name, Integer price, Integer stockQuantity, String itemImagePath, String itemInfoImagePath, ItemStatus itemStatus, Discount discount) {
+        return new Item(name, price, stockQuantity, itemImagePath, itemInfoImagePath, itemStatus, discount);
     }
 
     public void reduceStockQuantity(Integer quantity) {
@@ -72,15 +75,22 @@ public class Item extends BaseEntity {
         this.stockQuantity += stockQuantity;
     }
 
-    public void update(String name, Integer price, Integer stockQuantity, String content, Discount discount) {
+    public void update(String name, Integer price, Integer stockQuantity, Discount discount) {
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
-        this.content = content;
         this.discount = discount;
     }
 
     public void changeItemStatus(ItemStatus itemStatus) {
         this.itemStatus = itemStatus;
+    }
+
+    public void changeItemImagePath(String itemImagePath) {
+        this.itemImagePath = itemImagePath;
+    }
+
+    public void changeItemInfoImagePath(String itemInfoImagePath) {
+        this.itemInfoImagePath = itemInfoImagePath;
     }
 }

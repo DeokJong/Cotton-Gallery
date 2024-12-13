@@ -1,6 +1,7 @@
 package com.cottongallery.backend.item.controller.api;
 
 import com.cottongallery.backend.common.dto.Response;
+import com.cottongallery.backend.item.constants.ImageType;
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,9 +12,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Tag(name = "상품 관리", description = "상품 관련 API")
 public interface ItemCommandApi {
@@ -23,8 +28,10 @@ public interface ItemCommandApi {
             @ApiResponse(responseCode = "400", description = "잘못된 상품 등록 요청")
     })
     ResponseEntity<Response<?>> addItem(@Parameter(description = "적용할 할인 ID. 할인 미적용 시 생략 가능") @RequestParam(required = false) Long discountId,
-                                        @Validated @RequestBody ItemCreateRequest itemCreateRequest,
-                                        BindingResult bindingResult);
+                                        @RequestParam MultipartFile itemImage,
+                                        @RequestParam MultipartFile itemInfoImage,
+                                        @Validated @ModelAttribute ItemCreateRequest itemCreateRequest,
+                                        BindingResult bindingResult) throws IOException;
 
 
     @Operation(summary = "상품 수정", description = "특정 상품을 수정합니다.")
@@ -42,6 +49,11 @@ public interface ItemCommandApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "상품 삭제 성공"),
     })
-    ResponseEntity<Response<?>> removeItem(@Parameter(description = "삭제할 상품 ID") @PathVariable Long itemId);
+    ResponseEntity<Response<?>> removeItem(@Parameter(description = "삭제할 상품 ID") @PathVariable Long itemId) throws IOException;
 
+    @Operation(summary = "상품 사진 수정", description = "특정 상품 사진을 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "특정 상품 사진 수정 성공"),
+    })
+    ResponseEntity<Response<?>> editItemImage(@PathVariable Long itemId, @RequestParam MultipartFile itemImage, @RequestParam ImageType imageType) throws IOException;
 }
