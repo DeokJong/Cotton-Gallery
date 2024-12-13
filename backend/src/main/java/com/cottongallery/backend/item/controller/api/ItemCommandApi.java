@@ -1,6 +1,7 @@
 package com.cottongallery.backend.item.controller.api;
 
 import com.cottongallery.backend.common.dto.Response;
+import com.cottongallery.backend.item.constants.ImageType;
 import com.cottongallery.backend.item.dto.request.ItemCreateRequest;
 import com.cottongallery.backend.item.dto.request.ItemUpdateRequest;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,4 +51,9 @@ public interface ItemCommandApi {
     })
     ResponseEntity<Response<?>> removeItem(@Parameter(description = "삭제할 상품 ID") @PathVariable Long itemId) throws IOException;
 
+    @Operation(summary = "상품 사진 수정", description = "특정 상품 사진을 수정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "특정 상품 사진 수정 성공"),
+    })
+    ResponseEntity<Response<?>> editItemImage(@PathVariable Long itemId, @RequestParam MultipartFile itemImage, @RequestParam ImageType imageType) throws IOException;
 }

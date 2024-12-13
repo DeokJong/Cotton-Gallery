@@ -70,6 +70,7 @@ public class ItemCommandController implements ItemCommandApi {
         return new ResponseEntity<>(Response.createResponseWithoutData(HttpServletResponse.SC_OK, "상품 수정에 성공했습니다."), HttpStatus.OK);
     }
 
+    @Override
     @PutMapping(value = "/{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Response<?>> editItemImage(@PathVariable Long itemId, @RequestParam MultipartFile itemImage, @RequestParam ImageType imageType) throws IOException {
         itemCommandService.updateItemImage(itemId, itemImage, imageType);
