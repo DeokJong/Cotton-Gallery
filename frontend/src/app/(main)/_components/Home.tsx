@@ -1,46 +1,59 @@
 "use client";
 
-import React from "react";
-import GoodsCard from "./GoodsCard";
+import React, { useEffect, useState } from "react";
+import GoodsCard, { Item } from "./GoodsCard";
+import usePageStore from "@/store/pageStore";
+import Link from "next/link";
 
-const categoryList = ["카테고리", "신상품", "베스트", "단독특가", "이벤트/특가"];
-const cardList = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-const Home = () => {
-  // Todo : 로그아웃 버튼 메인헤더로 옮기기
-  // Todo : 쿠키 가져와서 없는 경우에는 로그인 버튼 / 있으면 로그아웃 버튼 렌더링
-
-  const handleLogoutBtn = async () => {
-    const response = await fetch("http://localhost:8080/api/logout", {
-      method: "POST",
+const getItemList = async (pageNumber: number) => {
+  try {
+    const response = await fetch(`http://localhost:8080/api/items?page=${pageNumber}&itemSort=CREATED_DATE`, {
+      method: "GET",
       credentials: "include",
       headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({})
+        Accept: "application/json"
+      }
     });
 
-    const result = await response;
-    console.log(result);
+    if (!response.ok) {
+      throw new Error("아이템 목록을 가져오는 데 실패했습니다.");
+    }
+
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching item list:", error);
+    return null;
+  }
+};
+
+const Home = () => {
+  // Todo : 쿠키 가져와서 없는 경우에는 로그인 버튼 / 있으면 로그아웃 버튼 렌더링
+  const { pageNumber } = usePageStore();
+  const [items, setItems] = useState<Item[]>([]);
+
+  const fetchItems = async (pageNumber: number) => {
+    const result = await getItemList(pageNumber);
+    if (result) {
+      console.log("아이템 리스트:", result.data.items);
+      setItems(result.data.items);
+    }
   };
+
+  useEffect(() => {
+    fetchItems(pageNumber);
+    //eslint-disable-next-line
+  }, [pageNumber]);
 
   return (
     <div className="flex flex-col items-center">
-      {/* <button className="w-20 bg-slate-200" onClick={handleLogoutBtn}>
-        로그아웃
-      </button> */}
-      <ul className="w-full flex gap-24 border-gray-400 border-b-2 justify-center mb-10">
-        {categoryList.map((category) => (
-          <li key={category} className="mb-2">
-            {category}
-          </li>
-        ))}
-      </ul>
-
-      <ul className="w-[73.75rem] flex flex-wrap justify-between">
-        {cardList.map((card) => (
-          <li key={card} className="mb-[1.25rem]">
-            <GoodsCard />
+      <ul className="w-[73.75rem] flex flex-wrap gap-5 items-center">
+        {items.map((item, index) => (
+          <li key={index} className="mb-[1.25rem]">
+            <Link href={`/items/detail/${item.itemId}`}>
+              <GoodsCard item={item} />
+            </Link>
           </li>
         ))}
       </ul>
