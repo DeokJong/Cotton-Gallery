@@ -30,6 +30,7 @@ const getItemList = async (pageNumber: number) => {
 
 const Home = () => {
   // Todo : 쿠키 가져와서 없는 경우에는 로그인 버튼 / 있으면 로그아웃 버튼 렌더링
+  // 상태코드 확인해서 렌더링..
   const { pageNumber } = usePageStore();
   const [items, setItems] = useState<Item[]>([]);
 
