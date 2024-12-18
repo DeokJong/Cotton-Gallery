@@ -1,0 +1,13 @@
+# Docker 컨테이너에서 실행할 때 사용할 설정 파일
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  data:
+    redis:
+      host: ${ELASTICACHE_HOST}
+      port: ${ELASTICACHE_PORT}
+      password: ${ELASTICACHE_PASSWORD}
