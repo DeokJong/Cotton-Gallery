@@ -23,7 +23,7 @@
 #    `AWS_ACCESS_KEY_ID` 및 `AWS_SECRET_ACCESS_KEY`.
 #    사용된 각 액션의 권장 IAM 정책 및 액세스 키 자격 증명을 안전하게 관리하는 방법은 관련 문서를 참조하세요.
 
-name: Dockerizing to Amazon ECR
+name: AWS ECR에 이미지 빌드 및 푸시
 
 on:
   push:
@@ -65,24 +65,28 @@ jobs:
       id: build-backend-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        BACKEND_IMAGE_TAG: ${{ github.sha }}
+        BACKEND_IMAGE_TAG: "${{ github.sha }}-backend"
       run: |
         # Docker 컨테이너 빌드
         # ECR에 백엔드 이미지 푸시
+        echo "📦 백엔드 이미지 빌드 및 푸시 시작"
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG -f ./backend/Dockerfile ./backend
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG
+        echo "🚀 백엔드 이미지 빌드 및 푸시 완료"
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG"
         
     - name: Amazon ECR에 프론트엔드 이미지 빌드, 태그 지정 및 푸시
       id: build-frontend-image
       env:  
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        FRONTEND_IMAGE_TAG: ${{ github.sha }}
+        FRONTEND_IMAGE_TAG: "${{ github.sha }}-frontend"
       run: |
         # Docker 컨테이너 빌드
         # ECR에 프론트엔드 이미지 푸시
+        echo "📦 프론트엔드 이미지 빌드 및 푸시 시작"
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG -f ./frontend/Dockerfile ./frontend
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG
+        echo "🚀 프론트엔드 이미지 빌드 및 푸시 완료"
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG"
 
 #    - name: Amazon ECS 작업 정의에 새 이미지 ID 입력
