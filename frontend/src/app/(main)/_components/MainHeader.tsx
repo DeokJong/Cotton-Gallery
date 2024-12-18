@@ -43,7 +43,14 @@ const MainHeader = () => {
   return (
     <>
       <div className="w-full mt-[3.75rem] mb-[3.75rem] flex justify-center items-center gap-[22.5rem]">
-        <p>찜 리스트</p>
+        <div className="flex gap-3">
+          <p>찜 리스트</p>
+          {name === "Admin" && (
+            <Link href={"/items/add"}>
+              <p>상품 등록</p>
+            </Link>
+          )}
+        </div>
         <Link href={"/"}>
           <Logo />
         </Link>
