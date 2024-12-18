@@ -4,7 +4,6 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
-import { HiShoppingCart } from "react-icons/hi";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
 interface DiscountResponse {

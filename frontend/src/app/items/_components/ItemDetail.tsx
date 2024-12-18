@@ -10,7 +10,6 @@ import { FaChevronRight } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { FaMinus } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
-import CommonModal from "@/components/CommonModal";
 import DeleteItemModal from "./DeleteItemModal";
 
 type ItemDetailPropsType = {
