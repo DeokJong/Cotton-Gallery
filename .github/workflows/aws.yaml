@@ -31,8 +31,8 @@ on:
       - feature/release-test
 
 env:
-  AWS_REGION: ap-northeast-2                   # 선호하는 AWS 리전으로 설정하세요. 예: us-west-1
-  ECR_REPOSITORY: jbnu-shopping/image          # Amazon ECR 리포지토리 이름으로 설정하세요.
+  AWS_REGION: ${{ secrets.AWS_REGION }}                   # 선호하는 AWS 리전으로 설정하세요. 예: us-west-1
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
 
 #  ECS_SERVICE: MY_ECS_SERVICE                 # Amazon ECS 서비스 이름으로 설정하세요.
 #  ECS_CLUSTER: MY_ECS_CLUSTER                 # Amazon ECS 클러스터 이름으로 설정하세요.
@@ -60,6 +60,13 @@ jobs:
     - name: Amazon ECR 로그인
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
+
+    - name: 프로젝트 환경 변수 설정
+      run: |
+        touch ./frontend/.env
+        echo "${{ secrets.FRONTEND_API_URL }}" >> ./frontend/.env
+        touch ./backend/.env
+        echo "${{ secrets.BACKEND_SECRET }}" >> ./backend/.env
 
     - name: Amazon ECR에 백엔드 이미지 빌드, 태그 지정 및 푸시
       id: build-backend-image
