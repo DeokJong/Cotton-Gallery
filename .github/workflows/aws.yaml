@@ -1,28 +1,3 @@
-# 이 워크플로우는 Amazon ECR에 새 컨테이너 이미지를 빌드하고 푸시하며, 
-# 메인 브랜치에 푸시될 때 Amazon ECS에 새 작업 정의를 배포합니다.
-#
-# 이 워크플로우를 사용하려면 다음 설정 단계를 완료해야 합니다:
-#
-# 1. 이미지를 저장할 ECR 리포지토리를 생성하세요.
-#    예: `aws ecr create-repository --repository-name my-ecr-repo --region us-east-2`.
-#    아래 워크플로우에서 `ECR_REPOSITORY` 환경 변수의 값을 리포지토리 이름으로 바꾸세요.
-#    `AWS_REGION` 환경 변수의 값을 리포지토리의 리전으로 바꾸세요.
-#
-# 2. ECS 작업 정의, ECS 클러스터 및 ECS 서비스를 생성하세요.
-#    예: ECS 콘솔의 시작 가이드 참조:
-#      https://us-east-2.console.aws.amazon.com/ecs/home?region=us-east-2#/firstRun
-#    아래 워크플로우에서 `ECS_SERVICE` 환경 변수의 값을 Amazon ECS 서비스 이름으로 바꾸세요.
-#    `ECS_CLUSTER` 환경 변수의 값을 클러스터 이름으로 바꾸세요.
-#
-# 3. ECS 작업 정의를 JSON 파일로 리포지토리에 저장하세요.
-#    형식은 `aws ecs register-task-definition --generate-cli-skeleton` 명령어의 출력 결과와 같아야 합니다.
-#    아래 워크플로우에서 `ECS_TASK_DEFINITION` 환경 변수의 값을 JSON 파일 경로로 바꾸세요.
-#    `CONTAINER_NAME` 환경 변수의 값을 작업 정의의 `containerDefinitions` 섹션에 있는 컨테이너 이름으로 바꾸세요.
-#
-# 4. IAM 사용자 액세스 키를 GitHub Actions 비밀 변수에 저장하세요: 
-#    `AWS_ACCESS_KEY_ID` 및 `AWS_SECRET_ACCESS_KEY`.
-#    사용된 각 액션의 권장 IAM 정책 및 액세스 키 자격 증명을 안전하게 관리하는 방법은 관련 문서를 참조하세요.
-
 name: AWS ECR에 이미지 빌드 및 푸시
 
 on:
@@ -33,6 +8,10 @@ on:
 env:
   AWS_REGION: ap-northeast-2                   # 선호하는 AWS 리전으로 설정하세요. 예: us-west-1
   ECR_REPOSITORY: jbnu-shopping/image          # Amazon ECR 리포지토리 이름으로 설정하세요.
+  BACKEND_DOCKERFILE_PATH: ./backend/Dockerfile # 백엔드 Dockerfile 경로
+  BACKEND_BUILD_CONTEXT: ./backend             # 백엔드 빌드 컨텍스트
+  FRONTEND_DOCKERFILE_PATH: ./frontend/Dockerfile # 프론트엔드 Dockerfile 경로
+  FRONTEND_BUILD_CONTEXT: ./frontend           # 프론트엔드 빌드 컨텍스트
 
 #  ECS_SERVICE: MY_ECS_SERVICE                 # Amazon ECS 서비스 이름으로 설정하세요.
 #  ECS_CLUSTER: MY_ECS_CLUSTER                 # Amazon ECS 클러스터 이름으로 설정하세요.
@@ -66,6 +45,34 @@ jobs:
       with:
         driver-opts: image=moby/buildkit:latest
 
+    - name: Docker 캐시 유효성 검사 - 백엔드
+      run: |
+        echo "📦 Docker 백엔드 캐시 레이어 유효성 검사"
+        if ! docker manifest inspect $ECR_REGISTRY/$ECR_REPOSITORY:backend-cache > /dev/null 2>&1; then
+          echo "⚠️ 백엔드 캐시 레이어가 존재하지 않아 새로 생성합니다."
+          docker buildx build \
+            --cache-to type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:backend-cache,mode=max \
+            --tag $ECR_REGISTRY/$ECR_REPOSITORY:backend-init-cache \
+            --push -f ${{ env.BACKEND_DOCKERFILE_PATH }} ${{ env.BACKEND_BUILD_CONTEXT }}
+          echo "🚀 백엔드 캐시 레이어 생성 완료"
+        else
+          echo "✅ 기존 백엔드 캐시 레이어 발견, 캐시 사용 준비 완료"
+        fi
+
+    - name: Docker 캐시 유효성 검사 - 프론트엔드
+      run: |
+        echo "📦 Docker 프론트엔드 캐시 레이어 유효성 검사"
+        if ! docker manifest inspect $ECR_REGISTRY/$ECR_REPOSITORY:frontend-cache > /dev/null 2>&1; then
+          echo "⚠️ 프론트엔드 캐시 레이어가 존재하지 않아 새로 생성합니다."
+          docker buildx build \
+            --cache-to type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:frontend-cache,mode=max \
+            --tag $ECR_REGISTRY/$ECR_REPOSITORY:frontend-init-cache \
+            --push -f ${{ env.FRONTEND_DOCKERFILE_PATH }} ${{ env.FRONTEND_BUILD_CONTEXT }}
+          echo "🚀 프론트엔드 캐시 레이어 생성 완료"
+        else
+          echo "✅ 기존 프론트엔드 캐시 레이어 발견, 캐시 사용 준비 완료"
+        fi
+
     - name: Amazon ECR에 백엔드 이미지 빌드, 태그 지정 및 푸시
       id: build-backend-image
       env:
@@ -73,7 +80,11 @@ jobs:
         BACKEND_IMAGE_TAG: "${{ github.sha }}-backend"
       run: |
         echo "📦 백엔드 이미지 빌드 및 푸시 시작"
-        docker buildx build --cache-from type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:cache --cache-to type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:cache,mode=max -t $ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG -f ./backend/Dockerfile ./backend --push
+        docker buildx build \
+        --cache-from type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:backend-cache \
+        --cache-to type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:backend-cache,mode=max \
+        -t $ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG \
+        -f ${{ env.BACKEND_DOCKERFILE_PATH }} ${{ env.BACKEND_BUILD_CONTEXT }} --push
         echo "🚀 백엔드 이미지 빌드 및 푸시 완료"
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG"
 
@@ -84,7 +95,11 @@ jobs:
         FRONTEND_IMAGE_TAG: "${{ github.sha }}-frontend"
       run: |
         echo "📦 프론트엔드 이미지 빌드 및 푸시 시작"
-        docker buildx build --cache-from type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:cache --cache-to type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:cache,mode=max -t $ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG -f ./frontend/Dockerfile ./frontend --push
+        docker buildx build \
+        --cache-from type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:frontend-cache \
+        --cache-to type=registry,ref=$ECR_REGISTRY/$ECR_REPOSITORY:frontend-cache,mode=max \
+        -t $ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG \
+        -f ${{ env.FRONTEND_DOCKERFILE_PATH }} ${{ env.FRONTEND_BUILD_CONTEXT }} --push
         echo "🚀 프론트엔드 이미지 빌드 및 푸시 완료"
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG"
 
