@@ -1,0 +1,102 @@
+# 이 워크플로우는 Amazon ECR에 새 컨테이너 이미지를 빌드하고 푸시하며, 
+# 메인 브랜치에 푸시될 때 Amazon ECS에 새 작업 정의를 배포합니다.
+#
+# 이 워크플로우를 사용하려면 다음 설정 단계를 완료해야 합니다:
+#
+# 1. 이미지를 저장할 ECR 리포지토리를 생성하세요.
+#    예: `aws ecr create-repository --repository-name my-ecr-repo --region us-east-2`.
+#    아래 워크플로우에서 `ECR_REPOSITORY` 환경 변수의 값을 리포지토리 이름으로 바꾸세요.
+#    `AWS_REGION` 환경 변수의 값을 리포지토리의 리전으로 바꾸세요.
+#
+# 2. ECS 작업 정의, ECS 클러스터 및 ECS 서비스를 생성하세요.
+#    예: ECS 콘솔의 시작 가이드 참조:
+#      https://us-east-2.console.aws.amazon.com/ecs/home?region=us-east-2#/firstRun
+#    아래 워크플로우에서 `ECS_SERVICE` 환경 변수의 값을 Amazon ECS 서비스 이름으로 바꾸세요.
+#    `ECS_CLUSTER` 환경 변수의 값을 클러스터 이름으로 바꾸세요.
+#
+# 3. ECS 작업 정의를 JSON 파일로 리포지토리에 저장하세요.
+#    형식은 `aws ecs register-task-definition --generate-cli-skeleton` 명령어의 출력 결과와 같아야 합니다.
+#    아래 워크플로우에서 `ECS_TASK_DEFINITION` 환경 변수의 값을 JSON 파일 경로로 바꾸세요.
+#    `CONTAINER_NAME` 환경 변수의 값을 작업 정의의 `containerDefinitions` 섹션에 있는 컨테이너 이름으로 바꾸세요.
+#
+# 4. IAM 사용자 액세스 키를 GitHub Actions 비밀 변수에 저장하세요: 
+#    `AWS_ACCESS_KEY_ID` 및 `AWS_SECRET_ACCESS_KEY`.
+#    사용된 각 액션의 권장 IAM 정책 및 액세스 키 자격 증명을 안전하게 관리하는 방법은 관련 문서를 참조하세요.
+
+name: Dockerizing to Amazon ECR
+
+on:
+  push:
+    branches:
+      - feature/release-test
+
+env:
+  AWS_REGION: ap-northeast-2                   # 선호하는 AWS 리전으로 설정하세요. 예: us-west-1
+  ECR_REPOSITORY: jbnu-shopping/image          # Amazon ECR 리포지토리 이름으로 설정하세요.
+
+#  ECS_SERVICE: MY_ECS_SERVICE                 # Amazon ECS 서비스 이름으로 설정하세요.
+#  ECS_CLUSTER: MY_ECS_CLUSTER                 # Amazon ECS 클러스터 이름으로 설정하세요.
+#  ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION # Amazon ECS 작업 정의 파일 경로로 설정하세요. 
+#                                               # 예: .aws/task-definition.json
+#  CONTAINER_NAME: MY_CONTAINER_NAME           # 작업 정의의 containerDefinitions 섹션에 있는 컨테이너 이름으로 설정하세요.
+
+jobs:
+  deploy:
+    name: 배포
+    runs-on: ubuntu-latest
+    environment: test
+
+    steps:
+    - name: 코드 체크아웃
+      uses: actions/checkout@v2
+
+    - name: AWS 자격 증명 구성
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}         # github secrets에 저장된 값
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # github secrets에 저장된 값
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Amazon ECR 로그인
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Amazon ECR에 백엔드 이미지 빌드, 태그 지정 및 푸시
+      id: build-backend-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        BACKEND_IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Docker 컨테이너 빌드
+        # ECR에 백엔드 이미지 푸시
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG -f ./backend/Dockerfile ./backend
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG"
+        
+    - name: Amazon ECR에 프론트엔드 이미지 빌드, 태그 지정 및 푸시
+      id: build-frontend-image
+      env:  
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        FRONTEND_IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Docker 컨테이너 빌드
+        # ECR에 프론트엔드 이미지 푸시
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG -f ./frontend/Dockerfile ./frontend
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG
+        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG"
+
+#    - name: Amazon ECS 작업 정의에 새 이미지 ID 입력
+#      id: task-def
+#      uses: aws-actions/amazon-ecs-render-task-definition@v1
+#      with:
+#        task-definition: ${{ env.ECS_TASK_DEFINITION }}
+#        container-name: ${{ env.CONTAINER_NAME }}
+#        image: ${{ steps.build-image.outputs.image }}
+#
+#    - name: Amazon ECS 작업 정의 배포
+#      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+#      with:
+#        task-definition: ${{ steps.task-def.outputs.task-definition }}
+#        service: ${{ env.ECS_SERVICE }}
+#        cluster: ${{ env.ECS_CLUSTER }}
+#        wait-for-service-stability: true
