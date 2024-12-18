@@ -1,4 +1,5 @@
 "use client";
+import { NEXT_PUBLIC_API_URL } from "@/constants";
 import { useItemStore } from "@/store/itemStore";
 import React from "react";
 
@@ -28,7 +29,7 @@ const AddItem = () => {
 
   const handleSubmitItem = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:8080/api/items", {
+    const response = await fetch(`${NEXT_PUBLIC_API_URL}/api/items`, {
       method: "POST",
       credentials: "include",
       headers: {

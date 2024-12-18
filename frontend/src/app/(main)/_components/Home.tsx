@@ -4,10 +4,11 @@ import React, { useEffect, useState } from "react";
 import GoodsCard, { Item } from "./GoodsCard";
 import usePageStore from "@/store/pageStore";
 import Link from "next/link";
+import { NEXT_PUBLIC_API_URL } from "@/constants";
 
 const getItemList = async (pageNumber: number) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/items?page=${pageNumber}&itemSort=CREATED_DATE`, {
+    const response = await fetch(`${NEXT_PUBLIC_API_URL}/api/items?page=${pageNumber}&itemSort=CREATED_DATE`, {
       method: "GET",
       credentials: "include",
       headers: {

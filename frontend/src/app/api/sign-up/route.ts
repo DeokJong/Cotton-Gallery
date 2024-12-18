@@ -1,9 +1,10 @@
+import { API_URL } from "@/constants";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
     const requestData = await request.json();
-    const response = await fetch("http://localhost:8080/api/sign-up", {
+    const response = await fetch(`${API_URL}/api/sign-up`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
