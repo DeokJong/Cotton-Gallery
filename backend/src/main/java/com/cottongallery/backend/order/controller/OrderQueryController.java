@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/orders")
+@RequestMapping("/api/user/orders")
 public class OrderQueryController implements OrderQueryApi {
 
     private final OrderQueryService orderQueryService;

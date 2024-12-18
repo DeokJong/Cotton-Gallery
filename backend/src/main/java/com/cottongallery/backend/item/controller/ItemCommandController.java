@@ -24,7 +24,7 @@ import java.io.IOException;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/items")
+@RequestMapping("/api/admin/items")
 public class ItemCommandController implements ItemCommandApi {
 
     private final ItemCommandService itemCommandService;

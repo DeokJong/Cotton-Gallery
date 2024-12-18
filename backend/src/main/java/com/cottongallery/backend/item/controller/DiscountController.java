@@ -24,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/discounts")
+@RequestMapping("/api/admin/discounts")
 @RequiredArgsConstructor
 public class DiscountController {
 
