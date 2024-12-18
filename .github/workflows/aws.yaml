@@ -53,55 +53,53 @@ jobs:
     - name: AWS 자격 증명 구성
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}         # github secrets에 저장된 값
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # github secrets에 저장된 값
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Amazon ECR 로그인
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    # 백엔드 캐시 복원
-    - name: 백엔드 Docker 캐시 복원
-      uses: actions/cache@v3
+    # Docker Buildx 활성화
+    - name: Docker Buildx 활성화
+      uses: docker/setup-buildx-action@v2
       with:
-        path: /tmp/.buildx-cache-backend
-        key: ${{ runner.os }}-buildx-backend-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-backend-
+        driver-opts: image=moby/buildkit:latest
 
-    - name: Amazon ECR에 백엔드 이미지 빌드, 태그 지정 및 푸시
+    # 백엔드 Docker 이미지 빌드 및 푸시
+    - name: 백엔드 Docker 이미지 빌드 및 푸시
       id: build-backend-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         BACKEND_IMAGE_TAG: "${{ github.sha }}-backend"
       run: |
         echo "📦 백엔드 이미지 빌드 및 푸시 시작"
-        docker build --cache-from=type=local,src=/tmp/.buildx-cache-backend --cache-to=type=local,dest=/tmp/.buildx-cache-backend-new,mode=max -t $ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG -f ./backend/Dockerfile ./backend
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG
+        docker buildx build \
+          --cache-from=type=local,src=/tmp/.buildx-cache-backend \
+          --cache-to=type=local,dest=/tmp/.buildx-cache-backend-new,mode=max \
+          --platform linux/amd64,linux/arm64 \
+          --push \
+          -t $ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG \
+          -f ./backend/Dockerfile ./backend
         echo "🚀 백엔드 이미지 빌드 및 푸시 완료"
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG"
 
-    # 프론트엔드 캐시 복원
-    - name: 프론트엔드 Docker 캐시 복원
-      uses: actions/cache@v3
-      with:
-        path: /tmp/.buildx-cache-frontend
-        key: ${{ runner.os }}-buildx-frontend-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-frontend-
-
-    - name: Amazon ECR에 프론트엔드 이미지 빌드, 태그 지정 및 푸시
+    # 프론트엔드 Docker 이미지 빌드 및 푸시
+    - name: 프론트엔드 Docker 이미지 빌드 및 푸시
       id: build-frontend-image
-      env:  
+      env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         FRONTEND_IMAGE_TAG: "${{ github.sha }}-frontend"
       run: |
         echo "📦 프론트엔드 이미지 빌드 및 푸시 시작"
-        docker build --cache-from=type=local,src=/tmp/.buildx-cache-frontend --cache-to=type=local,dest=/tmp/.buildx-cache-frontend-new,mode=max -t $ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG -f ./frontend/Dockerfile ./frontend
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG
+        docker buildx build \
+          --cache-from=type=local,src=/tmp/.buildx-cache-frontend \
+          --cache-to=type=local,dest=/tmp/.buildx-cache-frontend-new,mode=max \
+          --platform linux/amd64,linux/arm64 \
+          --push \
+          -t $ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG \
+          -f ./frontend/Dockerfile ./frontend
         echo "🚀 프론트엔드 이미지 빌드 및 푸시 완료"
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG"
 
     # 백엔드 캐시 저장
     - name: 백엔드 Docker 캐시 저장
