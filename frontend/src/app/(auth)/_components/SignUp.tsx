@@ -91,7 +91,7 @@ const SignUp = () => {
         switch (error.field) {
           //console.log("Current error state:", useAuthStore.getState().error);
           case "username":
-            setError("username", "아이디를 입력해주세요");
+            setError("username", "아이디를 10자 이내로 입력해주세요");
             break;
           case "password":
             setError("password", "비밀번호를 입력해주세요");

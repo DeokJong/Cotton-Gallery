@@ -6,9 +6,11 @@ import { useAuthStore } from "@/store/authStore";
 import SubmitBtn from "./SubmitBtn";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import useIsLoggedinStore from "@/store/isLoggedinStore";
 
 const Login = () => {
   const router = useRouter();
+  const { setIsLoggedin } = useIsLoggedinStore();
   const { username, password, error, setName, setUsername, setPassword, setError } = useAuthStore();
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +49,7 @@ const Login = () => {
     const result = await response.json();
     console.log(result);
     if (result.status === 200) {
+      setIsLoggedin(true);
       if (result.data.name) {
         setName(result.data.name);
       }
