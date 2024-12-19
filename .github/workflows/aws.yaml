@@ -62,7 +62,6 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-
       - name: 프론트엔드 환경 변수 설정
         run: |
           touch ./frontend/.env

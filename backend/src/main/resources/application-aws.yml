@@ -3,7 +3,7 @@ spring:
   datasource:
     # secretsmanager JDBC URL
     # secretArn 파라미터를 통해 username, password를 자동으로 가져옵니다.
-    url: "jdbc-secretsmanager:postgresql://${RDS_ENDPOINT}/${DB_NAME}?secretArn=arn:aws:secretsmanager:ap-northeast-2:116981803095:secret:rds!db-9b6f3e16-ca88-4d94-a577-4ee818df018a-Q8u3cr"
+    url: "jdbc-secretsmanager:postgresql://${RDS_ENDPOINT}/${DB_NAME}?secretArn=${RDS_SECRET_NAME}"
     driver-class-name: com.amazonaws.secretsmanager.jdbc.AWSSecretsManagerDriver
 
   data:
