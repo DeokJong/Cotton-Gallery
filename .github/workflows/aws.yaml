@@ -31,7 +31,6 @@ on:
       - feature/release-test
 
 env:
-  AWS_REGION: ${{ secrets.AWS_REGION }}                   # 선호하는 AWS 리전으로 설정하세요. 예: us-west-1
   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
 
 #  ECS_SERVICE: MY_ECS_SERVICE                 # Amazon ECS 서비스 이름으로 설정하세요.
@@ -41,60 +40,43 @@ env:
 #  CONTAINER_NAME: MY_CONTAINER_NAME           # 작업 정의의 containerDefinitions 섹션에 있는 컨테이너 이름으로 설정하세요.
 
 jobs:
-  deploy:
-    name: 배포
+  build-and-push:
     runs-on: ubuntu-latest
-    environment: test
-
+    strategy:
+      matrix:
+        service: [backend, frontend]
     steps:
-    - name: 코드 체크아웃
-      uses: actions/checkout@v2
+      - name: 코드 체크아웃
+        uses: actions/checkout@v2
 
-    - name: AWS 자격 증명 구성
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}         # github secrets에 저장된 값
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # github secrets에 저장된 값
-        aws-region: ${{ env.AWS_REGION }}
+      - name: AWS 자격 증명 구성
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-    - name: Amazon ECR 로그인
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Amazon ECR 로그인
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: 프로젝트 환경 변수 설정
-      run: |
-        touch ./frontend/.env
-        echo "${{ secrets.FRONTEND_API_URL }}" >> ./frontend/.env
-        touch ./backend/.env
-        echo "${{ secrets.BACKEND_SECRET }}" >> ./backend/.env
 
-    - name: Amazon ECR에 백엔드 이미지 빌드, 태그 지정 및 푸시
-      id: build-backend-image
-      env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        BACKEND_IMAGE_TAG: "${{ github.sha }}-backend"
-      run: |
-        # Docker 컨테이너 빌드
-        # ECR에 백엔드 이미지 푸시
-        echo "📦 백엔드 이미지 빌드 및 푸시 시작"
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG -f ./backend/Dockerfile ./backend
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG
-        echo "🚀 백엔드 이미지 빌드 및 푸시 완료"
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$BACKEND_IMAGE_TAG"
-        
-    - name: Amazon ECR에 프론트엔드 이미지 빌드, 태그 지정 및 푸시
-      id: build-frontend-image
-      env:  
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        FRONTEND_IMAGE_TAG: "${{ github.sha }}-frontend"
-      run: |
-        # Docker 컨테이너 빌드
-        # ECR에 프론트엔드 이미지 푸시
-        echo "📦 프론트엔드 이미지 빌드 및 푸시 시작"
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG -f ./frontend/Dockerfile ./frontend
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG
-        echo "🚀 프론트엔드 이미지 빌드 및 푸시 완료"
-        echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$FRONTEND_IMAGE_TAG"
+      - name: 프로젝트 환경 변수 설정
+        run: |
+          touch ./frontend/.env
+          echo "${{ secrets.FRONTEND_SECRET }}" >> ./frontend/.env
+          touch ./backend/.env
+          echo "${{ secrets.BACKEND_SECRET }}" >> ./backend/.env
+
+      - name: 이미지 빌드 및 푸시
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: "${{ github.sha }}-${{ matrix.service }}"
+        run: |
+          echo "📦 ${{ matrix.service }} 이미지 빌드 및 푸시 시작"
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./${{ matrix.service }}/Dockerfile ./${{ matrix.service }}
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "🚀 ${{ matrix.service }} 이미지 빌드 및 푸시 완료"
 
 #    - name: Amazon ECS 작업 정의에 새 이미지 ID 입력
 #      id: task-def
