@@ -2,16 +2,14 @@
 
 import Logo from "@/components/Logo";
 import { useAuthStore } from "@/store/authStore";
-import useIsLoggedinStore from "@/store/isLoggedinStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const categoryList = ["카테고리", "신상품", "베스트", "단독특가", "이벤트/특가"];
 
 const MainHeader = () => {
-  const { isLoggedin, setIsLoggedin } = useIsLoggedinStore();
-  const { name, setName } = useAuthStore();
+  const { name, setName, isLoggedin, setIsLoggedin } = useAuthStore();
   const router = useRouter();
 
   const handleLogoutBtn = async () => {
@@ -32,13 +30,6 @@ const MainHeader = () => {
       setIsLoggedin(false);
     }
   };
-
-  useEffect(() => {
-    if (!isLoggedin) {
-      setIsLoggedin(false);
-    }
-    //eslint-disable-next-line
-  }, []);
 
   return (
     <>

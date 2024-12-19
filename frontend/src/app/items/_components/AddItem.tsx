@@ -3,7 +3,18 @@ import { useItemStore } from "@/store/itemStore";
 import React from "react";
 
 const AddItem = () => {
-  const { name, price, stockQuantity, content, setName, setPrice, setStockQuantity, setContent } = useItemStore();
+  const {
+    name,
+    price,
+    stockQuantity,
+    itemImage,
+    itemInfoImage,
+    setName,
+    setPrice,
+    setStockQuantity,
+    setItemImage,
+    setItemInfoImage
+  } = useItemStore();
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
@@ -13,42 +24,48 @@ const AddItem = () => {
   const handleStockQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStockQuantity(+e.target.value);
   };
-  const handleContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // const file = e.target.files?.[0];
-    // if (file) {
-    //   const reader = new FileReader();
-    //   reader.onload = () => {
-    //     const base64String = reader.result?.toString() || "";
-    //     setContent(base64String);
-    //   };
-    //   reader.readAsDataURL(file);
-    // }
-    setContent(e.target.value);
+  const handleItemImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setItemImage(file);
+    }
+  };
+
+  const handleItemInfoImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setItemInfoImage(file);
+    }
   };
 
   const handleSubmitItem = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:8080/api/items", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name,
-        price,
-        stockQuantity,
-        content
-      })
-    });
 
-    const result = await response.json();
-    console.log(result);
-    // TODO: 스윗알럿으로 변경
-    if (result.status === 201) {
-      alert("상품 생성 성공");
-    } else {
-      alert(`상품 생성 실패: ${result.message}`);
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("price", price.toString());
+    formData.append("stockQuantity", stockQuantity.toString());
+    if (itemImage) formData.append("itemImage", itemImage);
+    if (itemInfoImage) formData.append("itemInfoImage", itemInfoImage);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/admin/items", {
+        method: "POST",
+        credentials: "include",
+        body: formData
+      });
+
+      const result = await response.json();
+      console.log(result);
+
+      if (response.ok) {
+        alert("상품 생성 성공");
+      } else {
+        alert(`상품 생성 실패: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("요청 중 오류 발생:", error);
+      alert("상품 생성 중 오류가 발생했습니다.");
     }
   };
 
@@ -88,13 +105,21 @@ const AddItem = () => {
         className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
       />
       <label htmlFor="content" className="indent-3 mb-2">
-        상품 상세 내용
+        상품 대표 이미지
       </label>
       <input
         id="content"
-        type="text"
-        onChange={handleContentChange}
-        placeholder="상품 내용"
+        type="file"
+        onChange={handleItemImageChange}
+        className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
+      />
+      <label htmlFor="content" className="indent-3 mb-2">
+        상품 설명 이미지
+      </label>
+      <input
+        id="content"
+        type="file"
+        onChange={handleItemInfoImageChange}
         className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
       />
       <button>등록</button>

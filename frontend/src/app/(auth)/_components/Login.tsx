@@ -6,12 +6,12 @@ import { useAuthStore } from "@/store/authStore";
 import SubmitBtn from "./SubmitBtn";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import useIsLoggedinStore from "@/store/isLoggedinStore";
+//import useIsLoggedinStore from "@/store/isLoggedinStore";
 
 const Login = () => {
   const router = useRouter();
-  const { setIsLoggedin } = useIsLoggedinStore();
-  const { username, password, error, setName, setUsername, setPassword, setError } = useAuthStore();
+  //const { setIsLoggedin } = useIsLoggedinStore();
+  const { username, password, error, setName, setUsername, setPassword, setError, setIsLoggedin } = useAuthStore();
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -55,8 +55,6 @@ const Login = () => {
       }
       router.push("/");
     }
-    //console.log(typeof phoneNumber);
-    //console.log(name, username, password, phoneNumber, passwordConfirm, email, zipcode, street, detail);
   };
 
   return (

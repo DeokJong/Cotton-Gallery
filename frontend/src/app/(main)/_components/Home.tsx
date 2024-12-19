@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const getItemList = async (pageNumber: number) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/items?page=${pageNumber}&itemSort=CREATED_DATE`, {
+    const response = await fetch(`http://localhost:8080/api/public/items?page=${pageNumber}&itemSort=CREATED_DATE`, {
       method: "GET",
       credentials: "include",
       headers: {
