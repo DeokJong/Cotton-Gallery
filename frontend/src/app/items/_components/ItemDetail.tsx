@@ -17,9 +17,9 @@ type ItemDetailPropsType = {
   itemId: number;
 };
 
-const getItemList = async (pageNumber: number) => {
+const getItem = async (itemId: number) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/items?page=${pageNumber}&itemSort=CREATED_DATE`, {
+    const response = await fetch(`http://localhost:8080//api/public/items/${itemId}`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -28,7 +28,7 @@ const getItemList = async (pageNumber: number) => {
     });
 
     if (!response.ok) {
-      throw new Error("아이템 목록을 가져오는 데 실패했습니다.");
+      throw new Error("아이템을 가져오는 데 실패했습니다.");
     }
 
     const data = await response.json();
@@ -48,13 +48,13 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
   const [count, setCount] = useState<number>(0);
   const deliveryFee = 3000;
 
-  const fetchItems = async (pageNumber: number) => {
-    const result = await getItemList(pageNumber);
+  const fetchItems = async (itemId: number) => {
+    const result = await getItem(itemId);
     if (result) {
-      console.log("아이템 리스트:", result.data.items);
-      const data = result.data.items.find((item: Item) => item.itemId === +itemId);
-      console.log(data);
-      setItem(data);
+      console.log("아이템", result.data);
+      //const data = result.data.items.find((item: Item) => item.itemId === +itemId);
+      console.log(result.data);
+      setItem(result.data);
     }
   };
 
@@ -65,14 +65,13 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
   const handlemodifyBtn = async () => {};
 
   useEffect(() => {
-    fetchItems(pageNumber);
+    fetchItems(itemId);
     //eslint-disable-next-line
   }, [pageNumber]);
 
   return (
     <div className="flex gap-5">
       <div className="flex items-center gap-5">
-        {/* 이미지 여러 장이면 캐러셀 형식으로 */}
         <button>
           <FaChevronLeft size={24} />
         </button>

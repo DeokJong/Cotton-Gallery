@@ -1,28 +1,30 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { HiShoppingCart } from "react-icons/hi";
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
 interface DiscountResponse {
-  discountId: number; // 할인 고유 ID
-  name: string; // 할인 이름
-  discountPercent: number; // 할인 퍼센트
-  startDate: string; // 할인 시작 날짜 (ISO 형식)
-  endDate: string; // 할인 종료 날짜 (ISO 형식)
+  discountId: number;
+  name: string;
+  discountPercent: number;
+  startDate: string;
+  endDate: string;
 }
 
 export type Item = {
-  itemId: number; // 아이템 고유 ID
-  name: string; // 아이템 이름
-  price: number; // 가격
-  stockQuantity: number; // 재고 수량
-  likeCount: number; // 좋아요 개수
-  likedByMe: boolean; // 내가 좋아요를 눌렀는지 여부
-  discountResponse: DiscountResponse | null; // 할인 정보 (null일 수도 있음)
+  discountResponse: DiscountResponse | null;
+  itemId: number;
+  itemImage: string;
+  itemInfoImage?: string;
+  likeCount: number;
+  likedByMe: boolean;
+  name: string;
+  price: number;
+  stockQuantity: number;
 };
 
 type PropsType = {
@@ -31,10 +33,10 @@ type PropsType = {
 
 const GoodsCard = ({ item }: PropsType) => {
   const [liked, setLiked] = useState<boolean>(item.likedByMe);
+  const imageUrl = item.itemImage.replace("/app", "");
 
   const toggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    // 좋아요 취소 patch cors 설정 질문
     try {
       const method = liked ? "PATCH" : "POST";
       const response = await fetch(`http://localhost:8080/api/user/likes/${item.itemId}`, {
@@ -53,7 +55,9 @@ const GoodsCard = ({ item }: PropsType) => {
       const result = await response.json();
 
       if (result.status === 201) {
-        setLiked((prev) => !prev);
+        setLiked(true);
+      } else if (result.status === 200) {
+        setLiked(false);
       } else {
         console.warn("Unexpected response status:", result.status);
       }
@@ -61,55 +65,28 @@ const GoodsCard = ({ item }: PropsType) => {
     } catch (error) {
       console.error("Failed to toggle like status:", error);
     }
-
-    // e.preventDefault();
-
-    // if (!liked) {
-    //   const response = await fetch(`http://localhost:8080/api/user/likes/${item.itemId}`, {
-    //     method: "POST",
-    //     credentials: "include",
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify({
-    //       itemId: item.itemId
-    //     })
-    //   });
-    //   const postResult = await response.json();
-    //   if (postResult.status === 201) {
-    //     setLiked((prev) => !prev);
-    //   }
-    //   console.log(postResult);
-    // }
-
-    // if (liked) {
-    //   const response = await fetch(`http://localhost:8080/api/user/likes/${item.itemId}`, {
-    //     method: "PATCH",
-    //     credentials: "include",
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify({
-    //       itemId: item.itemId
-    //     })
-    //   });
-    //   const patchResult = await response.json();
-    //   if (patchResult.status === 201) {
-    //     setLiked((prev) => !prev);
-    //   }
-    //   console.log(patchResult);
-    //   console.log(liked, item.itemId);
-    // }
   };
 
   return (
     <div className="w-[23.75rem] h-[13.125rem] border-2 rounded-sm">
       <div className="flex flex-col">
         <div className="flex">
-          <Image src={"/pokeball.png"} width={165} height={165} priority alt="상품 사진" />
+          {/* <img
+            src={`http://localhost:8080/api/public/image?filename=${item.itemImage}&imageType=ITEM_IMAGE`}
+            alt="상품 사진"
+            width={165}
+            height={165}
+          /> */}
+          <Image
+            src={`http://localhost:8080/api/public/image?filename=${item.itemImage}&imageType=ITEM_IMAGE`}
+            width={165}
+            height={165}
+            priority
+            alt="상품 사진"
+          />
           <div className="w-[13.188rem] flex flex-col justify-between border-l-2">
-            <div className="ml-1 mt-1">
-              <p className="text-base">판매자</p>
+            <div className="ml-1 mt-1 p-1">
+              <p className="text-base hidden">판매자</p>
               <p className="text-lg">{item.name}</p>
               <p className="font-bold text-xl">{item.price.toLocaleString()}원</p>
             </div>
