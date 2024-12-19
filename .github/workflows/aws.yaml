@@ -31,6 +31,7 @@ on:
       - feature/release-test
 
 env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}                   # 선호하는 AWS 리전으로 설정하세요. 예: us-west-1
   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
 
 #  ECS_SERVICE: MY_ECS_SERVICE                 # Amazon ECS 서비스 이름으로 설정하세요.
@@ -54,7 +55,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Amazon ECR 로그인
         id: login-ecr
