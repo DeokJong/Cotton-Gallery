@@ -1,10 +1,10 @@
-# Docker 컨테이너에서 실행할 때 사용할 설정 파일
+# AWS 환경에서 실행할 때 사용할 설정 파일
 spring:
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    # secretsmanager JDBC URL
+    # secretArn 파라미터를 통해 username, password를 자동으로 가져옵니다.
+    url: "jdbc-secretsmanager:postgresql://${RDS_ENDPOINT}/${DB_NAME}?secretArn=arn:aws:secretsmanager:ap-northeast-2:116981803095:secret:rds!db-9b6f3e16-ca88-4d94-a577-4ee818df018a-Q8u3cr"
+    driver-class-name: com.amazonaws.secretsmanager.jdbc.AWSSecretsManagerDriver
 
   data:
     redis:

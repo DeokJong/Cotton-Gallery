@@ -52,5 +52,8 @@ RUN mkdir -p /app/resources && chmod -R 755 /app/resources
 # 애플리케이션 포트 노출
 EXPOSE 8080
 
+ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+
 # 애플리케이션 실행
 CMD ["java", "-jar", "app.jar"]

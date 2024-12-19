@@ -1,0 +1,10 @@
+spring:
+  config:
+    import:
+      - "aws-secretsmanager:/secrets/jbnu-shopping/backend" # backend 키 이름
+      - "aws-secretsmanager:arn:aws:secretsmanager:ap-northeast-2:116981803095:secret:rds!db-9b6f3e16-ca88-4d94-a577-4ee818df018a-Q8u3cr" # rds 키 이름
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2

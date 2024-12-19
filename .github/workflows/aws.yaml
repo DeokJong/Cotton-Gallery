@@ -63,12 +63,10 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
 
-      - name: 프로젝트 환경 변수 설정
+      - name: 프론트엔드 환경 변수 설정
         run: |
           touch ./frontend/.env
           echo "${{ secrets.FRONTEND_SECRET }}" >> ./frontend/.env
-          touch ./backend/.env
-          echo "${{ secrets.BACKEND_SECRET }}" >> ./backend/.env
 
       - name: 이미지 빌드 및 푸시
         env:
