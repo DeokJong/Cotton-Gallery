@@ -43,6 +43,7 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'test' }} # 메인 브랜치에 푸시될 때 프로덕션 환경으로 배포 그 외에는 테스트 환경으로 배포
     strategy:
       matrix:
         service: [backend, frontend]
