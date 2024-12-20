@@ -41,12 +41,9 @@ env:
 #  CONTAINER_NAME: MY_CONTAINER_NAME           # 작업 정의의 containerDefinitions 섹션에 있는 컨테이너 이름으로 설정하세요.
 
 jobs:
-  build-and-push:
+  build-and-push-frontend:
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}
     runs-on: ubuntu-latest
-    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'test' }} # 메인 브랜치에 푸시될 때 프로덕션 환경으로 배포 그 외에는 테스트 환경으로 배포
-    strategy:
-      matrix:
-        service: [backend, frontend]
     steps:
       - name: 코드 체크아웃
         uses: actions/checkout@v2
@@ -67,20 +64,43 @@ jobs:
           touch ./frontend/.env
           echo "${{ secrets.FRONTEND_SECRET }}" >> ./frontend/.env
 
-      - name: 이미지 빌드 및 푸시
+      - name: 프론트엔드 이미지 빌드 및 푸시
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: "${{ github.sha }}"
         run: |
-          echo "📦 ${{ matrix.service }} 이미지 빌드 및 푸시 시작"
-          if [ "$matrix.service" = "frontend" ]; then
-            docker build -t $ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG -f ./${{ matrix.service }}/Dockerfile ./${{ matrix.service }}
-            docker push $ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG
-          else
-            docker build -t $ECR_REGISTRY/$BACKEND_ECR_NAME:$IMAGE_TAG -f ./${{ matrix.service }}/Dockerfile ./${{ matrix.service }}
-            docker push $ECR_REGISTRY/$BACKEND_ECR_NAME:$IMAGE_TAG
-          fi
-          echo "📦 ${{ matrix.service }} 이미지 빌드 및 푸시 완료"
+          echo "📦 프론트엔드 이미지 빌드 및 푸시 시작"
+          docker build -t $ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG -f ./frontend/Dockerfile ./frontend
+          docker push $ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG
+          echo "📦 프론트엔드 이미지 빌드 및 푸시 완료"
+
+  build-and-push-backend:
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v2
+
+      - name: AWS 자격 증명 구성
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Amazon ECR 로그인
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: 백엔드 이미지 빌드 및 푸시
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: "${{ github.sha }}"
+        run: |
+          echo "📦 백엔드 이미지 빌드 및 푸시 시작"
+          docker build -t $ECR_REGISTRY/$BACKEND_ECR_NAME:$IMAGE_TAG -f ./backend/Dockerfile ./backend
+          docker push $ECR_REGISTRY/$BACKEND_ECR_NAME:$IMAGE_TAG
+          echo "📦 백엔드 이미지 빌드 및 푸시 완료"
 
 #    - name: Amazon ECS 작업 정의에 새 이미지 ID 입력
 #      id: task-def
