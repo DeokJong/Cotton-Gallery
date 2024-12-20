@@ -32,8 +32,8 @@ on:
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}                   # 선호하는 AWS 리전으로 설정하세요. 예: us-west-1
-  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
-
+  FRONTEND_ECR_URI: ${{ secrets.FRONTEND_ECR_URI }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
+  BACKEND_ECR_URI: ${{ secrets.BACKEND_ECR_URI }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
 #  ECS_SERVICE: MY_ECS_SERVICE                 # Amazon ECS 서비스 이름으로 설정하세요.
 #  ECS_CLUSTER: MY_ECS_CLUSTER                 # Amazon ECS 클러스터 이름으로 설정하세요.
 #  ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION # Amazon ECS 작업 정의 파일 경로로 설정하세요. 
@@ -70,9 +70,14 @@ jobs:
       - name: 이미지 빌드 및 푸시
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: "${{ github.sha }}-${{ matrix.service }}"
+          IMAGE_TAG: "${{ github.sha }}"
         run: |
           echo "📦 ${{ matrix.service }} 이미지 빌드 및 푸시 시작"
+          if [ "$matrix.service" == "frontend" ]; then
+            ECR_REPOSITORY=$FRONTEND_ECR_URI
+          else
+            ECR_REPOSITORY=$BACKEND_ECR_URI
+          fi
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f ./${{ matrix.service }}/Dockerfile ./${{ matrix.service }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "🚀 ${{ matrix.service }} 이미지 빌드 및 푸시 완료"
