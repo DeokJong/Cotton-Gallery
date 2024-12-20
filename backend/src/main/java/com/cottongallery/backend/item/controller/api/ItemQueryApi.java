@@ -31,5 +31,5 @@ public interface ItemQueryApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "특정 상품 조회에 성공")
     })
-    ResponseEntity<Response<ItemDetailResponse>> retrieveItem(@PathVariable Long itemId);
+    ResponseEntity<Response<ItemDetailResponse>> retrieveItem(@Login AccountSessionDTO accountSessionDTO, @PathVariable Long itemId);
 }

@@ -57,8 +57,14 @@ public class ItemQueryController implements ItemQueryApi {
     }
 
     @GetMapping(value = "/{itemId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response<ItemDetailResponse>> retrieveItem(@PathVariable Long itemId) {
+    public ResponseEntity<Response<ItemDetailResponse>> retrieveItem(@Login AccountSessionDTO accountSessionDTO, @PathVariable Long itemId) {
         ItemDetailResponse itemDetailResponse = itemQueryService.getItemDetailResponse(itemId);
+
+        if (!accountSessionDTO.getUsername().equals("anonymousUser")) {
+            boolean likedByMe = likeQueryService.isLikedByAccount(accountSessionDTO, itemDetailResponse.getItemId());
+            itemDetailResponse.setLikedByMe(likedByMe);
+        }
+
         return new ResponseEntity<>(Response.createResponse(HttpServletResponse.SC_OK, "상품 상세페이지 조회에 성공했습니다.", itemDetailResponse), HttpStatus.OK);
     }
 }
