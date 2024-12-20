@@ -63,7 +63,6 @@ const SignUp = () => {
 
   const handleSubmitSignUpForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Todo : 요청 보내기 전 휴대폰번호 상태값 정규식 검사
     // Todo : 요청 보내기 전 비밀번호, 비밀번호 확인 값 같은지 검사
 
     const response = await fetch("/api/sign-up", {
@@ -91,7 +90,6 @@ const SignUp = () => {
       const blank = result.data.filter((error: Record<string, string>) => error.code === "NotBlank");
       blank.forEach((error: Record<string, string>) => {
         switch (error.field) {
-          //console.log("Current error state:", useAuthStore.getState().error);
           case "username":
             setError("username", "아이디를 10자 이내로 입력해주세요");
             break;

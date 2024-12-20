@@ -1,8 +1,10 @@
 "use client";
 
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
+import { Item } from "@/app/(main)/_components/GoodsCard";
 import { useItemStore } from "@/store/itemStore";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getItem } from "./ItemDetail";
 
 type ItemEditPropsType = {
   itemId: number;
@@ -21,6 +23,15 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
     setItemImage,
     setItemInfoImage
   } = useItemStore();
+  const [item, setItem] = useState<Item>();
+
+  const fetchItem = async (itemId: number) => {
+    const result = await getItem(itemId);
+    if (result) {
+      console.log("아이템", result.data);
+      setItem(result.data);
+    }
+  };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -47,14 +58,16 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
 
   const handleEditItemInfo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+  };
 
+  const handleEditItemImage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const formData = new FormData();
     if (itemImage) formData.append("itemImage", itemImage);
-    if (itemInfoImage) formData.append("itemInfoImage", itemInfoImage);
 
     try {
-      const response = await fetch(`${baseUrl}/api/admin/items/${itemId}`, {
-        method: "POST",
+      const response = await fetch(`${baseUrl}/api/admin/items/${itemId}?imageType=ITEM_IMAGE`, {
+        method: "PUT",
         credentials: "include",
         body: formData
       });
@@ -63,31 +76,61 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
       console.log(result);
 
       if (response.ok) {
-        alert("상품 생성 성공");
+        alert("상품 이미지 변경 성공");
       } else {
-        alert(`상품 생성 실패: ${result.message}`);
+        alert(`상품 이미지 변경 실패: ${result.message}`);
       }
     } catch (error) {
       console.error("요청 중 오류 발생:", error);
-      alert("상품 생성 중 오류가 발생했습니다.");
+      alert("상품 이미지 변경중 오류가 발생했습니다.");
     }
   };
 
-  const handleEditItemImages = async () => {
-    console.log("ㅠㅠ");
+  const handleEditItemInfoImage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData();
+    if (itemInfoImage) formData.append("itemImage", itemInfoImage);
+
+    try {
+      const response = await fetch(`${baseUrl}/api/admin/items/${itemId}?imageType=ITEM_INFO_IMAGE`, {
+        method: "PUT",
+        credentials: "include",
+        body: formData
+      });
+
+      const result = await response.json();
+      console.log(result);
+
+      if (response.ok) {
+        alert("상품 상세 이미지 변경 성공");
+      } else {
+        alert(`상품 상세 이미지 변경 실패: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("요청 중 오류 발생:", error);
+      alert("상품 상세 이미지 변경중 오류가 발생했습니다.");
+    }
   };
 
+  useEffect(() => {
+    fetchItem(itemId);
+    //eslint-disable-next-line
+  }, []);
+
   return (
-    <>
+    <div className="flex flex-col justify-center">
       <form className="flex flex-col text-xl" onSubmit={handleEditItemInfo}>
+        <div className="w-[36.25rem] flex justify-between items-center mb-[2rem]">
+          <h1 className="text-[1.75rem] ">상품 정보 수정</h1>
+          <button>수정하기</button>
+        </div>
         <label htmlFor="name" className="indent-3 mb-2">
           상품 이름
         </label>
         <input
           id="name"
           type="text"
-          defaultValue={name}
-          value={name}
+          value={name || item?.name}
           onChange={handleNameChange}
           placeholder="상품 이름"
           className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
@@ -98,8 +141,7 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
         <input
           id="price"
           type="number"
-          defaultValue={price}
-          value={price}
+          value={price || item?.price}
           onChange={handlePriceChange}
           placeholder="상품 가격"
           className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
@@ -110,37 +152,44 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
         <input
           id="stockQuantity"
           type="number"
-          defaultValue={stockQuantity}
-          value={stockQuantity}
+          value={stockQuantity || item?.stockQuantity}
           onChange={handleStockQuantityChange}
           placeholder="상품 수량"
           className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
         />
-
-        <button>상품 정보 수정</button>
       </form>
-      <h2>상품 이미지 변경</h2>
-      <form className="flex flex-col text-xl" onSubmit={handleEditItemImages}>
-        <label htmlFor="content" className="indent-3 mb-2">
-          상품 대표 이미지
-        </label>
-        <input
-          id="content"
-          type="file"
-          onChange={handleItemImageChange}
-          className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
-        />
-        <label htmlFor="content" className="indent-3 mb-2">
-          상품 설명 이미지
-        </label>
-        <input
-          id="content"
-          type="file"
-          onChange={handleItemInfoImageChange}
-          className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
-        />
+      <div className="flex justify-between items-center mt-[2rem] mb-[2rem]">
+        <h1 className="text-[1.75rem]">상품 이미지 변경</h1>
+      </div>
+      <form className="w-[36.25rem] flex justify-between text-xl" onSubmit={handleEditItemImage}>
+        <div className="flex flex-col">
+          <label htmlFor="content" className="indent-3 mb-2">
+            상품 대표 이미지
+          </label>
+          <input
+            id="content"
+            type="file"
+            onChange={handleItemImageChange}
+            className="w-[30rem] h-[3.75rem] indent-5 rounded-[35px]"
+          />
+        </div>
+        <button>변경하기</button>
       </form>
-    </>
+      <form className="w-[36.25rem] flex justify-between text-xl" onSubmit={handleEditItemInfoImage}>
+        <div className="flex flex-col">
+          <label htmlFor="content" className="indent-3 mb-2">
+            상품 설명 이미지
+          </label>
+          <input
+            id="content"
+            type="file"
+            onChange={handleItemInfoImageChange}
+            className="w-[30rem] h-[3.75rem] indent-5 rounded-[35px]"
+          />
+        </div>
+        <button>변경하기</button>
+      </form>
+    </div>
   );
 };
 

@@ -18,7 +18,7 @@ type ItemDetailPropsType = {
   itemId: number;
 };
 
-const getItem = async (itemId: number) => {
+export const getItem = async (itemId: number) => {
   try {
     const response = await fetch(`${baseUrl}/api/public/items/${itemId}`, {
       method: "GET",
@@ -48,7 +48,7 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
   const [count, setCount] = useState<number>(0);
   //const deliveryFee = 3000;
 
-  const fetchItems = async (itemId: number) => {
+  const fetchItem = async (itemId: number) => {
     const result = await getItem(itemId);
     if (result) {
       console.log("아이템", result.data);
@@ -91,7 +91,7 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
   const handleBuyBtn = async () => {};
 
   useEffect(() => {
-    fetchItems(itemId);
+    fetchItem(itemId);
     //eslint-disable-next-line
   }, []);
 
