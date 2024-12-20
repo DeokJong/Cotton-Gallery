@@ -8,6 +8,28 @@ import { baseUrl } from "@/app/(auth)/_components/SignUp";
 import useCategoryStore from "@/store/categoryStore";
 
 const getItemList = async (pageNumber: number, category: string) => {
+  if (category === "LIKED_BY_ME") {
+    try {
+      const response = await fetch(`${baseUrl}/api/public/items?page=${pageNumber}&itemSort=CREATED_DATE`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Accept: "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("아이템 목록을 가져오는 데 실패했습니다.");
+      }
+
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.error("Error fetching item list:", error);
+      return null;
+    }
+  }
   try {
     const response = await fetch(`${baseUrl}/api/public/items?page=${pageNumber}&itemSort=${category}`, {
       method: "GET",
@@ -36,11 +58,12 @@ const Home = () => {
   const [items, setItems] = useState<Item[]>([]);
 
   const fetchItems = async (pageNumber: number, category: string) => {
-    // TODO: 페이지네이션, 카테고리 달라질 때마다 새로 fetch
+    // TODO: 페이지네이션
     const result = await getItemList(pageNumber, category);
-    if (result) {
-      console.log("아이템 리스트:", result.data.items);
-      setItems(result.data.items);
+    if (result && result.data.items) {
+      const filteredItems =
+        category === "LIKED_BY_ME" ? result.data.items.filter((item: Item) => item.likedByMe) : result.data.items;
+      setItems(filteredItems);
     }
   };
 
