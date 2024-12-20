@@ -36,6 +36,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/node_modules ./node_modules
 
 # 포트 노출
+ENV PORT=80
 EXPOSE 80
 
 # 컨테이너 시작 명령어
