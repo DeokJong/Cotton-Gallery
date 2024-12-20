@@ -6,11 +6,10 @@ import { useAuthStore } from "@/store/authStore";
 import SubmitBtn from "./SubmitBtn";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-//import useIsLoggedinStore from "@/store/isLoggedinStore";
+import { baseUrl } from "./SignUp";
 
 const Login = () => {
   const router = useRouter();
-  //const { setIsLoggedin } = useIsLoggedinStore();
   const { username, password, error, setName, setUsername, setPassword, setError, setIsLoggedin } = useAuthStore();
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +34,7 @@ const Login = () => {
       return;
     }
 
-    const response = await fetch("http://localhost:8080/api/auth/login", {
+    const response = await fetch(`${baseUrl}/api/auth/login`, {
       method: "POST",
       credentials: "include",
       headers: {

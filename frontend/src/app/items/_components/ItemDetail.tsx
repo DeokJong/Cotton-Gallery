@@ -1,7 +1,6 @@
 "use client";
 
 import { Item } from "@/app/(main)/_components/GoodsCard";
-import usePageStore from "@/store/pageStore";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
@@ -10,11 +9,10 @@ import { FaChevronRight } from "react-icons/fa6";
 import { RxCross2 } from "react-icons/rx";
 import { FaMinus } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
-import CommonModal from "@/components/CommonModal";
 import DeleteItemModal from "./DeleteItemModal";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
+import { baseUrl } from "@/app/(auth)/_components/SignUp";
 
 type ItemDetailPropsType = {
   itemId: number;
@@ -22,7 +20,7 @@ type ItemDetailPropsType = {
 
 const getItem = async (itemId: number) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/public/items/${itemId}`, {
+    const response = await fetch(`${baseUrl}/api/public/items/${itemId}`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -48,7 +46,7 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [item, setItem] = useState<Item>();
   const [count, setCount] = useState<number>(0);
-  const deliveryFee = 3000;
+  //const deliveryFee = 3000;
 
   const fetchItems = async (itemId: number) => {
     const result = await getItem(itemId);
@@ -64,7 +62,7 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:8080/api/user/cartItem", {
+      const response = await fetch(`${baseUrl}/api/user/cartItem`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -105,7 +103,7 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
             <FaChevronLeft size={24} />
           </button>
           <Image
-            src={`http://localhost:8080/api/public/image?filename=${item?.itemImage}&imageType=ITEM_IMAGE`}
+            src={`${baseUrl}/api/public/image?filename=${item?.itemImage}&imageType=ITEM_IMAGE`}
             width={500}
             height={500}
             priority
@@ -117,8 +115,8 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
         </div>
         <div className="w-[36.25rem]">
           <div className="flex justify-between">
-            <p className="text-xl mb-4 hidden">판매자</p>
-            <div className={`flex text-bold text-white gap-3 ${name !== "Admin" && "hidden"}`}>
+            <p className="text-xl mb-4 invisible">판매자</p>
+            <div className={`flex text-bold text-white gap-3 ${name !== "Admin" && "invisible"}`}>
               <DeleteItemModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} itemId={item?.itemId} />
               <button onClick={() => setIsModalOpen(true)} className="w-16 h-9 rounded-md bg-gray-400">
                 삭제
@@ -128,16 +126,16 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
               </Link>
             </div>
           </div>
-          <p className="text-[1.625rem] mt-2 mb-4">{item?.name}</p>
+          <p className="text-[1.625rem] mb-4">{item?.name}</p>
           <div className="flex items-center gap-2 mb-10">
             <FaHeart size={24} />
             <p className="text-xl">{item?.likeCount.toLocaleString()}</p>
           </div>
           <p className="text-[2.188rem] font-bold mb-10">{item?.price.toLocaleString()}원</p>
-          <div className="flex justify-between w-[12.5rem] mb-4">
+          {/* <div className="flex justify-between w-[12.5rem] mb-4">
             <p>배송비</p>
             <p>{deliveryFee.toLocaleString()}원</p>
-          </div>
+          </div> */}
           <div className="flex flex-col p-3 justify-center gap-5 w-[33.438rem] h-[6.25rem] bg-gray-200">
             <div className="flex justify-between">
               <p className="w-[30rem] mt-1 ml-1 truncate">{item?.name}</p>
@@ -164,7 +162,7 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
             <div className="flex justify-between items-center w-[10.625rem] h-[5.313rem]">
               <p className="text-lg">합계</p>
               <p className="text-3xl font-bold text-sky-400">
-                {count !== 0 ? ((item?.price as number) * count + deliveryFee).toLocaleString() : 0}원
+                {count !== 0 ? ((item?.price as number) * count).toLocaleString() : 0}원
               </p>
             </div>
           </div>
@@ -185,7 +183,7 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
       </div>
       <div className="w-[68.75rem]">
         <Image
-          src={`http://localhost:8080/api/public/image?filename=${item?.itemInfoImage}&imageType=ITEM_INFO_IMAGE`}
+          src={`${baseUrl}/api/public/image?filename=${item?.itemInfoImage}&imageType=ITEM_INFO_IMAGE`}
           alt="상품 상세 정보"
           width={1100}
           height={1920}

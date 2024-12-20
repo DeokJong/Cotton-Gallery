@@ -1,4 +1,5 @@
 "use client";
+import { baseUrl } from "@/app/(auth)/_components/SignUp";
 import { useItemStore } from "@/store/itemStore";
 import React from "react";
 
@@ -49,7 +50,7 @@ const AddItem = () => {
     if (itemInfoImage) formData.append("itemInfoImage", itemInfoImage);
 
     try {
-      const response = await fetch("http://localhost:8080/api/admin/items", {
+      const response = await fetch(`${baseUrl}/api/admin/items`, {
         method: "POST",
         credentials: "include",
         body: formData

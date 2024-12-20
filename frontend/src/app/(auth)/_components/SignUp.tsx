@@ -7,6 +7,8 @@ import { useState } from "react";
 import AddressModal from "./AddressModal";
 import Link from "next/link";
 
+export const baseUrl = process.env.NEXT_PUBLIC_URL;
+
 const SignUp = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const {

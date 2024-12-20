@@ -1,5 +1,6 @@
 "use client";
 
+import { baseUrl } from "@/app/(auth)/_components/SignUp";
 import Logo from "@/components/Logo";
 import { useAuthStore } from "@/store/authStore";
 import Link from "next/link";
@@ -10,10 +11,9 @@ const categoryList = ["신상품", "베스트", "단독특가", "이벤트/특�
 
 const MainHeader = () => {
   const { name, setName, isLoggedin, setIsLoggedin } = useAuthStore();
-  const router = useRouter();
 
   const handleLogoutBtn = async () => {
-    const response = await fetch("http://localhost:8080/api/auth/logout", {
+    const response = await fetch(`${baseUrl}/api/auth/logout`, {
       method: "POST",
       credentials: "include",
       headers: {

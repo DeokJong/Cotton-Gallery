@@ -1,3 +1,4 @@
+import { baseUrl } from "@/app/(auth)/_components/SignUp";
 import CommonModal from "@/components/CommonModal";
 import { useRouter } from "next/navigation";
 import React, { SetStateAction } from "react";
@@ -35,7 +36,7 @@ const DeleteItemModal = ({ isModalOpen, setIsModalOpen, itemId }: PropsType) => 
   const router = useRouter();
   const deleteItem = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/items/${itemId}`, {
+      const response = await fetch(`${baseUrl}/api/items/${itemId}`, {
         method: "DELETE",
         credentials: "include",
         headers: {

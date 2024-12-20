@@ -1,11 +1,10 @@
 "use client";
 
+import { baseUrl } from "@/app/(auth)/_components/SignUp";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
-import { HiShoppingCart } from "react-icons/hi";
-import { HiOutlineShoppingCart } from "react-icons/hi";
 
 interface DiscountResponse {
   discountId: number;
@@ -39,7 +38,7 @@ const GoodsCard = ({ item }: PropsType) => {
     e.preventDefault();
     try {
       const method = liked ? "PATCH" : "POST";
-      const response = await fetch(`http://localhost:8080/api/user/likes/${item.itemId}`, {
+      const response = await fetch(`${baseUrl}/api/user/likes/${item.itemId}`, {
         method,
         credentials: "include",
         headers: {
@@ -74,7 +73,7 @@ const GoodsCard = ({ item }: PropsType) => {
       <div className="flex flex-col">
         <div className="flex">
           <Image
-            src={`http://localhost:8080/api/public/image?filename=${item.itemImage}&imageType=ITEM_IMAGE`}
+            src={`${baseUrl}/api/public/image?filename=${item.itemImage}&imageType=ITEM_IMAGE`}
             width={165}
             height={165}
             priority

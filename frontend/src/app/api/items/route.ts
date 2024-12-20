@@ -5,7 +5,7 @@
 //     const body = await request.json(); // 요청 데이터 파싱
 //     console.log("Request Body:", body); // 요청 데이터 확인
 
-//     const backendResponse = await fetch("http://localhost:8080/api/items", {
+//     const backendResponse = await fetch(`${baseUrl}/api/items", {
 //       method: "POST",
 //       headers: {
 //         "Content-Type": "application/json"
