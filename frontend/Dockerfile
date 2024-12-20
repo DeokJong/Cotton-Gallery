@@ -36,7 +36,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/node_modules ./node_modules
 
 # 포트 노출
-EXPOSE 3000
+EXPOSE 80
 
 # 컨테이너 시작 명령어
 CMD ["yarn", "start"]
