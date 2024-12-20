@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const categoryList = ["카테고리", "신상품", "베스트", "단독특가", "이벤트/특가"];
+const categoryList = ["신상품", "베스트", "단독특가", "이벤트/특가"];
 
 const MainHeader = () => {
   const { name, setName, isLoggedin, setIsLoggedin } = useAuthStore();

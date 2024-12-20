@@ -33,7 +33,7 @@ type PropsType = {
 
 const GoodsCard = ({ item }: PropsType) => {
   const [liked, setLiked] = useState<boolean>(item.likedByMe);
-  const imageUrl = item.itemImage.replace("/app", "");
+  const [likeCount, setLikeCount] = useState<number>(item.likeCount);
 
   const toggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -56,8 +56,10 @@ const GoodsCard = ({ item }: PropsType) => {
 
       if (result.status === 201) {
         setLiked(true);
+        setLikeCount((prev) => prev + 1);
       } else if (result.status === 200) {
         setLiked(false);
+        setLikeCount((prev) => prev - 1);
       } else {
         console.warn("Unexpected response status:", result.status);
       }
@@ -71,12 +73,6 @@ const GoodsCard = ({ item }: PropsType) => {
     <div className="w-[23.75rem] h-[13.125rem] border-2 rounded-sm">
       <div className="flex flex-col">
         <div className="flex">
-          {/* <img
-            src={`http://localhost:8080/api/public/image?filename=${item.itemImage}&imageType=ITEM_IMAGE`}
-            alt="상품 사진"
-            width={165}
-            height={165}
-          /> */}
           <Image
             src={`http://localhost:8080/api/public/image?filename=${item.itemImage}&imageType=ITEM_IMAGE`}
             width={165}
@@ -92,17 +88,12 @@ const GoodsCard = ({ item }: PropsType) => {
             </div>
             <div className="w-full h-[35px] pr-2 flex justify-end items-center border-t-2">
               <button onClick={toggleLike}>{liked ? <FaHeart color="red" /> : <FaRegHeart />}</button>
-              <button className="ml-2">
-                {/* TODO: 장바구니 담기*/}
-                <HiOutlineShoppingCart />
-                {/* <HiShoppingCart /> */}
-              </button>
             </div>
           </div>
         </div>
         <div className="w-full h-[45px] pl-2 pr-2 flex justify-between items-center border-t-2">
-          <p>찜 {item.likeCount}</p>
-          <p>#해시태그</p>
+          <p>찜 {likeCount}</p>
+          <p className="invisible">#해시태그</p>
         </div>
       </div>
     </div>
