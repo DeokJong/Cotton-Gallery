@@ -67,7 +67,7 @@ jobs:
       - name: 프론트엔드 이미지 빌드 및 푸시
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: "${{ github.sha }}"
+          IMAGE_TAG: "latest"
         run: |
           echo "📦 프론트엔드 이미지 빌드 및 푸시 시작"
           docker build -t $ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG -f ./frontend/Dockerfile ./frontend
@@ -95,7 +95,7 @@ jobs:
       - name: 백엔드 이미지 빌드 및 푸시
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: "${{ github.sha }}"
+          IMAGE_TAG: "latest"
         run: |
           echo "📦 백엔드 이미지 빌드 및 푸시 시작"
           docker build -t $ECR_REGISTRY/$BACKEND_ECR_NAME:$IMAGE_TAG -f ./backend/Dockerfile ./backend
