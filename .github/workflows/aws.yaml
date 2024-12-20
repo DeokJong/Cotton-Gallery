@@ -74,14 +74,16 @@ jobs:
         run: |
           echo "📦 ${{ matrix.service }} 이미지 빌드 및 푸시 시작"
           if [ "$matrix.service" == "frontend" ]; then
+            echo "$ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG"
             docker build -t $ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG -f ./${{ matrix.service }}/Dockerfile ./${{ matrix.service }}
             docker push $ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG
           else
+            echo "$ECR_REGISTRY/$BACKEND_ECR_NAME:$IMAGE_TAG"
             docker build -t $ECR_REGISTRY/$BACKEND_ECR_NAME:$IMAGE_TAG -f ./${{ matrix.service }}/Dockerfile ./${{ matrix.service }}
             docker push $ECR_REGISTRY/$BACKEND_ECR_NAME:$IMAGE_TAG
           fi
           echo "📦 ${{ matrix.service }} 이미지 빌드 및 푸시 완료"
-          
+
 #    - name: Amazon ECS 작업 정의에 새 이미지 ID 입력
 #      id: task-def
 #      uses: aws-actions/amazon-ecs-render-task-definition@v1
