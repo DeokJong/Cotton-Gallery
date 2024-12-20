@@ -32,8 +32,8 @@ on:
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}                   # 선호하는 AWS 리전으로 설정하세요. 예: us-west-1
-  FRONTEND_ECR_URI: ${{ secrets.FRONTEND_ECR_URI }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
-  BACKEND_ECR_URI: ${{ secrets.BACKEND_ECR_URI }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
+  FRONTEND_ECR_NAME: ${{ secrets.FRONTEND_ECR_NAME }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
+  BACKEND_ECR_NAME: ${{ secrets.BACKEND_ECR_NAME }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
 #  ECS_SERVICE: MY_ECS_SERVICE                 # Amazon ECS 서비스 이름으로 설정하세요.
 #  ECS_CLUSTER: MY_ECS_CLUSTER                 # Amazon ECS 클러스터 이름으로 설정하세요.
 #  ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION # Amazon ECS 작업 정의 파일 경로로 설정하세요. 
@@ -74,11 +74,11 @@ jobs:
         run: |
           echo "📦 ${{ matrix.service }} 이미지 빌드 및 푸시 시작"
           if [ "$matrix.service" == "frontend" ]; then
-            docker build -t $ECR_REGISTRY/$FRONTEND_ECR_URI:$IMAGE_TAG -f ./frontend/Dockerfile ./frontend
-            docker push $ECR_REGISTRY/$FRONTEND_ECR_URI:$IMAGE_TAG
+            docker build -t $ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG -f ./frontend/Dockerfile ./frontend
+            docker push $ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG
           else
-            docker build -t $ECR_REGISTRY/$BACKEND_ECR_URI:$IMAGE_TAG -f ./backend/Dockerfile ./backend
-            docker push $ECR_REGISTRY/$BACKEND_ECR_URI:$IMAGE_TAG
+            docker build -t $ECR_REGISTRY/$BACKEND_ECR_NAME:$IMAGE_TAG -f ./backend/Dockerfile ./backend
+            docker push $ECR_REGISTRY/$BACKEND_ECR_NAME:$IMAGE_TAG
           fi
             echo "📦 ${{ matrix.service }} 이미지 빌드 및 푸시 완료"
 
