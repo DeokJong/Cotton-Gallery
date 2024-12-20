@@ -34,10 +34,13 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}                   # 선호하는 AWS 리전으로 설정하세요. 예: us-west-1
   FRONTEND_ECR_NAME: ${{ secrets.FRONTEND_ECR_NAME }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
   BACKEND_ECR_NAME: ${{ secrets.BACKEND_ECR_NAME }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
+  ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
+  FRONTEND_ECS_SERVICE: ${{ secrets.FRONTEND_ECS_SERVICE }}
+  FRONTEND_ECS_TASK_DEFINITION: ${{ secrets.FRONTEND_ECS_TASK_DEFINITION }}
 #  ECS_SERVICE: MY_ECS_SERVICE                 # Amazon ECS 서비스 이름으로 설정하세요.
 #  ECS_CLUSTER: MY_ECS_CLUSTER                 # Amazon ECS 클러스터 이름으로 설정하세요.
 #  ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION # Amazon ECS 작업 정의 파일 경로로 설정하세요. 
-#                                               # 예: .aws/task-definition.json
+#                                              # 예: .aws/task-definition.json
 #  CONTAINER_NAME: MY_CONTAINER_NAME           # 작업 정의의 containerDefinitions 섹션에 있는 컨테이너 이름으로 설정하세요.
 
 jobs:
@@ -73,6 +76,22 @@ jobs:
           docker build -t $ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG -f ./frontend/Dockerfile ./frontend
           docker push $ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG
           echo "📦 프론트엔드 이미지 빌드 및 푸시 완료"
+      
+      - name: 프론트엔트 ECS 작업 정의에 새 이미지 ID 입력
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.FRONTEND_ECS_TASK_DEFINITION }}
+          container-name: ${{ env.FRONTEND_ECS_SERVICE }}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: 프론트엔드 ECS 작업 정의 배포
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.FRONTEND_ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
 
   build-and-push-backend:
     environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}
