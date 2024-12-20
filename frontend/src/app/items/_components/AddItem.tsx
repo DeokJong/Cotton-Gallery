@@ -1,7 +1,7 @@
 "use client";
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
 import { useItemStore } from "@/store/itemStore";
-import React from "react";
+import React, { useEffect } from "react";
 
 const AddItem = () => {
   const {
@@ -70,9 +70,16 @@ const AddItem = () => {
     }
   };
 
+  useEffect(() => {
+    setName("");
+    setPrice(0);
+    setStockQuantity(0);
+  }, []);
+
   return (
     <form className="flex flex-col text-xl" onSubmit={handleSubmitItem}>
-      <label htmlFor="name" className="indent-3 mb-2">
+      <h1 className="text-[1.75rem] mb-6">상품 정보 수정</h1>
+      <label htmlFor="name" className="indent-3 mt-2 mb-2">
         상품 이름
       </label>
       <input
@@ -83,7 +90,7 @@ const AddItem = () => {
         placeholder="상품 이름"
         className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
       />
-      <label htmlFor="price" className="indent-3 mb-2">
+      <label htmlFor="price" className="indent-3 mt-2 mb-2">
         상품 가격
       </label>
       <input
@@ -94,7 +101,7 @@ const AddItem = () => {
         placeholder="상품 가격"
         className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
       />
-      <label htmlFor="stockQuantity" className="indent-3 mb-2">
+      <label htmlFor="stockQuantity" className="indent-3 mt-2 mb-2">
         상품 수량
       </label>
       <input
@@ -105,23 +112,23 @@ const AddItem = () => {
         placeholder="상품 수량"
         className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
       />
-      <label htmlFor="content" className="indent-3 mb-2">
+      <label htmlFor="content" className="indent-3 mt-2 mb-2">
         상품 대표 이미지
       </label>
       <input
         id="content"
         type="file"
         onChange={handleItemImageChange}
-        className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
+        className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px]"
       />
-      <label htmlFor="content" className="indent-3 mb-2">
+      <label htmlFor="content" className="indent-3 mt-2 mb-2">
         상품 설명 이미지
       </label>
       <input
         id="content"
         type="file"
         onChange={handleItemInfoImageChange}
-        className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
+        className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px]"
       />
       <button>등록</button>
     </form>

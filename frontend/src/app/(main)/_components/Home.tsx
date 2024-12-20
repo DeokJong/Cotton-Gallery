@@ -4,10 +4,12 @@ import React, { useEffect, useState } from "react";
 import GoodsCard, { Item } from "./GoodsCard";
 import usePageStore from "@/store/pageStore";
 import Link from "next/link";
+import { baseUrl } from "@/app/(auth)/_components/SignUp";
+import useCategoryStore from "@/store/categoryStore";
 
-const getItemList = async (pageNumber: number) => {
+const getItemList = async (pageNumber: number, category: string) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/public/items?page=${pageNumber}&itemSort=CREATED_DATE`, {
+    const response = await fetch(`${baseUrl}/api/public/items?page=${pageNumber}&itemSort=${category}`, {
       method: "GET",
       credentials: "include",
       headers: {
@@ -29,11 +31,13 @@ const getItemList = async (pageNumber: number) => {
 };
 
 const Home = () => {
+  const { category } = useCategoryStore();
   const { pageNumber } = usePageStore();
   const [items, setItems] = useState<Item[]>([]);
 
-  const fetchItems = async (pageNumber: number) => {
-    const result = await getItemList(pageNumber);
+  const fetchItems = async (pageNumber: number, category: string) => {
+    // TODO: 페이지네이션, 카테고리 달라질 때마다 새로 fetch
+    const result = await getItemList(pageNumber, category);
     if (result) {
       console.log("아이템 리스트:", result.data.items);
       setItems(result.data.items);
@@ -41,9 +45,9 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchItems(pageNumber);
+    fetchItems(pageNumber, category);
     //eslint-disable-next-line
-  }, [pageNumber]);
+  }, [pageNumber, category]);
 
   return (
     <div className="flex flex-col items-center">

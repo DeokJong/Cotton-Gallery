@@ -3,13 +3,15 @@
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
 import Logo from "@/components/Logo";
 import { useAuthStore } from "@/store/authStore";
+import useCategoryStore from "@/store/categoryStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const categoryList = ["신상품", "베스트", "단독특가", "이벤트/특가"];
+const categoryList = ["신상품", "베스트", "내가 찜한 상품"];
 
 const MainHeader = () => {
+  const { setCategory } = useCategoryStore();
   const { name, setName, isLoggedin, setIsLoggedin } = useAuthStore();
 
   const handleLogoutBtn = async () => {
@@ -31,16 +33,32 @@ const MainHeader = () => {
     }
   };
 
+  const handleCategoryClick = (category: string) => {
+    switch (category) {
+      case "신상품":
+        setCategory("CREATED_DATE");
+        break;
+      case "베스트":
+        setCategory("LIKE_COUNT");
+        break;
+      case "내가 찜한 상품":
+        setCategory("LIKED_BY_ME");
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <>
       <div className="w-full mt-[3.75rem] mb-[3.75rem] flex justify-center items-center gap-[22.5rem]">
         <div className="flex gap-3">
-          <p>찜 리스트</p>
           {name === "Admin" && (
             <Link href={"/items/add"}>
               <p>상품 등록</p>
             </Link>
           )}
+          <p className="invisible">찜 리스트</p>
         </div>
         <Link href={"/"}>
           <Logo />
@@ -65,7 +83,7 @@ const MainHeader = () => {
       </div>
       <ul className="w-full flex gap-24 border-gray-400 border-b-2 justify-center mb-10">
         {categoryList.map((category) => (
-          <li key={category} className="mb-2">
+          <li key={category} className="mb-2 cursor-pointer" onClick={() => handleCategoryClick(category)}>
             {category}
           </li>
         ))}

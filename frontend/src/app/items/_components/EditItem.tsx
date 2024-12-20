@@ -5,6 +5,7 @@ import { Item } from "@/app/(main)/_components/GoodsCard";
 import { useItemStore } from "@/store/itemStore";
 import React, { useEffect, useState } from "react";
 import { getItem } from "./ItemDetail";
+import { useRouter } from "next/navigation";
 
 type ItemEditPropsType = {
   itemId: number;
@@ -24,6 +25,7 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
     setItemInfoImage
   } = useItemStore();
   const [item, setItem] = useState<Item>();
+  const router = useRouter();
 
   const fetchItem = async (itemId: number) => {
     const result = await getItem(itemId);
@@ -58,6 +60,32 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
 
   const handleEditItemInfo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
+      const response = await fetch(`${baseUrl}/api/admin/items/${itemId}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: name || item?.name,
+          price: price || item?.price,
+          stockQuantity: stockQuantity || item?.stockQuantity
+        })
+      });
+      const result = await response.json();
+      console.log(result);
+
+      if (response.ok) {
+        alert("상품 정보 수정 성공");
+        router.push(`/items/detail/${itemId}`);
+      } else {
+        alert(`상품 정보 수정 실패: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("요청 중 오류 발생:", error);
+      alert("상품 정보 수정중 오류가 발생했습니다.");
+    }
   };
 
   const handleEditItemImage = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -130,9 +158,9 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
         <input
           id="name"
           type="text"
-          value={name || item?.name}
+          value={name}
           onChange={handleNameChange}
-          placeholder="상품 이름"
+          placeholder={item?.name}
           className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
         />
         <label htmlFor="price" className="indent-3 mb-2">
@@ -141,7 +169,7 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
         <input
           id="price"
           type="number"
-          value={price || item?.price}
+          value={price}
           onChange={handlePriceChange}
           placeholder="상품 가격"
           className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
@@ -151,10 +179,10 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
         </label>
         <input
           id="stockQuantity"
-          type="number"
-          value={stockQuantity || item?.stockQuantity}
+          type="text"
+          value={stockQuantity}
           onChange={handleStockQuantityChange}
-          placeholder="상품 수량"
+          placeholder={String(item?.stockQuantity)}
           className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px] bg-gray-200"
         />
       </form>

@@ -36,7 +36,7 @@ const DeleteItemModal = ({ isModalOpen, setIsModalOpen, itemId }: PropsType) => 
   const router = useRouter();
   const deleteItem = async () => {
     try {
-      const response = await fetch(`${baseUrl}/api/items/${itemId}`, {
+      const response = await fetch(`${baseUrl}/api/admin/items/${itemId}`, {
         method: "DELETE",
         credentials: "include",
         headers: {
