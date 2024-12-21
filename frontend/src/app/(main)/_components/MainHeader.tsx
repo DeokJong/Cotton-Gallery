@@ -11,6 +11,7 @@ import React from "react";
 const categoryList = ["신상품", "베스트", "내가 찜한 상품"];
 
 const MainHeader = () => {
+  const router = useRouter();
   const { setCategory } = useCategoryStore();
   const { name, setName, isLoggedin, setIsLoggedin } = useAuthStore();
 
@@ -58,7 +59,9 @@ const MainHeader = () => {
               <p>상품 등록</p>
             </Link>
           )}
-          <p className="invisible">찜 리스트</p>
+          <Link href={"/cart"}>
+            <p>장바구니</p>
+          </Link>
         </div>
         <Link href={"/"}>
           <Logo />
@@ -75,7 +78,7 @@ const MainHeader = () => {
             </>
           ) : (
             <>
-              <button>{name} 님</button>
+              <button onClick={() => router.push("/my-page")}>{name} 님</button>
               <button onClick={handleLogoutBtn}>로그아웃</button>
             </>
           )}
