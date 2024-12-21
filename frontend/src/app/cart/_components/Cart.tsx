@@ -57,16 +57,19 @@ const Cart = () => {
   }, [items]);
 
   return (
-    <div className="flex flex-col items-center">
-      <ul className="w-[73.75rem] flex flex-col gap-1 items-center">
-        {items.map((item, index) => (
-          <li key={index} className="mb-[1.25rem]">
-            <Link href={`/items/detail/${item.cartItemId}`}>
+    <div className="h-screen flex flex-col items-center">
+      <h1 className="text-[1.75rem] mb-6">장바구니</h1>
+      {items.length === 0 ? (
+        <p className="text-lg text-gray-500 mt-60">장바구니가 비어있습니다</p>
+      ) : (
+        <ul className="w-[73.75rem] flex flex-col gap-1 items-center">
+          {items.map((item, index) => (
+            <li key={index} className="mb-[1.25rem]">
               <CartItem item={item} />
-            </Link>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

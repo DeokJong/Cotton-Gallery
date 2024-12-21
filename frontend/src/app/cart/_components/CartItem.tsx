@@ -4,19 +4,20 @@ import React, { useEffect, useState } from "react";
 import { CartItemType } from "./Cart";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
+import DeleteCartItemModal from "./DeleteCartItemModal";
+import Link from "next/link";
 
 type PropsType = {
   item: CartItemType;
 };
 
 const CartItem = ({ item }: PropsType) => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(item.quantity);
-  const [isQuantityChanged, setIsQuantityChanged] = useState<boolean>(false);
 
   const handleItemQuantity = async (e: React.MouseEvent<HTMLButtonElement>, cartItemId: number) => {
     e.preventDefault();
     const { id } = e.currentTarget;
-
     try {
       const response = await fetch(`${baseUrl}/api/user/cartItem/${cartItemId}?quantityChangeType=${id}`, {
         method: "PATCH",
@@ -29,7 +30,6 @@ const CartItem = ({ item }: PropsType) => {
       console.log(result);
 
       if (response.ok) {
-        alert("장바구니 수량 변경 성공");
         setQuantity(id === "DECREASE" ? Math.max(quantity - 1, 0) : quantity + 1);
       } else {
         alert(`장바구니 수량 변경 실패: ${result.message}`);
@@ -45,11 +45,11 @@ const CartItem = ({ item }: PropsType) => {
       <div className="flex flex-col">
         <div className="flex">
           <div className="w-[48.75rem] flex flex-col justify-between">
-            <div className="ml-2 mt-2">
+            <Link href={`/items/detail/${item.cartItemId}`} className="ml-2 mt-2">
               <p className="text-base hidden">판매자</p>
               <p className="text-lg">{item.name}</p>
               <p className="font-bold text-xl">{item.price.toLocaleString()}원</p>
-            </div>
+            </Link>
             <div className="w-full h-[30px] pr-2 flex justify-between items-center">
               <div className="ml-2 flex justify-center items-center gap-2">
                 <button id="DECREASE" onClick={(e) => handleItemQuantity(e, item.cartItemId)} className="ml-1">
@@ -60,11 +60,23 @@ const CartItem = ({ item }: PropsType) => {
                   <FaPlus size={15} />
                 </button>
               </div>
-              <button>삭제</button>
+              <button
+                className="-mr-1 w-12 h-7 rounded-md bg-gray-300"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsModalOpen(true);
+                }}
+              >
+                삭제
+              </button>
+              <DeleteCartItemModal
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+                cartItemId={item.cartItemId}
+              />
             </div>
           </div>
         </div>
-        {/* <div className="w-full h-[45px] pl-2 pr-2 flex justify-between items-center border-t-2">gg</div> */}
       </div>
     </div>
   );

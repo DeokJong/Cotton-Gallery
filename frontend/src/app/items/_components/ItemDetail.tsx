@@ -78,13 +78,13 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
       console.log(result);
 
       if (response.ok) {
-        alert("장바구니 생성 성공");
+        alert("장바구니에 상품을 담았습니다.");
       } else {
-        alert(`장바구니 생성 실패: ${result.message}`);
+        alert(`장바구니에 상품 담기 실패: ${result.message}`);
       }
     } catch (error) {
       console.error("요청 중 오류 발생:", error);
-      alert("장바구니 생성 중 오류가 발생했습니다.");
+      alert("장바구니 상품을 담는 중 오류가 발생했습니다.");
     }
   };
 
