@@ -1,7 +1,7 @@
 "use client";
 
 import Logo from "@/components/Logo";
-import { NEXT_PUBLIC_API_URL } from "@/constants";
+import { API_URL } from "@/constants";
 import { useAuthStore } from "@/store/authStore";
 import Link from "next/link";
 import React from "react";
@@ -12,7 +12,7 @@ const MainHeader = () => {
   const { name, setName } = useAuthStore();
 
   const handleLogoutBtn = async () => {
-    const response = await fetch(`${NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+    const response = await fetch(`${API_URL}/api/auth/logout`, {
       method: "POST",
       credentials: "include",
       headers: {

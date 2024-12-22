@@ -1,6 +1,6 @@
 "use client";
 
-import { NEXT_PUBLIC_API_URL } from "@/constants";
+import { API_URL } from "@/constants";
 import Image from "next/image";
 import React, { useState } from "react";
 import { FaHeart } from "react-icons/fa";
@@ -37,7 +37,7 @@ const GoodsCard = ({ item }: PropsType) => {
     // 좋아요 취소 patch cors 설정 질문
     try {
       const method = liked ? "PATCH" : "POST";
-      const response = await fetch(`${NEXT_PUBLIC_API_URL}/api/user/likes/${item.itemId}`, {
+      const response = await fetch(`${API_URL}/api/user/likes/${item.itemId}`, {
         method,
         credentials: "include",
         headers: {
@@ -65,7 +65,7 @@ const GoodsCard = ({ item }: PropsType) => {
     // e.preventDefault();
 
     // if (!liked) {
-    //   const response = await fetch(`${NEXT_PUBLIC_API_URL}/api/user/likes/${item.itemId}`, {
+    //   const response = await fetch(`${API_URL}/api/user/likes/${item.itemId}`, {
     //     method: "POST",
     //     credentials: "include",
     //     headers: {
@@ -83,7 +83,7 @@ const GoodsCard = ({ item }: PropsType) => {
     // }
 
     // if (liked) {
-    //   const response = await fetch(`${NEXT_PUBLIC_API_URL}/api/user/likes/${item.itemId}`, {
+    //   const response = await fetch(`${API_URL}/api/user/likes/${item.itemId}`, {
     //     method: "PATCH",
     //     credentials: "include",
     //     headers: {

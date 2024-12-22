@@ -1,5 +1,5 @@
 import CommonModal from "@/components/CommonModal";
-import { NEXT_PUBLIC_API_URL } from "@/constants";
+import { API_URL } from "@/constants";
 import { useRouter } from "next/navigation";
 import React, { SetStateAction } from "react";
 
@@ -36,7 +36,7 @@ const DeleteItemModal = ({ isModalOpen, setIsModalOpen, itemId }: PropsType) => 
   const router = useRouter();
   const deleteItem = async () => {
     try {
-      const response = await fetch(`${NEXT_PUBLIC_API_URL}/api/items/${itemId}`, {
+      const response = await fetch(`${API_URL}/api/items/${itemId}`, {
         method: "DELETE",
         credentials: "include",
         headers: {

@@ -11,7 +11,7 @@ import { RxCross2 } from "react-icons/rx";
 import { FaMinus } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
 import DeleteItemModal from "./DeleteItemModal";
-import { NEXT_PUBLIC_API_URL } from "@/constants";
+import { API_URL } from "@/constants";
 
 type ItemDetailPropsType = {
   itemId: number;
@@ -19,7 +19,7 @@ type ItemDetailPropsType = {
 
 const getItemList = async (pageNumber: number) => {
   try {
-    const response = await fetch(`${NEXT_PUBLIC_API_URL}/api/items?page=${pageNumber}&itemSort=CREATED_DATE`, {
+    const response = await fetch(`${API_URL}/api/items?page=${pageNumber}&itemSort=CREATED_DATE`, {
       method: "GET",
       credentials: "include",
       headers: {

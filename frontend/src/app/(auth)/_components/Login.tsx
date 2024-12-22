@@ -6,7 +6,7 @@ import { useAuthStore } from "@/store/authStore";
 import SubmitBtn from "./SubmitBtn";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { NEXT_PUBLIC_API_URL } from "@/constants";
+import { API_URL } from "@/constants";
 
 const Login = () => {
   const router = useRouter();
@@ -34,7 +34,7 @@ const Login = () => {
       return;
     }
 
-    const response = await fetch(`${NEXT_PUBLIC_API_URL}/api/auth/login`, {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
       method: "POST",
       credentials: "include",
       headers: {
