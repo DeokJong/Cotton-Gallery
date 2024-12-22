@@ -1,9 +1,7 @@
 spring:
-  config:
-    import:
-      - "aws-secretsmanager:${BACKEND_SECRET_NAME}"
-
   cloud:
     aws:
-      region:
-        static: ap-northeast-2
+      secretsmanager:
+        enabled: true
+        name: /secrets/jbnu-shopping/backend
+        fail-fast: true
