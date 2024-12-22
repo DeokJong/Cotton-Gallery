@@ -207,6 +207,29 @@ const Ordersheet = () => {
     }
   };
 
+  const deleteAddr = async (addressId: number) => {
+    try {
+      const response = await fetch(`${baseUrl}/api/user/address/${addressId}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          Accept: "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete address: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Address deleted successfully:", data);
+      return data;
+    } catch (error) {
+      console.error("Error deleting address:", error);
+      return null;
+    }
+  };
+
   const fetchItem = async (itemId: number) => {
     const result = await getItem(itemId);
     if (result) {
@@ -227,7 +250,6 @@ const Ordersheet = () => {
   return (
     <div className=" flex flex-col items-center justify-center">
       <h1 className=" w-full h-16 border-b-2 text-center border-gray-200 text-[1.75rem] mb-6">주문서</h1>
-
       {changeComponent === "default" ? (
         <>
           <div className="w-[48.75rem] h-[10rem] bg-gray-100">
@@ -238,8 +260,8 @@ const Ordersheet = () => {
               </button>
             </div>
             <div>
-              <p>d{primaryAddr?.street}</p>
-              <p>d({primaryAddr?.detail})</p>
+              <p>{primaryAddr?.street}</p>
+              <p>({primaryAddr?.detail})</p>
               <p>우편번호: {primaryAddr?.zipcode}</p>
             </div>
           </div>
@@ -259,7 +281,7 @@ const Ordersheet = () => {
             {addressList?.map((address, index) => (
               <li
                 key={index}
-                className={`mb-[1.25rem] w-[48.75rem] bg-gray-200 p-3 ${primaryAddrId === index && "bg-gray-400"}`}
+                className={`mb-[1.25rem] w-[48.75rem] bg-gray-200 p-3 ${primaryAddrId === index && "bg-gray-300"}`}
                 onClick={() => setPrimaryAddrId(index)}
               >
                 <div>
@@ -268,6 +290,9 @@ const Ordersheet = () => {
                   <p>({address?.detail})</p>
                   <p>우편번호: {address?.zipcode}</p>
                 </div>
+                <button className="-mr-1 w-12 h-7 rounded-md bg-gray-300" onClick={() => deleteAddr(index + 1)}>
+                  삭제
+                </button>
               </li>
             ))}
           </ul>
