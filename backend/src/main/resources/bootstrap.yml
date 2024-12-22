@@ -3,5 +3,5 @@ spring:
     aws:
       secretsmanager:
         enabled: true
-        name: /secrets/jbnu-shopping/backend
+        name: ${BACKEND_SECRET_NAME}
         fail-fast: true
