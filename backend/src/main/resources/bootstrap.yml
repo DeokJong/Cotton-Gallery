@@ -1,7 +1,0 @@
-spring:
-  cloud:
-    aws:
-      secretsmanager:
-        enabled: true
-        name: ${BACKEND_SECRET_NAME}
-        fail-fast: true
