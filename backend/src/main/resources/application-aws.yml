@@ -1,9 +1,9 @@
 # AWS 환경에서 실행할 때 사용할 설정 파일
 spring:
   datasource:
-    # secretsmanager JDBC URL
-    # secretArn 파라미터를 통해 username, password를 자동으로 가져옵니다.
-    url: "jdbc-secretsmanager:postgresql://${RDS_ENDPOINT}/${DB_NAME}?secretArn=${RDS_SECRET_NAME}"
+    url: "jdbc-secretsmanager:postgresql://${RDS_ENDPOINT}/${DB_NAME}"
+    username: ${username}
+    password: ${password}
     driver-class-name: com.amazonaws.secretsmanager.jdbc.AWSSecretsManagerDriver
 
   data:

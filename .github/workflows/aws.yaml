@@ -86,13 +86,11 @@ jobs:
           --task-definition ${{ env.FRONTEND_ECS_TASK_DEFINITION }} \
           --region ${{ env.AWS_REGION }} >> ./frontend-task-definition.json
       
-      - name: 환경 변수 확인
+      - name: 작업 정의 확인
         run: |
-          echo "FRONTEND_ECS_TASK_DEFINITION=${{ env.FRONTEND_ECS_TASK_DEFINITION }}"
-          echo "AWS_REGION=${{ env.AWS_REGION }}"
-          echo "FRONTEND_CONTAINER_NAME=${{ env.FRONTEND_CONTAINER_NAME }}"
+          cat ./frontend-task-definition.json
       
-      - name: 프론트엔트 ECS 작업 정의에 새 이미지 ID 입력
+      - name: 프론트엔드 ECS 작업 정의에 새 이미지 ID 입력
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
