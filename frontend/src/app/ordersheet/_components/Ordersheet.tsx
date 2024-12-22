@@ -16,29 +16,6 @@ type Address = {
   addressType?: string;
 };
 
-const fetchAddressList = async () => {
-  try {
-    const response = await fetch(`${baseUrl}/api/user/address`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        Accept: "application/json"
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch user address: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    console.log("User Address:", data);
-    return data;
-  } catch (error) {
-    console.error("Error fetching user address:", error);
-    return null;
-  }
-};
-
 const changePrimaryAddress = async (addressId: number) => {
   try {
     const response = await fetch(`${baseUrl}/api/user/address/${addressId}/primary`, {
@@ -100,7 +77,7 @@ const Ordersheet = () => {
   const { zipcode, street, detail, setZipcode, setStreet, setDetail } = useAuthStore();
   const [addressId, setAddressId] = useState<number>(1);
   const [primaryAddr, setPrimaryAddr] = useState<Address>();
-  const [isPrimaryAddr, setIsPrimaryAddr] = useState();
+  const [primaryAddrId, setPrimaryAddrId] = useState<number>();
   const [addressList, setAddressList] = useState<Address[]>();
   const [item, setItem] = useState<Item>();
   const [changeComponent, setChangeComponent] = useState<string>("default");
@@ -122,6 +99,25 @@ const Ordersheet = () => {
 
       const result = await response.json();
       console.log("Primary Address:", result.data);
+
+      if (result.data && Array.isArray(result.data.address)) {
+        setPrimaryAddr(result.data);
+
+        // 주소 리스트 길이가 1일 때 primaryAddrId를 1로 설정
+        if (result.data.address.length === 1) {
+          setPrimaryAddrId(1);
+        } else {
+          const primaryIndex = result.data.address.findIndex((item: Address) => item.addressType === "PRIMARY");
+
+          if (primaryIndex !== -1) {
+            setPrimaryAddrId(primaryIndex);
+          } else {
+            console.warn("No PRIMARY address found.");
+          }
+        }
+      } else {
+        console.warn("Invalid address data format.");
+      }
       setPrimaryAddr(result.data);
       return result;
     } catch (error) {
@@ -129,11 +125,58 @@ const Ordersheet = () => {
       return null;
     }
   };
+
+  const fetchAddressList = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/api/user/address`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Accept: "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch user address: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      console.log("User Address:", result.data);
+      setAddressList(result.data.address);
+      return result;
+    } catch (error) {
+      console.error("Error fetching user address:", error);
+      return null;
+    }
+  };
   // 배송지 변경  버튼 누르면 주소 리스트 조회
   const handleAddrList = () => {
     fetchAddressList();
+    setChangeComponent("change");
   };
   // 선택 후에 변경 요청
+  const EditPrimaryAddr = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/api/user/address/${primaryAddrId}/primary`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          Accept: "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to set primary address: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Primary address updated successfully:", data);
+      return data;
+    } catch (error) {
+      console.error("Error updating primary address:", error);
+      return null;
+    }
+  };
 
   const addAddress = async () => {
     try {
@@ -185,12 +228,14 @@ const Ordersheet = () => {
     <div className=" flex flex-col items-center justify-center">
       <h1 className=" w-full h-16 border-b-2 text-center border-gray-200 text-[1.75rem] mb-6">주문서</h1>
 
-      {changeComponent !== "default" ? (
+      {changeComponent === "default" ? (
         <>
           <div className="w-[48.75rem] h-[10rem] bg-gray-100">
             <div className="w-[48.75rem] flex justify-between items-center">
               <p className="text-xl font-semibold">기본 배송지</p>
-              <button className="w-24 border-2 border-gray-400 rounded">배송지 변경</button>
+              <button className="w-24 border-2 border-gray-400 rounded" onClick={handleAddrList}>
+                배송지 변경
+              </button>
             </div>
             <div>
               <p>d{primaryAddr?.street}</p>
@@ -201,13 +246,33 @@ const Ordersheet = () => {
           <button onClick={handleClickOrderBtn}>주문하기</button>
         </>
       ) : (
-        <>
-          <div className="flex items-center">
-            <p>배송지 정보</p>
-            <RxCross2 />
+        <div className="w-[48.75rem] flex flex-col items-center">
+          <div className="w-[48.75rem] flex items-center justify-between">
+            <p className="text-xl font-semibold">배송지 정보</p>
+            <button onClick={() => setChangeComponent("default")}>
+              <RxCross2 size={25} />
+            </button>
           </div>
+          {/* 모달 */}
           <button>배송지 추가하기</button>
-        </>
+          <ul className="w-[48.75rem] flex flex-col items-center justify-between">
+            {addressList?.map((address, index) => (
+              <li
+                key={index}
+                className={`mb-[1.25rem] w-[48.75rem] bg-gray-200 p-3 ${primaryAddrId === index && "bg-gray-400"}`}
+                onClick={() => setPrimaryAddrId(index)}
+              >
+                <div>
+                  {address?.addressType === "PRIMARY" && <p className="text-base font-semibold mb-2">기본 배송지</p>}
+                  <p>{address?.street}</p>
+                  <p>({address?.detail})</p>
+                  <p>우편번호: {address?.zipcode}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <button onClick={EditPrimaryAddr}>변경하기</button>
+        </div>
       )}
     </div>
   );
