@@ -84,7 +84,13 @@ jobs:
         run: |
           aws ecs describe-task-definition \
           --task-definition ${{ env.FRONTEND_ECS_TASK_DEFINITION }} \
-          --region ${{ env.AWS_REGION }} > ./frontend-task-definition.json
+          --region ${{ env.AWS_REGION }} >> ./frontend-task-definition.json
+      
+      - name: 환경 변수 확인
+        run: |
+          echo "FRONTEND_ECS_TASK_DEFINITION=${{ env.FRONTEND_ECS_TASK_DEFINITION }}"
+          echo "AWS_REGION=${{ env.AWS_REGION }}"
+          echo "FRONTEND_CONTAINER_NAME=${{ env.FRONTEND_CONTAINER_NAME }}"
       
       - name: 프론트엔트 ECS 작업 정의에 새 이미지 ID 입력
         id: task-def
