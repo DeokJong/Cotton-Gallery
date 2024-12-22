@@ -80,31 +80,31 @@ jobs:
           echo "::set-output name=image::$ECR_REGISTRY/$FRONTEND_ECR_NAME:$IMAGE_TAG" # GitHub Actions에서 이미지 경로 출력 설정
           echo "📦 프론트엔드 이미지 빌드 및 푸시 완료"
       
-      - name: ECS 작업 정의 파일 복사
-        run: |
-          aws ecs describe-task-definition \
-          --task-definition ${{ env.FRONTEND_ECS_TASK_DEFINITION }} \
-          --region ${{ env.AWS_REGION }} >> ./frontend-task-definition.json
+      # - name: ECS 작업 정의 파일 복사
+      #   run: |
+      #     aws ecs describe-task-definition \
+      #     --task-definition ${{ env.FRONTEND_ECS_TASK_DEFINITION }} \
+      #     --region ${{ env.AWS_REGION }} >> ./frontend-task-definition.json
       
-      - name: 작업 정의 확인
-        run: |
-          cat ./frontend-task-definition.json
+      # - name: 작업 정의 확인
+      #   run: |
+      #     cat ./frontend-task-definition.json
       
-      - name: 프론트엔드 ECS 작업 정의에 새 이미지 ID 입력
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ./frontend-task-definition.json
-          container-name: ${{ env.FRONTEND_CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }} # 이미지 출력 전달
+      # - name: 프론트엔드 ECS 작업 정의에 새 이미지 ID 입력
+      #   id: task-def
+      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+      #   with:
+      #     task-definition: ./frontend-task-definition.json
+      #     container-name: ${{ env.FRONTEND_CONTAINER_NAME }}
+      #     image: ${{ steps.build-image.outputs.image }} # 이미지 출력 전달
           
-      - name: 프론트엔드 ECS 작업 정의 배포
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.FRONTEND_ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true
+      # - name: 프론트엔드 ECS 작업 정의 배포
+      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      #   with:
+      #     task-definition: ${{ steps.task-def.outputs.task-definition }}
+      #     service: ${{ env.FRONTEND_ECS_SERVICE }}
+      #     cluster: ${{ env.ECS_CLUSTER }}
+      #     wait-for-service-stability: true
 
   build-and-push-backend:
     environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'test' }}

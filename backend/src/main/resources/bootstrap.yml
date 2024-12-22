@@ -2,9 +2,9 @@ spring:
   config:
     import:
       # backend 키 이름
-      - "aws-secretsmanager:${BACKEND_SECRET_NAME}"
+      - "aws-secretsmanager:'${BACKEND_SECRET_NAME}'"
       # rds 키 이름
-      - "aws-secretsmanager:${RDS_SECRET_NAME}"
+      - "aws-secretsmanager:'${RDS_SECRET_NAME}'"
 
   cloud:
     aws:
