@@ -1,10 +1,7 @@
 spring:
   config:
     import:
-      # backend 키 이름
-      - "aws-secretsmanager:'${BACKEND_SECRET_NAME}'"
-      # rds 키 이름
-      - "aws-secretsmanager:'${RDS_SECRET_NAME}'"
+      - "aws-secretsmanager:arn:aws:secretsmanager:ap-northeast-2:116981803095:secret:/secrets/jbnu-shopping/backend-4QBb6X"
 
   cloud:
     aws:
