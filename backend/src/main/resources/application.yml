@@ -23,11 +23,14 @@ spring:
 logging:
   level:
     com:
+      amazonaws: DEBUG
       cottongallery:
         backend: debug
     org:
       springframework:
         security: DEBUG
+        cloud:
+          aws: DEBUG
 
 
 jwt:
