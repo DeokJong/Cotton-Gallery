@@ -10,4 +10,5 @@ spring:
     redis:
       host: ${ELASTICACHE_HOST:}
       port: ${ELASTICACHE_PORT:}
-      password: ${ELASTICACHE_PASSWORD:}
+      password: ${ELASTICACHE_PASSWORD:} 
+      ssl-enabled: true
