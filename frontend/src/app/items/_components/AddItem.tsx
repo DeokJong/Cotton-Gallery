@@ -78,7 +78,7 @@ const AddItem = () => {
 
   return (
     <form className="flex flex-col text-xl" onSubmit={handleSubmitItem}>
-      <h1 className="text-[1.75rem] mb-6">상품 정보 수정</h1>
+      <h1 className="text-[1.75rem] mb-6">상품 정보 등록</h1>
       <label htmlFor="name" className="indent-3 mt-2 mb-2">
         상품 이름
       </label>
@@ -130,7 +130,7 @@ const AddItem = () => {
         onChange={handleItemInfoImageChange}
         className="w-[36.25rem] h-[3.75rem] indent-5 rounded-[35px]"
       />
-      <button>등록</button>
+      <button className="h-10 rounded bg-gray-300">등록하기</button>
     </form>
   );
 };

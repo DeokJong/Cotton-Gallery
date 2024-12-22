@@ -13,6 +13,7 @@ import DeleteItemModal from "./DeleteItemModal";
 import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
+import { useRouter } from "next/navigation";
 
 type ItemDetailPropsType = {
   itemId: number;
@@ -42,6 +43,7 @@ export const getItem = async (itemId: number) => {
 };
 
 const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
+  const router = useRouter();
   const { name } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [item, setItem] = useState<Item>();
@@ -131,7 +133,14 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
     }
   };
 
-  const handleBuyBtn = async () => {};
+  const handleBuyBtn = async (e: React.MouseEvent<HTMLButtonElement>, itemId: number, count: number) => {
+    e.preventDefault();
+    if (count === 0) {
+      alert("상품의 수량을 선택해주세요.");
+      return;
+    }
+    router.push(`/ordersheet?itemId=${itemId}&count=${count}`);
+  };
 
   useEffect(() => {
     fetchItem(itemId);
@@ -218,7 +227,7 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
             <button onClick={handleCartBtn} className="w-[14.375rem] bg-black">
               장바구니
             </button>
-            <button onClick={handleBuyBtn} className="w-[14.375rem] bg-sky-400">
+            <button onClick={(e) => handleBuyBtn(e, itemId, count)} className="w-[14.375rem] bg-sky-400">
               바로구매
             </button>
           </div>
