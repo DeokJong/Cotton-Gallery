@@ -35,9 +35,6 @@ env:
   ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
   BACKEND_ECR_NAME: ${{ secrets.BACKEND_ECR_NAME }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
   FRONTEND_ECR_NAME: ${{ secrets.FRONTEND_ECR_NAME }}          # Amazon ECR 리포지토리 이름으로 설정하세요.
-  FRONTEND_ECS_SERVICE: ${{ secrets.FRONTEND_ECS_SERVICE }}
-  FRONTEND_ECS_TASK_DEFINITION: ${{ secrets.FRONTEND_ECS_TASK_DEFINITION }}
-  FRONTEND_CONTAINER_NAME: ${{ secrets.FRONTEND_CONTAINER_NAME }}
 #  ECS_SERVICE: MY_ECS_SERVICE                 # Amazon ECS 서비스 이름으로 설정하세요.
 #  ECS_CLUSTER: MY_ECS_CLUSTER                 # Amazon ECS 클러스터 이름으로 설정하세요.
 #  ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION # Amazon ECS 작업 정의 파일 경로로 설정하세요. 
