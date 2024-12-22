@@ -60,7 +60,12 @@ const Cart = () => {
     <div className="h-screen flex flex-col items-center">
       <h1 className="text-[1.75rem] mb-6">장바구니</h1>
       {items.length === 0 ? (
-        <p className="text-lg text-gray-500 mt-60">장바구니가 비어있습니다</p>
+        <div className="flex flex-col justify-center items-center gap-16">
+          <p className="text-xl text-gray-500 mt-60">장바구니가 비어있습니다</p>
+          <Link href={"/"}>
+            <button className="w-40 h-10 rounded bg-gray-200">쇼핑 계속하기</button>
+          </Link>
+        </div>
       ) : (
         <ul className="w-[73.75rem] flex flex-col gap-1 items-center">
           {items.map((item, index) => (

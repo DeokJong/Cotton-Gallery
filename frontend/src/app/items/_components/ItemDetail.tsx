@@ -46,7 +46,16 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [item, setItem] = useState<Item>();
   const [count, setCount] = useState<number>(0);
+  const [likeCount, setLikeCount] = useState<number>(item?.likeCount as number);
+  const [liked, setLiked] = useState<boolean>(item?.likedByMe as boolean);
+
   //const deliveryFee = 3000;
+  useEffect(() => {
+    if (item) {
+      setLiked(item.likedByMe);
+      setLikeCount(item.likeCount);
+    }
+  }, [item]);
 
   const fetchItem = async (itemId: number) => {
     const result = await getItem(itemId);
@@ -88,11 +97,45 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
     }
   };
 
+  const toggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      const method = liked ? "PATCH" : "POST";
+      const response = await fetch(`${baseUrl}/api/user/likes/${item?.itemId}`, {
+        method,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ itemId: item?.itemId })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.status === 201) {
+        setLiked(true);
+        setLikeCount((likeCount as number) + 1);
+      } else if (result.status === 200) {
+        setLiked(false);
+        setLikeCount((likeCount as number) - 1);
+      } else {
+        console.warn("Unexpected response status:", result.status);
+      }
+      console.log(result);
+    } catch (error) {
+      console.error("Failed to toggle like status:", error);
+    }
+  };
+
   const handleBuyBtn = async () => {};
 
   useEffect(() => {
     fetchItem(itemId);
-    //eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -129,7 +172,7 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
           <p className="text-[1.625rem] mb-4">{item?.name}</p>
           <div className="flex items-center gap-2 mb-10">
             <FaHeart size={24} />
-            <p className="text-xl">{item?.likeCount.toLocaleString()}</p>
+            <p className="text-xl">{likeCount}</p>
           </div>
           <p className="text-[2.188rem] font-bold mb-10">{item?.price.toLocaleString()}원</p>
           {/* <div className="flex justify-between w-[12.5rem] mb-4">
@@ -168,8 +211,8 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
           </div>
           <div className="flex justify-between w-[33.438rem] h-[3.125rem] text-[1.563rem] font-bold text-white">
             <div className="flex justify-center items-center w-[4.688rem] border-[0.188rem] border-gray-400 border-r-0">
-              <button>
-                {item?.likedByMe ? <FaHeart color="red" size={30} /> : <FaRegHeart size={30} color="gray" />}
+              <button onClick={toggleLike}>
+                {liked ? <FaHeart color="red" size={30} /> : <FaRegHeart size={30} color="gray" />}
               </button>
             </div>
             <button onClick={handleCartBtn} className="w-[14.375rem] bg-black">
