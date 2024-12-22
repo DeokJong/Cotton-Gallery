@@ -1,7 +1,7 @@
 spring:
   config:
     import:
-      - "aws-secretsmanager:arn:aws:secretsmanager:ap-northeast-2:116981803095:secret:/secrets/jbnu-shopping/backend-4QBb6X"
+      - "aws-secretsmanager:${BACKEND_SECRET_NAME}"
 
   cloud:
     aws:
