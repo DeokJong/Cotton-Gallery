@@ -221,6 +221,7 @@ const Ordersheet = () => {
       const data = await response.json();
       console.log("Address deleted successfully:", data);
       alert("주소가 정상적으로 삭제되었습니다.");
+      setAddressList((prevAddressList) => prevAddressList?.filter((address) => address.addressId !== addressId));
       return data;
     } catch (error) {
       console.error("Error deleting address:", error);

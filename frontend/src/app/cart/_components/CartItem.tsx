@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { CartItemType } from "./Cart";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
@@ -9,9 +9,10 @@ import Link from "next/link";
 
 type PropsType = {
   item: CartItemType;
+  setItems: Dispatch<SetStateAction<CartItemType[]>>;
 };
 
-const CartItem = ({ item }: PropsType) => {
+const CartItem = ({ item, setItems }: PropsType) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(item.quantity);
 
@@ -73,6 +74,7 @@ const CartItem = ({ item }: PropsType) => {
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
                 cartItemId={item.cartItemId}
+                setItems={setItems}
               />
             </div>
           </div>

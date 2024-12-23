@@ -3,12 +3,14 @@
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
 import CommonModal from "@/components/CommonModal";
 import { useRouter } from "next/navigation";
-import React, { SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
+import { CartItemType } from "./Cart";
 
 type PropsType = {
   isModalOpen: boolean;
   setIsModalOpen: (value: SetStateAction<boolean>) => void;
   cartItemId: number | undefined;
+  setItems: Dispatch<SetStateAction<CartItemType[]>>;
 };
 
 const DeleteItemModalStyles: ReactModal.Styles = {
@@ -34,7 +36,7 @@ const DeleteItemModalStyles: ReactModal.Styles = {
   }
 };
 
-const DeleteCartItemModal = ({ isModalOpen, setIsModalOpen, cartItemId }: PropsType) => {
+const DeleteCartItemModal = ({ isModalOpen, setIsModalOpen, cartItemId, setItems }: PropsType) => {
   const router = useRouter();
   const deleteItem = async () => {
     try {
@@ -53,6 +55,7 @@ const DeleteCartItemModal = ({ isModalOpen, setIsModalOpen, cartItemId }: PropsT
       const data = await response.json();
       console.log(data);
       alert("장바구니에서 상품을 삭제하였습니다.");
+      setItems((prevItems) => prevItems.filter((item) => item.cartItemId !== cartItemId));
       setIsModalOpen(false);
       return;
     } catch (error) {
