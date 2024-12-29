@@ -30,7 +30,6 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
   const fetchItem = async (itemId: number) => {
     const result = await getItem(itemId);
     if (result) {
-      console.log("아이템", result.data);
       setItem(result.data);
     }
   };
@@ -74,7 +73,6 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
         })
       });
       const result = await response.json();
-      console.log(result);
 
       if (response.ok) {
         alert("상품 정보 수정 성공");
@@ -101,7 +99,6 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
       });
 
       const result = await response.json();
-      console.log(result);
 
       if (response.ok) {
         alert("상품 이미지 변경 성공");
@@ -127,7 +124,6 @@ const EditItem = ({ itemId }: ItemEditPropsType) => {
       });
 
       const result = await response.json();
-      console.log(result);
 
       if (response.ok) {
         alert("상품 상세 이미지 변경 성공");

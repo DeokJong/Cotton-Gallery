@@ -30,7 +30,6 @@ const fetchCartList = async () => {
     }
 
     const data = await response.json();
-    console.log("Response Data:", data); // 데이터 구조 확인
     return data;
   } catch (error) {
     console.error("Error fetching item list:", error);
@@ -48,7 +47,6 @@ const Cart = () => {
   const fetchItems = async () => {
     try {
       const result = await fetchCartList();
-      console.log("Fetched Result:", result);
       if (result?.data?.cartItem) {
         const fetchedItems = result.data.cartItem;
         setItems(fetchedItems);
@@ -76,7 +74,6 @@ const Cart = () => {
         throw new Error(`Failed to fetch primary address: ${response.statusText}`);
       }
       const result = await response.json();
-      console.log("Primary Address:", result.data);
 
       if (result.data) {
         setPrimaryAddr(result.data);
@@ -125,7 +122,6 @@ const Cart = () => {
       }
 
       const result = await response.json();
-      console.log("Order placed successfully:", result);
       alert("주문을 완료했습니다.");
       return result;
     } catch (error) {
@@ -139,9 +135,7 @@ const Cart = () => {
     fetchPrimaryAddress();
   }, []);
 
-  useEffect(() => {
-    console.log("Items updated:", items);
-  }, [items]);
+  useEffect(() => {}, [items]);
 
   return (
     <div className="h-screen flex flex-col items-center">

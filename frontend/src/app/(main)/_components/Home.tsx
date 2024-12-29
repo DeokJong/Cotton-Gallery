@@ -23,7 +23,6 @@ const getItemList = async (pageNumber: number, category: string) => {
       }
 
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (error) {
       console.error("Error fetching item list:", error);
@@ -44,7 +43,6 @@ const getItemList = async (pageNumber: number, category: string) => {
     }
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Error fetching item list:", error);

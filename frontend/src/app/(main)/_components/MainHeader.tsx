@@ -26,7 +26,6 @@ const MainHeader = () => {
     });
 
     const result = await response;
-    console.log(result);
     if (result.status === 204) {
       alert("로그아웃 되었습니다");
       setName("");

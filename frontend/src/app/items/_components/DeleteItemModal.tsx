@@ -49,7 +49,6 @@ const DeleteItemModal = ({ isModalOpen, setIsModalOpen, itemId }: PropsType) => 
       }
 
       const data = await response.json();
-      console.log(data);
       setIsModalOpen(false);
       router.push("/");
       return;

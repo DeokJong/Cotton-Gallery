@@ -40,7 +40,6 @@ const EditPassword = () => {
       }
 
       const data = await response.json();
-      console.log("Password changed successfully:", data);
       alert("비밀번호가 성공적으로 변경되었습니다.");
       router.push("/my-page");
       return data;

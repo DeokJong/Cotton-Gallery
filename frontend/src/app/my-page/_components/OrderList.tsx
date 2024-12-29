@@ -46,7 +46,6 @@ const OrderList = () => {
       }
 
       const result = await response.json();
-      console.log("Fetched orders successfully:", result.data);
       setOrderList(result.data);
       return result.data;
     } catch (error) {
@@ -102,9 +101,7 @@ const OrderList = () => {
     // eslint-disable-next-line
   }, [page]);
 
-  useEffect(() => {
-    console.log("orderList updated:", orderList);
-  }, [orderList]);
+  useEffect(() => {}, [orderList]);
 
   return (
     <div className="h-screen flex flex-col items-center gap-3 mb-3">

@@ -57,7 +57,6 @@ const AddItem = () => {
       });
 
       const result = await response.json();
-      console.log(result);
 
       if (response.ok) {
         alert("상품 생성 성공");

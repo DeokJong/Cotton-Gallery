@@ -34,7 +34,6 @@ export const getItem = async (itemId: number) => {
     }
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error("Error fetching item list:", error);
@@ -62,7 +61,6 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
   const fetchItem = async (itemId: number) => {
     const result = await getItem(itemId);
     if (result) {
-      console.log("아이템", result.data);
       setItem(result.data);
     }
   };
@@ -86,7 +84,6 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
       });
 
       const result = await response.json();
-      console.log(result);
 
       if (response.ok) {
         alert("장바구니에 상품을 담았습니다.");
@@ -127,7 +124,6 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
       } else {
         console.warn("Unexpected response status:", result.status);
       }
-      console.log(result);
     } catch (error) {
       console.error("Failed to toggle like status:", error);
     }

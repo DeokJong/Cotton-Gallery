@@ -62,7 +62,6 @@ const GoodsCard = ({ item }: PropsType) => {
       } else {
         console.warn("Unexpected response status:", result.status);
       }
-      console.log(result);
     } catch (error) {
       console.error("Failed to toggle like status:", error);
     }

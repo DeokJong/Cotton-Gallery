@@ -53,7 +53,6 @@ const DeleteCartItemModal = ({ isModalOpen, setIsModalOpen, cartItemId, setItems
       }
 
       const data = await response.json();
-      console.log(data);
       alert("장바구니에서 상품을 삭제하였습니다.");
       setItems((prevItems) => prevItems.filter((item) => item.cartItemId !== cartItemId));
       setIsModalOpen(false);

@@ -141,7 +141,6 @@ const SignUp = () => {
           }
         });
       } else {
-        console.log("회원가입 성공:", result);
         alert("회원가입을 완료했습니다.");
         router.push("/login");
       }

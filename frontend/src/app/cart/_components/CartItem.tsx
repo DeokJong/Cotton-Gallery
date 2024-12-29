@@ -28,7 +28,6 @@ const CartItem = ({ item, setItems }: PropsType) => {
         }
       });
       const result = await response.json();
-      console.log(result);
 
       if (response.ok) {
         setQuantity(id === "DECREASE" ? Math.max(quantity - 1, 0) : quantity + 1);

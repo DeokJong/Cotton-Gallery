@@ -7,7 +7,6 @@ import Link from "next/link";
 
 const MyPage = () => {
   const { name } = useAuthStore();
-  console.log(name);
 
   return (
     <div className="h-screen flex flex-col items-center">

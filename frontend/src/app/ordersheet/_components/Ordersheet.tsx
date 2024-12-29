@@ -34,7 +34,6 @@ const changePrimaryAddress = async (addressId: number) => {
     }
 
     const data = await response.json();
-    console.log("Primary address updated successfully:", data);
     return data;
   } catch (error) {
     console.error("Error updating primary address:", error);
@@ -63,7 +62,6 @@ const createOrder = async (addressId: number, itemId: number, count: number) => 
     }
 
     const data = await response.json();
-    console.log("Order created successfully:", data);
     alert("주문을 완료했습니다.");
     return data;
   } catch (error) {
@@ -98,7 +96,6 @@ const Ordersheet = () => {
         throw new Error(`Failed to fetch primary address: ${response.statusText}`);
       }
       const result = await response.json();
-      console.log("Primary Address:", result.data);
 
       if (result.data) {
         setPrimaryAddr(result.data);
@@ -128,7 +125,6 @@ const Ordersheet = () => {
       }
 
       const result = await response.json();
-      console.log("User Address:", result.data);
       setAddressList(result.data.address);
       return result;
     } catch (error) {
@@ -157,7 +153,6 @@ const Ordersheet = () => {
       }
 
       const data = await response.json();
-      console.log("Primary address updated successfully:", data);
       return data;
     } catch (error) {
       console.error("Error updating primary address:", error);
@@ -192,7 +187,6 @@ const Ordersheet = () => {
       }
 
       const data = await response.json();
-      console.log("Address added successfully:", data);
       return data;
     } catch (error) {
       console.error("Error adding address:", error);
@@ -219,7 +213,6 @@ const Ordersheet = () => {
       }
 
       const data = await response.json();
-      console.log("Address deleted successfully:", data);
       alert("주소가 정상적으로 삭제되었습니다.");
       setAddressList((prevAddressList) => prevAddressList?.filter((address) => address.addressId !== addressId));
       return data;
@@ -232,7 +225,6 @@ const Ordersheet = () => {
   const fetchItem = async (itemId: number) => {
     const result = await getItem(itemId);
     if (result) {
-      console.log("아이템", result.data);
       setItem(result.data);
     }
   };

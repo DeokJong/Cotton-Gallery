@@ -32,7 +32,6 @@ const EditEmail = () => {
       }
 
       const data = await response.json();
-      console.log("Email changed successfully:", data);
       alert("이메일이 성공적으로 변경되었습니다.");
       router.push("/my-page");
       return data;

@@ -46,7 +46,6 @@ const Login = () => {
       })
     });
     const result = await response.json();
-    console.log(result);
     if (result.status === 200) {
       setIsLoggedin(true);
       if (result.data.name) {
