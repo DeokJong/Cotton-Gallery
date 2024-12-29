@@ -1,7 +1,8 @@
 import React from "react";
+import EditEmail from "../../_components/EditEmail";
 
 const page = () => {
-  return <div>이메일 변경</div>;
+  return <EditEmail />;
 };
 
 export default page;
