@@ -51,8 +51,9 @@ const getItemList = async (pageNumber: number, category: string) => {
 };
 
 const Home = () => {
+  const numList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const { category } = useCategoryStore();
-  const { pageNumber } = usePageStore();
+  const { pageNumber, setPageNumber } = usePageStore();
   const [items, setItems] = useState<Item[]>([]);
 
   const fetchItems = async (pageNumber: number, category: string) => {
@@ -72,15 +73,28 @@ const Home = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <ul className="w-[73.75rem] flex flex-wrap gap-5 items-center">
-        {items.map((item, index) => (
-          <li key={index} className="mb-[1.25rem]">
-            <Link href={`/items/detail/${item.itemId}`}>
-              <GoodsCard item={item} />
-            </Link>
-          </li>
-        ))}
+      <ul className="w-[73.75rem] flex flex-wrap gap-5  items-center">
+        {items.length === 0 ? (
+          <p className="w-full text-center text-lg font-semibold mt-5">상품이 없습니다</p>
+        ) : (
+          items.map((item, index) => (
+            <li key={index} className="mb-[1.25rem]">
+              <Link href={`/items/detail/${item.itemId}`}>
+                <GoodsCard item={item} />
+              </Link>
+            </li>
+          ))
+        )}
       </ul>
+      <div className="flex gap-10 h-40">
+        {numList.map((num) => {
+          return (
+            <button onClick={() => setPageNumber(num)} className="text-lg mb-10 mt-5">
+              {num}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };
