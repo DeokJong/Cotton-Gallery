@@ -50,6 +50,28 @@ const getItemList = async (pageNumber: number, category: string) => {
   }
 };
 
+export const refreshToken = async () => {
+  try {
+    const response = await fetch(`${baseUrl}/api/auth/refresh`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`토큰 갱신 실패: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 const Home = () => {
   const numList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const { category } = useCategoryStore();
@@ -67,6 +89,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    refreshToken();
     fetchItems(pageNumber, category);
     //eslint-disable-next-line
   }, [pageNumber, category]);
@@ -89,7 +112,7 @@ const Home = () => {
       <div className="flex gap-10 h-40">
         {numList.map((num) => {
           return (
-            <button onClick={() => setPageNumber(num)} className="text-lg mb-10 mt-5">
+            <button key={num} onClick={() => setPageNumber(num)} className="text-lg mb-10 mt-5">
               {num}
             </button>
           );

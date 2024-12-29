@@ -2,6 +2,7 @@
 
 import InputBox from "@/app/(auth)/_components/InputBox";
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
+import { refreshToken } from "@/app/(main)/_components/Home";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -52,6 +53,7 @@ const EditPassword = () => {
 
   useEffect(() => {
     setError("passwordConfirm", "");
+    refreshToken();
     // eslint-disable-next-line
   }, []);
 

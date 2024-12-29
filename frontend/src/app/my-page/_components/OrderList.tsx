@@ -1,6 +1,7 @@
 "use client";
 
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
+import { refreshToken } from "@/app/(main)/_components/Home";
 import React, { useEffect, useState } from "react";
 
 type PageInfoType = {
@@ -101,7 +102,9 @@ const OrderList = () => {
     // eslint-disable-next-line
   }, [page]);
 
-  useEffect(() => {}, [orderList]);
+  useEffect(() => {
+    refreshToken();
+  }, [orderList]);
 
   return (
     <div className="h-screen flex flex-col items-center gap-3 mb-3">
@@ -138,7 +141,7 @@ const OrderList = () => {
       <div className="flex gap-10 h-40">
         {numList.map((num) => {
           return (
-            <button onClick={() => setPage(num)} className="text-lg mb-10 mt-5">
+            <button key={num} onClick={() => setPage(num)} className="text-lg mb-10 mt-5">
               {num}
             </button>
           );

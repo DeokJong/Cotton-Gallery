@@ -2,11 +2,16 @@
 
 import { useAuthStore } from "@/store/authStore";
 import { FaChevronRight } from "react-icons/fa6";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { refreshToken } from "@/app/(main)/_components/Home";
 
 const MyPage = () => {
   const { name } = useAuthStore();
+
+  useEffect(() => {
+    refreshToken();
+  }, []);
 
   return (
     <div className="h-screen flex flex-col items-center">

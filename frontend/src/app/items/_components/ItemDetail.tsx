@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
 import { useRouter } from "next/navigation";
+import { refreshToken } from "@/app/(main)/_components/Home";
 
 type ItemDetailPropsType = {
   itemId: number;
@@ -140,6 +141,7 @@ const ItemDetail = ({ itemId }: ItemDetailPropsType) => {
 
   useEffect(() => {
     fetchItem(itemId);
+    refreshToken();
     // eslint-disable-next-line
   }, []);
 

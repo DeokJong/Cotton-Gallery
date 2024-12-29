@@ -5,6 +5,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import CartItem from "./CartItem";
 import { Address } from "react-daum-postcode";
+import { refreshToken } from "@/app/(main)/_components/Home";
 
 export type CartItemType = {
   cartItemId: number;
@@ -135,7 +136,9 @@ const Cart = () => {
     fetchPrimaryAddress();
   }, []);
 
-  useEffect(() => {}, [items]);
+  useEffect(() => {
+    refreshToken();
+  }, [items]);
 
   return (
     <div className="h-screen flex flex-col items-center">

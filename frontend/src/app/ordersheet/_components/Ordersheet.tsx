@@ -9,6 +9,7 @@ import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import AddAddressModal from "./AddAddressModal";
+import { refreshToken } from "@/app/(main)/_components/Home";
 
 type Address = {
   addressId: number;
@@ -244,6 +245,7 @@ const Ordersheet = () => {
 
   useEffect(() => {
     fetchPrimaryAddress();
+    refreshToken();
   }, []);
 
   return (
