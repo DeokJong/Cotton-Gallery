@@ -4,7 +4,7 @@ import InputBox from "@/app/(auth)/_components/InputBox";
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 const EditEmail = () => {
   const router = useRouter();
@@ -42,6 +42,12 @@ const EditEmail = () => {
       return null;
     }
   };
+
+  useEffect(() => {
+    setError("email", "");
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <div className="h-screen flex flex-col items-center">
       <h1 className="w-full h-16 border-b-2 text-center border-gray-200 text-[1.75rem] mb-6">이메일 변경</h1>
