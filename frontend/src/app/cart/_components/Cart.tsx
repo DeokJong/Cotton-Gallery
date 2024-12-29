@@ -140,7 +140,7 @@ const Cart = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Items updated:", items); // items 업데이트 후 확인
+    console.log("Items updated:", items);
   }, [items]);
 
   return (

@@ -56,6 +56,42 @@ const OrderList = () => {
     }
   };
 
+  const handleCancelOrder = async (orderId: number) => {
+    const userConfirmed = window.confirm("정말로 주문을 취소하시겠습니까?");
+    if (userConfirmed) {
+      const isCancelled = await cancelOrder(orderId);
+      if (isCancelled) {
+        console.log(`주문 ${orderId}이 취소되었습니다.`);
+      }
+    }
+  };
+
+  const cancelOrder = async (orderId: number): Promise<boolean> => {
+    try {
+      const response = await fetch(`${baseUrl}/api/user/orders/${orderId}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`주문 취소 실패: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setOrderList((prevItems) => prevItems.filter((item) => item.orderId !== orderId));
+      alert("주문이 성공적으로 취소되었습니다.");
+      return true;
+    } catch (error) {
+      console.error("주문 취소 중 오류 발생:", error);
+      alert("주문 취소에 실패했습니다. 다시 시도해주세요.");
+      return false;
+    }
+  };
+
   useEffect(() => {
     fetchOrders(1);
     // eslint-disable-next-line
@@ -65,6 +101,10 @@ const OrderList = () => {
     fetchOrders(page);
     // eslint-disable-next-line
   }, [page]);
+
+  useEffect(() => {
+    console.log("orderList updated:", orderList);
+  }, [orderList]);
 
   return (
     <div className="h-screen flex flex-col items-center gap-3 mb-3">
@@ -77,7 +117,12 @@ const OrderList = () => {
             <div key={order.orderId} className="flex flex-col w-[48.75rem] h-auto p-3 border-2 rounded-sm">
               <div className="flex justify-between items-center mb-1 px-1">
                 <h1 className="font-bold text-xl">{order.orderDate.slice(0, 10)}</h1>
-                <button className="w-12 h-7 rounded-md bg-gray-400 text-white">취소</button>
+                <button
+                  onClick={() => handleCancelOrder(order.orderId)}
+                  className="w-12 h-7 rounded-md bg-gray-400 text-white"
+                >
+                  취소
+                </button>
               </div>
               {order.orderItems.map((item) => {
                 return (
