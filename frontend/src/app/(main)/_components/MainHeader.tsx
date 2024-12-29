@@ -78,7 +78,9 @@ const MainHeader = () => {
             </>
           ) : (
             <>
-              <button onClick={() => router.push("/my-page")}>{name} 님</button>
+              <button onClick={() => router.push("/my-page")} className="font-bold underline">
+                {name} 님
+              </button>
               <button onClick={handleLogoutBtn}>로그아웃</button>
             </>
           )}
