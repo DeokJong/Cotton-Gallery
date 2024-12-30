@@ -14,6 +14,7 @@ export const useAuthStore = create(
       zipcode: "",
       street: "",
       detail: "",
+      isLoggedin: false,
       error: {
         username: "",
         password: "",
@@ -35,6 +36,7 @@ export const useAuthStore = create(
       setZipcode: (zipcode: string) => set({ zipcode }),
       setStreet: (street: string) => set({ street }),
       setDetail: (detail: string) => set({ detail }),
+      setIsLoggedin: (isLoggedin: boolean) => set({ isLoggedin }),
       setError: (field: string, message: string) =>
         set((state) => ({
           error: {
@@ -48,7 +50,8 @@ export const useAuthStore = create(
       storage: createJSONStorage(() => sessionStorage),
       partialize: (state) =>
         ({
-          name: state.name
+          name: state.name,
+          isLoggedin: state.isLoggedin
         }) as AuthStoreType
     }
   )

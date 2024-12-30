@@ -6,8 +6,12 @@ import SubmitBtn from "./SubmitBtn";
 import { useState } from "react";
 import AddressModal from "./AddressModal";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+export const baseUrl = process.env.NEXT_PUBLIC_URL;
 
 const SignUp = () => {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const {
     username,
@@ -61,75 +65,88 @@ const SignUp = () => {
 
   const handleSubmitSignUpForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Todo : 요청 보내기 전 휴대폰번호 상태값 정규식 검사
-    // Todo : 요청 보내기 전 비밀번호, 비밀번호 확인 값 같은지 검사
 
-    const response = await fetch("/api/sign-up", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        name,
-        username,
-        password,
-        confirmPassword: passwordConfirm,
-        email,
-        phoneNumber,
-        zipcode,
-        street,
-        detail
-      })
-    });
+    try {
+      if (password !== passwordConfirm) {
+        setError("passwordConfirm", "비밀번호가 일치하지 않습니다.");
+        return;
+      }
 
-    const result = await response.json();
-    console.log(result);
-
-    if (result.data) {
-      const blank = result.data.filter((error: Record<string, string>) => error.code === "NotBlank");
-      blank.forEach((error: Record<string, string>) => {
-        switch (error.field) {
-          //console.log("Current error state:", useAuthStore.getState().error);
-          case "username":
-            setError("username", "아이디를 입력해주세요");
-            break;
-          case "password":
-            setError("password", "비밀번호를 입력해주세요");
-            break;
-          case "confirmPassword":
-            setError("passwordConfirm", "비밀번호를 한 번 더 입력해주세요");
-            break;
-          case "name":
-            setError("name", "이름을 입력해주세요");
-            break;
-          case "email":
-            setError("email", "이메일을 입력해주세요.");
-            break;
-          case "phoneNumber":
-            setError("phoneNumber", "휴대폰 번호를 입력해주세요");
-            break;
-          case "street":
-          case "detail":
-            setError("street", "주소를 입력해주세요");
-            break;
-          default:
-            break;
-        }
+      const response = await fetch(`${baseUrl}/api/sign-up`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          username,
+          password,
+          confirmPassword: passwordConfirm,
+          email,
+          phoneNumber,
+          zipcode,
+          street,
+          detail
+        })
       });
 
-      const minLength = result.data.filter((error: Record<string, string>) => error.code === "Size");
-      minLength.forEach((error: Record<string, string>) => {
-        switch (error.field) {
-          case "password":
-            setError("password", "비밀번호를 8자~15자 이내로 입력해주세요");
-            break;
-          case "confirmPassword":
-            setError("passwordConfirm", "비밀번호를 8자~15자 이내로 입력해주세요");
-            break;
-          default:
-            break;
-        }
-      });
+      if (!response.ok) {
+        throw new Error(`Failed to sign up: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      if (result.data) {
+        const blank = result.data.filter((error: Record<string, string>) => error.code === "NotBlank");
+        blank.forEach((error: Record<string, string>) => {
+          switch (error.field) {
+            case "username":
+              setError("username", "아이디를 10자 이내로 입력해주세요");
+              break;
+            case "password":
+              setError("password", "비밀번호를 입력해주세요");
+              break;
+            case "confirmPassword":
+              setError("passwordConfirm", "비밀번호를 한 번 더 입력해주세요");
+              break;
+            case "name":
+              setError("name", "이름을 입력해주세요");
+              break;
+            case "email":
+              setError("email", "이메일을 입력해주세요.");
+              break;
+            case "phoneNumber":
+              setError("phoneNumber", "휴대폰 번호를 입력해주세요");
+              break;
+            case "street":
+            case "detail":
+              setError("street", "주소를 입력해주세요");
+              break;
+            default:
+              break;
+          }
+        });
+
+        const minLength = result.data.filter((error: Record<string, string>) => error.code === "Size");
+        minLength.forEach((error: Record<string, string>) => {
+          switch (error.field) {
+            case "password":
+              setError("password", "비밀번호를 8자~15자 이내로 입력해주세요");
+              break;
+            case "confirmPassword":
+              setError("passwordConfirm", "비밀번호를 8자~15자 이내로 입력해주세요");
+              break;
+            default:
+              break;
+          }
+        });
+      } else {
+        alert("회원가입을 완료했습니다.");
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("회원가입 요청 중 오류 발생:", error);
+      setError("form", "회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
     }
   };
 

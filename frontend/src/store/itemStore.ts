@@ -5,10 +5,12 @@ export const useItemStore = create<ItemStoreType>((set) => ({
   name: "",
   price: 0,
   stockQuantity: 0,
-  content: "",
+  itemImage: null,
+  itemInfoImage: null,
 
   setName: (name: string) => set({ name }),
   setPrice: (price: number) => set({ price }),
   setStockQuantity: (stockQuantity: number) => set({ stockQuantity }),
-  setContent: (content: string) => set({ content })
+  setItemImage: (itemImage: File | null) => set({ itemImage }),
+  setItemInfoImage: (itemInfoImage: File | null) => set({ itemInfoImage })
 }));
