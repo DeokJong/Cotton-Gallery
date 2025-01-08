@@ -11,6 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AddressResponse {
+    private Long addressId;
+
     private String zipcode;
 
     private String street;
@@ -20,6 +22,6 @@ public class AddressResponse {
     private AddressType addressType;
 
     public static AddressResponse fromAddress(Address address) {
-        return new AddressResponse(address.getZipcode(), address.getStreet(), address.getDetail(), address.getAddressType());
+        return new AddressResponse(address.getId(), address.getZipcode(), address.getStreet(), address.getDetail(), address.getAddressType());
     }
 }

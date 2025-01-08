@@ -8,6 +8,7 @@ export type AuthStoreType = {
   zipcode: string;
   street: string;
   detail: string;
+  isLoggedin?: boolean;
   error: {
     username: string;
     password: string;
@@ -29,5 +30,6 @@ export type AuthStoreType = {
   setZipcode: (zipcode: string) => void;
   setStreet: (street: string) => void;
   setDetail: (detail: string) => void;
+  setIsLoggedin: (isLoggedin: boolean) => void;
   setError: (field: string, message: string) => void;
 };

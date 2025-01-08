@@ -1,13 +1,16 @@
+"use client";
+
 import { baseUrl } from "@/app/(auth)/_components/SignUp";
 import CommonModal from "@/components/CommonModal";
-import { API_URL } from "@/constants";
 import { useRouter } from "next/navigation";
-import React, { SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
+import { CartItemType } from "./Cart";
 
 type PropsType = {
   isModalOpen: boolean;
   setIsModalOpen: (value: SetStateAction<boolean>) => void;
-  itemId: number | undefined;
+  cartItemId: number | undefined;
+  setItems: Dispatch<SetStateAction<CartItemType[]>>;
 };
 
 const DeleteItemModalStyles: ReactModal.Styles = {
@@ -33,11 +36,11 @@ const DeleteItemModalStyles: ReactModal.Styles = {
   }
 };
 
-const DeleteItemModal = ({ isModalOpen, setIsModalOpen, itemId }: PropsType) => {
+const DeleteCartItemModal = ({ isModalOpen, setIsModalOpen, cartItemId, setItems }: PropsType) => {
   const router = useRouter();
   const deleteItem = async () => {
     try {
-      const response = await fetch(`${baseUrl}/api/admin/items/${itemId}`, {
+      const response = await fetch(`${baseUrl}/api/user/cartItem/${cartItemId}`, {
         method: "DELETE",
         credentials: "include",
         headers: {
@@ -50,8 +53,9 @@ const DeleteItemModal = ({ isModalOpen, setIsModalOpen, itemId }: PropsType) => 
       }
 
       const data = await response.json();
+      alert("장바구니에서 상품을 삭제하였습니다.");
+      setItems((prevItems) => prevItems.filter((item) => item.cartItemId !== cartItemId));
       setIsModalOpen(false);
-      router.push("/");
       return;
     } catch (error) {
       console.error("Error fetching item list:", error);
@@ -68,7 +72,7 @@ const DeleteItemModal = ({ isModalOpen, setIsModalOpen, itemId }: PropsType) => 
           <button onClick={() => setIsModalOpen(false)} className="w-16 h-8 rounded-lg text-lg bg-gray-200">
             취소
           </button>
-          <button onClick={deleteItem} className="tw-16 h-8 rounded-lg text-lg bg-gray-300">
+          <button onClick={deleteItem} className="w-16 h-8 rounded-lg text-lg bg-gray-300">
             삭제
           </button>
         </div>
@@ -77,4 +81,4 @@ const DeleteItemModal = ({ isModalOpen, setIsModalOpen, itemId }: PropsType) => 
   );
 };
 
-export default DeleteItemModal;
+export default DeleteCartItemModal;
