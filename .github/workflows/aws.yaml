@@ -28,7 +28,7 @@ name: AWS ECR에 이미지 빌드 및 푸시
 on:
   push:
     branches:
-      - feature/release-test
+      - release/**
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}                   # 선호하는 AWS 리전으로 설정하세요. 예: us-west-1
